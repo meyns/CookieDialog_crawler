@@ -41,7 +41,7 @@ BASE_PATH = "d:/temp/Selenium-model/"
 # BASE_PATH = "Selenium/" # voor docker run
 #BASE_PATH = "./data/" # Ubuntu
 
-LIMIT_CPU = 12  # cpu_count() - 1 # int(cpu_count()) // 2 #cpu_count() - 1 #int(cpu_count()) // 2
+LIMIT_CPU = 1  # cpu_count() - 1 # int(cpu_count()) // 2 #cpu_count() - 1 #int(cpu_count()) // 2
 #LIMIT_NR_SITES = 4
 #START_SITE = 3715  # 1 = start
 TIMEOUT = 90
@@ -532,9 +532,9 @@ def writing(lock, urls, stop, cookies, cookies2, visits, do_not_visit, elements)
     elements_dupl = []
 
     with lock:
-        if len(cookies) > 0:
+        '''if len(cookies) > 0:
             cookies_dupl = list(cookies)
-            del cookies[:]
+            del cookies[:]'''
         if len(cookies2) > 0:
             cookies2_dupl = list(cookies2)
             del cookies2[:]
@@ -548,34 +548,13 @@ def writing(lock, urls, stop, cookies, cookies2, visits, do_not_visit, elements)
     with lock:
         conn = sqlite3.connect(BASE_PATH + 'cookies.db')
 
-        if len(cookies_dupl) > 0:
-            '''print('Writing to cookies.txt')
-            with open(BASE_PATH  + "cookies.txt", 'a+') as file:
-                for c in cookies_dupl:
-                    file.write(str(c[0]) + "," + str(c[1]) + "," + str(c[2]) + "," + str(c[3]) + "," + str(c[4]) + "\n")
-
-            print('Writing to database file cookies_numbers')'''
+        '''if len(cookies_dupl) > 0:
             cursor = conn.cursor()
             for c in cookies_dupl:
                 cursor.execute('INSERT INTO cookie_numbers VALUES(?,?,?,?)',
                                (c[0], c[1], c[2], c[3]))
-                if c[6] is None and c[7] is None and c[8] is None:  # Error while visiting the site
-                    cursor.execute('UPDATE cookie_numbers SET visit_result = ? WHERE site_nr = ?', (c[2], c[0]))
-                    do_not_visit.append(c[0])
-                elif c[7] is None and c[8] is None:  # Could not click on accept button
-                    cursor.execute('UPDATE cookie_numbers SET visit_result = ?, cookies_before = ? WHERE site_nr = ?',
-                                   (c[2], c[6], c[0]))
-                    do_not_visit.append(c[0])
-                elif c[7] is None:
-                    cursor.execute(
-                        'UPDATE cookie_numbers SET method = ?, button_decline = ?, cookies_before = ?, cookies_after_decline = ? WHERE site_nr = ?',
-                        (c[3], c[5], c[6], c[8], c[0]))
-                elif c[8] is None:
-                    cursor.execute(
-                        'UPDATE cookie_numbers SET visit_result = ?, method = ?, button_accept = ?, cookies_before = ?, cookies_after_accept = ? WHERE site_nr = ?',
-                        (c[2], c[3], c[4], c[6], c[7], c[0]))
             cursor.execute('COMMIT')
-            cursor.close()
+            cursor.close()'''
 
         if len(cookies2_dupl) > 0:
             # print('Writing to database file cookies')
@@ -591,8 +570,8 @@ def writing(lock, urls, stop, cookies, cookies2, visits, do_not_visit, elements)
             # print('Writing to database file visits')
             cursor = conn.cursor()
             for v in visits_dupl:
-                cursor.execute('INSERT INTO visits VALUES(?, ?, ?, ?, ?)',
-                               (v[0], v[1], v[2], v[3], v[4]))
+                cursor.execute('INSERT INTO visits VALUES(?, ?, ?, ?, ?, ?)',
+                               (v[0], v[1], v[2], v[3], v[4], v[5]))
             cursor.execute('COMMIT')
             cursor.close()
 
@@ -600,10 +579,13 @@ def writing(lock, urls, stop, cookies, cookies2, visits, do_not_visit, elements)
             # print('Writing to database file elements')
             cursor = conn.cursor()
             for e in elements_dupl:
+                print(e)
                 cursor.execute('INSERT OR IGNORE INTO elements VALUES(?,?,?,?,?,?,?,?,?,?,?,?,?)',
                                (e[0], e[1], e[2], e[3], e[4], e[5], e[6], e[7], e[8], e[9], e[10], e[11], e[12]))
-                cursor.execute('UPDATE elements SET visited = ?, element_text = ?, element_css = ?, iframe_css = ?, location = ?, text_color = ?, background_color = ?, width = ?, height = ?, font_size = ? WHERE site_nr = ? AND element_type = ?',
-                    (e[3], e[4], e[5], e[6], e[7], e[8], e[9], e[10], e[11], e[12], e[0], e[2]))
+                cursor.execute('UPDATE elements SET visited = ?, element_text = ?, element_css = ?, iframe_css = ?, '
+                               'location = ?, text_color = ?, background_color = ?, width = ?, height = ?, '
+                               'font_size = ? WHERE site_nr = ? AND element_type = ?',
+                                (e[3], e[4], e[5], e[6], e[7], e[8], e[9], e[10], e[11], e[12], e[0], e[2]))
             cursor.execute('COMMIT')
             cursor.close()
 
@@ -771,7 +753,7 @@ def session(lock, stop, start_time, short_url, url, visit_type, site_nr, fails, 
             driver.get("http://" + url)
             time.sleep(5)
 
-            visits.append([site_nr, short_url, visit_type, visit_id, driver.current_url])
+            visits.append([site_nr, short_url, visit_type, visit_id, driver.current_url, -1])
 
             # Count the non ascii characters if more than half are non-ascii characters then skip this site (probably chinese)
             html = driver.find_element(By.XPATH, "/*").text
@@ -782,6 +764,7 @@ def session(lock, stop, start_time, short_url, url, visit_type, site_nr, fails, 
                     file.write(str(site_nr) + "°" + short_url + " Skipped because probably Chinese\n")
                 elements.append(
                     [site_nr, short_url, 0, 1, "# Skipped Chinese website", "", "", "", "", "", "", "", ""])
+                visits.append([site_nr, short_url, visit_type, visit_id, "chinese", -1])
 
             elif not get_status_code(driver, driver.current_url) == 200:
                 print(str(site_nr) + "-" + short_url + " - Skipping url because not 200 status code")
@@ -789,18 +772,21 @@ def session(lock, stop, start_time, short_url, url, visit_type, site_nr, fails, 
                     file.write(str(site_nr) + "°" + short_url + " Skipped because not 200 status code\n")
                 elements.append(
                     [site_nr, short_url, 0, 1, "# Skipped no 200 response", "", "", "", "", "", "", "", ""])
+                visits.append([site_nr, short_url, visit_type, visit_id, "no 200 respone", -1])
             elif "ERR_" in html:
                 print(str(site_nr) + "-" + short_url + " - Skipping url because error code")
                 with open(BASE_PATH + "output.txt", "a") as file:
                     file.write(str(site_nr) + "°" + short_url + " Skipping url because error code\n")
                 elements.append(
                     [site_nr, short_url, 0, 1, "# Skipped error code", "", "", "", "", "", "", "", ""])
+                visits.append([site_nr, short_url, visit_type, visit_id, "error code", -1])
             elif "Website Blocked" in html:
                 print(str(site_nr) + "-" + short_url + " - Skipping url because website blocked")
                 with open(BASE_PATH + "output.txt", "a") as file:
                     file.write(str(site_nr) + "°" + short_url + " Skipping url because website blocked\n")
                 elements.append(
                     [site_nr, short_url, 0, 1, "# Skipped website blocked", "", "", "", "", "", "", "", ""])
+                visits.append([site_nr, short_url, visit_type, visit_id, "website blocked", -1])
             else:
                 do_layers = False
 
@@ -895,6 +881,10 @@ def session(lock, stop, start_time, short_url, url, visit_type, site_nr, fails, 
                                         height = c.value_of_css_property('height')
                                         font_size = c.value_of_css_property('font-size')
                                         location = str(c.location).replace("{", "").replace("}", "")
+                                        '''if not isinstance(location, str):
+                                            location = ""
+                                            print("##################################")'''
+
                                         short_text = ''.join([x for index, x in enumerate(text3.replace('\n', ' ')) if index < 240])
 
                                         elements.append([site_nr, short_url, 0, 1, short_text, "",
@@ -961,6 +951,10 @@ def session(lock, stop, start_time, short_url, url, visit_type, site_nr, fails, 
                                                     width = el.value_of_css_property('width')
                                                     height = el.value_of_css_property('height')
                                                     font_size = el.value_of_css_property('font-size')
+                                                    location = str(c.location).replace("{", "").replace("}", "")
+                                                    '''if not isinstance(location, str):
+                                                        location = ""
+                                                        print("##################################")'''
 
                                                     # To use for ACCEPT visit
                                                     if button_type == "ACCEPT":
@@ -1048,6 +1042,7 @@ def session(lock, stop, start_time, short_url, url, visit_type, site_nr, fails, 
                                                                           time.time() - this_url_start,
                                                                           time.time() - start_time))
                 write_cookies(0, visit_id, cookies_temp, cookies2, short_url)
+                visits.append([site_nr, short_url, 0, visit_id, driver.current_url, len(cookies_temp)])
 
                 print("----{:2f}s-----Finished URL visit--".format(time.time() - this_url_start))
 
@@ -1068,6 +1063,10 @@ def session(lock, stop, start_time, short_url, url, visit_type, site_nr, fails, 
                             width = element.value_of_css_property('width')
                             height = element.value_of_css_property('height')
                             font_size = element.value_of_css_property('font-size')
+                            location = str(c.location).replace("{", "").replace("}", "")
+                            if not isinstance(location, str):
+                                location = ""
+                                print("##################################""")
 
                             elements.append(
                                 [site_nr, short_url, 1, 1, element_text, element_css, iframe_element_css, location, text_color,
@@ -1076,8 +1075,6 @@ def session(lock, stop, start_time, short_url, url, visit_type, site_nr, fails, 
                             element.click()
                             time.sleep(3)
 
-                            visits.append([site_nr, short_url, 1, visit_id, driver.current_url])
-
                             # Save cookies
                             cookies_temp = driver.execute_cdp_cmd('Network.getAllCookies', {})['cookies']
                             print(
@@ -1085,6 +1082,7 @@ def session(lock, stop, start_time, short_url, url, visit_type, site_nr, fails, 
                                                                                        time.time() - this_url_start,
                                                                                        time.time() - start_time))
                             write_cookies(1, visit_id, cookies_temp, cookies2, short_url)
+                            visits.append([site_nr, short_url, 1, visit_id, driver.current_url, len(cookies_temp)])
 
                             # Save screenshot
                             driver.save_screenshot(
@@ -1129,7 +1127,7 @@ def session(lock, stop, start_time, short_url, url, visit_type, site_nr, fails, 
                     driver.get("http://" + url)
                     time.sleep(5)
 
-                    visits.append([site_nr, short_url, visit_type, visit_id, driver.current_url])
+                    visits.append([site_nr, short_url, visit_type, visit_id, driver.current_url, -1])
 
                     if r[6]:
                         driver.switch_to.frame(driver.find_element(By.CSS_SELECTOR, r[6]))
@@ -1137,16 +1135,10 @@ def session(lock, stop, start_time, short_url, url, visit_type, site_nr, fails, 
                     css_elements = driver.find_elements(By.CSS_SELECTOR, r[5])
                     for element in css_elements:
                         if element.text == r[4]:
-                            element.get_attribute("style")
-                            text_color = element.value_of_css_property('color')
-                            background_color = element.value_of_css_property('background-color')
-                            width = element.value_of_css_property('width')
-                            height = element.value_of_css_property('height')
-                            font_size = element.value_of_css_property('font-size')
-
+                            print('element reached')
                             elements.append(
-                                [r[0], r[1], r[2], 1, r[4], r[5], r[6], [7], text_color,
-                                 background_color, width, height, font_size])
+                                [r[0], r[1], r[2], 1, r[4], r[5], r[6], r[7], r[8], r[9],
+                                 r[10], r[11], r[12]])
 
                             element.click()
 
@@ -1157,6 +1149,7 @@ def session(lock, stop, start_time, short_url, url, visit_type, site_nr, fails, 
                                                                                      time.time() - this_url_start,
                                                                                      time.time() - start_time))
                             write_cookies(visit_type, visit_id, cookies_temp, cookies2, short_url)
+                            visits.append([site_nr, short_url, visit_type, visit_id, driver.current_url, len(cookies_temp)])
 
                             # Save screenshot
                             driver.save_screenshot(
@@ -1236,6 +1229,7 @@ def session_checker(lock, thread_nr, runn, stop, now, urls, fails, cookies, cook
             print("({}) http://{} has been skipped because it can't be reached".format(site_nr, short_url))
             elements.append(
                 [site_nr, short_url, 0, 1, "# Skipped because can't be reached", "", "", "", "", "", "", "", ""])
+            visits.append([site_nr, short_url, visit_type, -1, "can't be reached", -1])
         else:
             visit_id = random.randrange(1, 100000000)
             p = Process(target=session, args=(
@@ -1266,7 +1260,7 @@ def session_checker(lock, thread_nr, runn, stop, now, urls, fails, cookies, cook
                         # cookies.append([0, visit_type, site_nr, short_url, "", -1, -1, "", ""])
                         cookies.append(
                             [site_nr, short_url, "error", None, None, None, None, None, None])
-                        visits.append([site_nr, short_url, visit_type, visit_id, "error"])
+                        visits.append([site_nr, short_url, visit_type, visit_id, "error", -1])
                 else:
                     p.terminate()
                     p.join()
