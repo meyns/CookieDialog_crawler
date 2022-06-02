@@ -147,7 +147,7 @@ for k in range(0,4):
 
                         if len(ascii_count) < len(html) - len(ascii_count):
                             # print("Skipping url because more non-ascii letters than ascii letters (probably chinese website)")
-                            print(urls[number][1] + " skipped because chines")
+                            print(urls[number][1] + " skipped because chinese")
                         elif "ERR_SSL_PROTOCOL_ERROR" in html:
                             # Website wordt geblokkeerd door de virusscanner
                             print(urls[number][1] + " skipped because virusscanner")
@@ -155,7 +155,7 @@ for k in range(0,4):
                             print(urls[number][1] + " skipped because can't be reached")
                         elif 'ERR_' in html or "This site has been blocked" in html or "HTTP ERROR" in html:
                             print(urls[number][1] + " skipped because ...")
-                        elif " Website Blocked " in html:
+                        elif "Website Blocked" in html:
                             print(urls[number][1] + " skipped because virusscanner 2")
                         else:
                             to_add = urls[number]
