@@ -46,10 +46,7 @@ print('setting up database')
 conn = sqlite3.connect(BASE_PATH + 'cookies.db')
 cursor = conn.cursor()
 cursor.execute(
-#    "CREATE TABLE if not exists cookie_numbers (site_nr int PRIMARY KEY, sitename varchar(255), visit_result varchar(255), method varchar(24), button_accept varchar(255), button_decline varchar(255), cookies_before int, cookies_after_accept int, cookies_after_decline int)")
-    "CREATE TABLE if not exists cookie_numbers (site_nr int PRIMARY KEY, sitename varchar(255), visit_type int, cookie_numbers int)"
-cursor.execute(
-    "CREATE TABLE if not exists visits (site_nr int, sitename varchar(255), visit_type int, visit_nr int, site_url varchar(255))")
+    "CREATE TABLE if not exists visits (site_nr int, sitename varchar(255), visit_type int, visit_id int, site_url varchar(255), cookie_numbers int)")
 cursor.execute(
     "CREATE TABLE if not exists cookies (visit_id int, before_after varchar(24), short_url varchar(255), domain varchar(255), expires float(24), httpOnly bool, name varchar(255), path varchar(255), priority varchar(24), sameParty bool, sameSite varchar(25), secure bool, session bool, size int, sourcePort int, sourceScheme varchar(255), value varchar(255))")
 cursor.execute(
