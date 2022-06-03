@@ -10,17 +10,18 @@ from selenium.webdriver.common.by import By
 
 
 def check_response(url):
+    result = False
     try:
         socket.gethostbyname(url)
-        response = url
+        result = url
     except:
         try:
             socket.gethostbyname("www." + url)
-            response = "www." + url
+            result = "www." + url
         except:
-            response = False
-    print(url + " -> " + str(response))
-    return response
+            result = False
+    print(url + " -> " + str(result))
+    return result
 
 def get_status_code(url):
     for entry in driver.get_log('performance'):
@@ -137,6 +138,7 @@ for k in range(0,4):
                     driver.set_script_timeout(10)
 
                     driver.get("http://" + response)
+                    #driver.get("http://" + "www.pornhub.com")
                     time.sleep(1)
 
                     if get_status_code(driver.current_url) == 200:
@@ -170,6 +172,8 @@ for k in range(0,4):
                     print(urls[number][1] + " skipped because error during visit")
                 finally:
                     driver.quit()
+            else:
+                print(urls[number][1] + " skipped because no response")
         else:
             print(urls[number][1] + " skipped because wrong extension")
 

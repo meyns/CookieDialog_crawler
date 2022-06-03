@@ -7,10 +7,10 @@ BASE_PATH = "d:/temp/Selenium-model/"
 # BASE_PATH = "Selenium/" # voor docker run
 #BASE_PATH = "./data/" # Ubuntu
 
-buckets = [[0, 25000, 25],
-           [25001,100000, 25],
-           [100001,250000, 25],
-           [250001,1000000, 25]]
+buckets = [[0, 25000, 25000],
+           [25001,100000, 25000],
+           [100001,250000, 25000],
+           [250001,1000000, 25000]]
 
 with open('top-1m.csv') as file:
     lines = file.read()
