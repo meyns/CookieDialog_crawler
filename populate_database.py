@@ -5,12 +5,14 @@ import sqlite3
 
 BASE_PATH = "d:/temp/Selenium-model/"
 # BASE_PATH = "Selenium/" # voor docker run
-#BASE_PATH = "./data/" # Ubuntu
+BASE_PATH = "./data/" # Ubuntu
 
 buckets = [[0, 25000, 25000],
            [25001,100000, 25000],
            [100001,250000, 25000],
            [250001,1000000, 25000]]
+
+print('Populating databases')
 
 with open('top-1m.csv') as file:
     lines = file.read()
@@ -50,7 +52,7 @@ cursor.execute(
 cursor.execute(
     "CREATE TABLE if not exists cookies (visit_id int, before_after varchar(24), short_url varchar(255), domain varchar(255), expires float(24), httpOnly bool, name varchar(255), path varchar(255), priority varchar(24), sameParty bool, sameSite varchar(25), secure bool, session bool, size int, sourcePort int, sourceScheme varchar(255), value varchar(255))")
 cursor.execute(
-    "CREATE TABLE if not exists elements (site_nr int, sitename varchar(255), element_type int, visited int, element_text varchar(255), element_css varchar(255), iframe_css varchar(255), location varchar(24), text_color varchar(255), background_color varchar(255), width varchar(24), height varchar(24), font_size varchar(24), PRIMARY KEY (site_nr, element_type))")
+    "CREATE TABLE if not exists elements (site_nr int, sitename varchar(255), element_type int, visited int, element_text varchar(255), element_css varchar(255), iframe_css varchar(255), location_x int, location_y int, text_color varchar(255), background_color varchar(255), width varchar(24), height varchar(24), font_size varchar(24), PRIMARY KEY (site_nr, element_type))")
 # Fill in all rows of to be visited websites if they do not exist
 for url in urls:
     print(url)

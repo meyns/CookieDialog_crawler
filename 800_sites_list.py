@@ -73,9 +73,9 @@ visited = []
 final_urls = [[],[],[],[]]
 for k in range(0,4):
     i = 0
-    while i < 200:
+    while i < 250:
         visit = False
-        if i < 175:
+        if i < 220:
             number = random.randint(buckets[k][0], buckets[k][1])
             if any(website_type in urls[number][1] for website_type in TYPES_WEBSITES) \
                     and not any(website_type in urls[number][1] for website_type in NOT_TYPES_WEBSITES):
@@ -155,11 +155,12 @@ for k in range(0,4):
                             print(urls[number][1] + " skipped because virusscanner")
                         elif "ERR_NAME_NOT_RESOLVED" in html:
                             print(urls[number][1] + " skipped because can't be reached")
-                        elif 'ERR_' in html or "This site has been blocked" in html or "HTTP ERROR" in html:
+                        elif 'ERR_' in html or '_ERR' in html or "This site has been blocked" in html or "HTTP ERROR" in html:
                             print(urls[number][1] + " skipped because ...")
-                        elif "Website Blocked" in html:
+                        elif "Website Blocked" in html or "This site is blocked due" in html or "block.opendns.com" in driver.current_url:
                             print(urls[number][1] + " skipped because virusscanner 2")
                         else:
+                            # iframes check?
                             to_add = urls[number]
                             to_add.append(response)
                             final_urls[k].append(to_add)
