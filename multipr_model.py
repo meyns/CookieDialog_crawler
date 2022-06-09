@@ -26,8 +26,6 @@ from simpletransformers.classification import ClassificationModel
 from simpletransformers.config.model_args import ClassificationArgs
 
 from sys import platform
-
-print(platform)
     
 if platform == "linux" or platform == "linux2":
     ML_dir_cookie_dialog = "./model_dialog" #Ubuntu
@@ -72,7 +70,7 @@ def main():
     if platform == "linux" or platform == "linux2":
         LIMIT_CPU.value = 20
     elif platform == "win32":
-        LIMIT_CPU.value = 4 
+        LIMIT_CPU.value = 1
 
     kill_processes()
 
@@ -453,6 +451,7 @@ def get_active_element(driver, candidates):
 
 
 def candidate_filter(candidates):
+    # Filter out elements that cannot act like a button
     try:
         for index, c in reversed(list(enumerate(candidates))):
             # innerText = driver.execute_script("""return arguments[0].innerText;""", c)
@@ -470,6 +469,7 @@ def candidate_filter(candidates):
     except Exception as err:
         print(err)
 
+    # Filter out elements that are a father of another element
     i = 0
     while i < len(candidates):
         for index, c in enumerate(candidates):
@@ -883,12 +883,24 @@ def session(lock, stop, start_time, short_url, url, visit_type, site_nr, fails, 
                             # print(c.size['height'])
                             # print(c.get_attribute('innerHTML'))
                             iframe_test = (c.tag_name == 'iframe')
+                            iframe_element_css = ""
                             if iframe_test:
                                 iframe = c
+                                # Setting up CSS info for iframe element
+                                iframe_element_class = "." + ".".join(
+                                    iframe.get_attribute('class').split())
+                                iframe_element_name = iframe.tag_name
+                                iframe_element_id = (iframe.get_attribute('id') or '')
+                                if not iframe_element_id == '':
+                                    iframe_element_id = "#" + iframe_element_id
+
+                                iframe_element_css = iframe_element_name + iframe_element_class + iframe_element_id
+
                                 driver.switch_to.frame(c)
                                 c = driver.find_element(By.XPATH, '/*')  # first child in iframe
                                 c = finetune_element(c, 'iframe')
                                 # print(c)
+
 
                             # text = driver.execute_script("""return arguments[0].innerText;""", c)
                             # text2 = c.get_attribute('innerHTML')
@@ -1027,16 +1039,6 @@ def session(lock, stop, start_time, short_url, url, visit_type, site_nr, fails, 
                                                         with open(BASE_PATH + "buttons.csv", 'a', encoding='utf-8') as file:
                                                             file.write(line_to_add + '\n')
 
-                                                        iframe_element_css = ""
-                                                        if iframe_test:
-                                                            iframe_element_class = "." + ".".join(
-                                                                iframe.get_attribute('class').split())
-                                                            iframe_element_name = iframe.tag_name
-                                                            iframe_element_id = (iframe.get_attribute('id') or '')
-                                                            if not iframe_element_id == '':
-                                                                iframe_element_id = "#" + iframe_element_id
-
-                                                            iframe_element_css = iframe_element_name + iframe_element_class + iframe_element_id
 
                                                         # Writing to database
                                                         # [site nr, sitename, element_type, visited?, element_text, element_css]
