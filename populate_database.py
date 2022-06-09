@@ -3,9 +3,19 @@
 import random
 import sqlite3
 
+from sys import platform
+
+if platform == "linux" or platform == "linux2":
+    BASE_PATH = "./data/" # Ubuntu
+elif platform == "darwin":
+    # OS X
+    pass
+elif platform == "win32":
+    BASE_PATH = "d:/temp/Selenium-model/"
+
 BASE_PATH = "d:/temp/Selenium-model/"
 # BASE_PATH = "Selenium/" # voor docker run
-BASE_PATH = "./data/" # Ubuntu
+#BASE_PATH = "./data/" # Ubuntu
 
 buckets = [[0, 25000, 25000],
            [25001,100000, 25000],
