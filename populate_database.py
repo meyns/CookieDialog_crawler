@@ -5,22 +5,26 @@ import sqlite3
 
 from sys import platform
 
+BASE_PATH = "d:/temp/Selenium-model/"
+
 if platform == "linux" or platform == "linux2":
     BASE_PATH = "./data/" # Ubuntu
+    buckets = [[0, 1000, 1000],
+               [1001, 10000, 9000],
+               [10001, 100000, 45000],
+               [100001, 1000000, 45000]]
 elif platform == "darwin":
     # OS X
     pass
 elif platform == "win32":
     BASE_PATH = "d:/temp/Selenium-model/"
+    buckets = [[0, 1000, 25],
+               [1000, 10000, 25],
+               [10000, 100000, 25],
+               [100000, 1000000, 25]]
 
-BASE_PATH = "d:/temp/Selenium-model/"
+
 # BASE_PATH = "Selenium/" # voor docker run
-#BASE_PATH = "./data/" # Ubuntu
-
-buckets = [[0, 25000, 25000],
-           [25001,100000, 25000],
-           [100001,250000, 25000],
-           [250001,1000000, 25000]]
 
 print('Populating databases')
 
@@ -39,7 +43,7 @@ urls = []
 
 for k in range(4):
     print(buckets[k])
-    if k == 0 and buckets[k][2] == buckets[k][1] - buckets[k][0]:
+    if buckets[k][2] == (buckets[k][1] - buckets[k][0]):
         for line in lines2[buckets[k][0]:buckets[k][1]]:
             urls.append([line[0], line[1], 0])
         #print(urls)
@@ -58,11 +62,11 @@ print('setting up database')
 conn = sqlite3.connect(BASE_PATH + 'cookies.db')
 cursor = conn.cursor()
 cursor.execute(
-    "CREATE TABLE if not exists visits (site_nr int, sitename varchar(255), visit_type int, visit_id int, site_url varchar(255), cookie_numbers int)")
+    "CREATE TABLE if not exists visits (visit_id bigint, site_nr int, sitename varchar(255), visit_type int, site_url varchar(255), cookie_numbers int)")
 cursor.execute(
-    "CREATE TABLE if not exists cookies (visit_id int, before_after varchar(24), short_url varchar(255), domain varchar(255), expires float(24), httpOnly bool, name varchar(255), path varchar(255), priority varchar(24), sameParty bool, sameSite varchar(25), secure bool, session bool, size int, sourcePort int, sourceScheme varchar(255), value varchar(255))")
+    "CREATE TABLE if not exists cookies (visit_id bigint, before_after varchar(24), short_url varchar(255), domain varchar(255), expires float(24), httpOnly bool, name varchar(255), path varchar(255), priority varchar(24), sameParty bool, sameSite varchar(25), secure bool, session bool, size int, sourcePort int, sourceScheme varchar(255), value varchar(255))")
 cursor.execute(
-    "CREATE TABLE if not exists elements (site_nr int, sitename varchar(255), element_type int, visited int, element_text varchar(255), element_css varchar(255), iframe_css varchar(255), location_x int, location_y int, text_color varchar(255), background_color varchar(255), width varchar(24), height varchar(24), font_size varchar(24), PRIMARY KEY (site_nr, element_type))")
+    "CREATE TABLE if not exists elements (visit_id bigint, site_nr int, sitename varchar(255), element_type tinyint, visited tinyint, result varchar(255), element_text varchar(255), element_css varchar(255), iframe_css varchar(255), location_x int, location_y int, text_color varchar(255), background_color varchar(255), width varchar(24), height varchar(24), font_size varchar(24), PRIMARY KEY (site_nr, element_type))")
 # Fill in all rows of to be visited websites if they do not exist
 for url in urls:
     print(url)
