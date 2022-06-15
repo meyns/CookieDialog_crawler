@@ -21,16 +21,23 @@ def add_website(r, languages, url_buckets, lock, i, url):
             html2 = html.decode("utf-8")
             soup = BeautifulSoup(html, features="lxml")
             iframes = soup.find_all("iframe")
+            text = soup.getText()
             l = detect(soup.getText())
             # print(f"Site: {url}, language {l}")
             if l not in languages:
                 print(f"({i + 1}-{len(url_buckets)}) Skipping {url} ({r[0]}), language {l}")
-            elif not "<iframe" in html2:
-                print(f"({i + 1}-{len(url_buckets)}) Skipping {url} ({r[0]}), <iframe")
-            #elif not 'id="onetrust-' in html2:
-            #    print(f"({i + 1}-{len(url_buckets)}) Skipping {url} ({r[0]}), onetrust")
-            elif not iframes:
+            elif len(text) < 1000:
+                print(f"({i + 1}-{len(url_buckets)}) Skipping {url} ({r[0]}), short text")
+            elif "iframe" in html2:
+                print(f"({i + 1}-{len(url_buckets)}) Skipping {url} ({r[0]}), iframe")
+            elif 'onetrust' in html2:
+                print(f"({i + 1}-{len(url_buckets)}) Skipping {url} ({r[0]}), onetrust")
+            elif iframes:
                 print(f"({i + 1}-{len(url_buckets)}) Skipping {url} ({r[0]}), soup iframes")
+            elif "Access Denied" in text or "Website Blocked" in text or "Bot detection" in text:
+                print(f"({i + 1}-{len(url_buckets)}) Skipping {url} ({r[0]}), access denied")
+            elif "_err" in text or "err_" in text:
+                print(f"({i + 1}-{len(url_buckets)}) Skipping {url} ({r[0]}), other error")
             else:
                 url_buckets.append([str(r[0]), url])
                 print(f"({i + 1}-{len(url_buckets)}) Adding {url} ({r[0]}), language {l}")
@@ -46,10 +53,10 @@ if __name__ == '__main__':
     conn = sqlite3.connect('cookies.db')
     cursor = conn.cursor()
 
-    buckets = [[0, 25000],
-               [25001,100000],
-               [100001,250000],
-               [250001,1000000]]
+    buckets = [[1, 1000],
+               [1001,10000],
+               [10001,100000],
+               [100001,1000000]]
 
     url_buckets = Manager().list([])
     lock = Lock()
@@ -82,10 +89,10 @@ if __name__ == '__main__':
             if not r[1] is None:
                 url = r[1][:r[1].find('/', 8)]
                 #print('Starting process')
-                '''p = Process(target=add_website, args=(r, dutch, url_buckets, lock, i, url))
+                p = Process(target=add_website, args=(r, dutch, url_buckets, lock, i, url))
                 p.start()
-                time.sleep(0.15)'''
-                add_website(r, dutch, url_buckets, lock, i, url)
+                time.sleep(0.5)
+                #add_website(r, dutch, url_buckets, lock, i, url)
             i += 1
 
         # Extract allowed language sites
@@ -103,10 +110,10 @@ if __name__ == '__main__':
             if not r[1] is None:
                 url = r[1][:r[1].find('/', 8)]
                 #print('Starting process')
-                '''p = Process(target=add_website, args=(r, languages, url_buckets, lock, i, url))
+                p = Process(target=add_website, args=(r, languages, url_buckets, lock, i, url))
                 p.start()
-                time.sleep(0.15)'''
-                add_website(r, languages, url_buckets, lock, i, url)
+                time.sleep(0.5)
+                #add_website(r, languages, url_buckets, lock, i, url)
             i += 1
 
     conn.close()
