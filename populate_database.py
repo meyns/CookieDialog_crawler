@@ -1,28 +1,45 @@
 # Load list of websites
 # urls = []
+import pprint
 import random
 import sqlite3
 
 from sys import platform
 
+# This file is used to populate the database for the big crawl, it includes the sites from the manual crawl
+
 BASE_PATH = "d:/temp/Selenium-model/"
 
 if platform == "linux" or platform == "linux2":
     BASE_PATH = "./data/" # Ubuntu
-    buckets = [[0, 1000, 1000],
-               [1001, 10000, 9000],
-               [10001, 100000, 45000],
-               [100001, 1000000, 45000]]
+    buckets = [[0, 5000, 5000],
+               [5000, 25000, 20000],
+               [25000, 100000, 32500],
+               [100000, 1000000, 32500]]
 elif platform == "darwin":
     # OS X
     pass
 elif platform == "win32":
     BASE_PATH = "d:/temp/Selenium-model/"
-    buckets = [[0, 1000, 25],
-               [1000, 10000, 25],
-               [10000, 100000, 25],
-               [100000, 1000000, 25]]
+    buckets = [[0, 5000, 5000],
+               [5000, 25000, 20000],
+               [25000, 100000, 32500],
+               [100000, 1000000, 32500]]
 
+filenames = ["bucket1_1-5000.txt", "bucket2_5000-25000.txt", "bucket3_25000-100000.txt", "bucket4_100000-1000000.txt"]
+
+urls = [] # manual crawl url list
+for i, filename in enumerate(filenames):
+    with open(BASE_PATH + filename) as file:
+        lines = file.read()
+        lines = lines.splitlines()
+    urls.append([])
+    for line in lines:
+        line = line.split(',')
+        urls[i].append([int(line[0]), line[1]])
+    urls[i].sort()
+
+pprint.pprint(urls)
 
 # BASE_PATH = "Selenium/" # voor docker run
 
@@ -31,30 +48,40 @@ print('Populating databases')
 with open('top-1m.csv') as file:
     lines = file.read()
     lines = lines.splitlines()
-    #lines = [next(file) for x in range(START_SITE + LIMIT_NR_SITES)]
-#lines = lines[START_SITE - 1:-1]
-# print(lines)
-lines2 = []
+list_1m = []
 for line in lines:
-    lines2.append(line.split(','))
+    list_1m.append(line.split(','))
 
+for i, bucket in enumerate(urls):
+    for j, url in reversed(list(enumerate(bucket))):
+        list_1m.pop(url[0]-1)
+        for k in range(len(buckets)):
+            if k >= i:
+                if k == 0:
+                    pass
+                else:
+                    buckets[k][0] -= 1
+                buckets[k][1] -= 1
+                buckets[k][2] -= 1
 
-urls = []
+print('-------------')
 
+final_urls = []
 for k in range(4):
     print(buckets[k])
     if buckets[k][2] == (buckets[k][1] - buckets[k][0]):
-        for line in lines2[buckets[k][0]:buckets[k][1]]:
-            urls.append([line[0], line[1], 0])
+        for line in list_1m[buckets[k][0]:buckets[k][1]]:
+            final_urls.append([int(line[0]), line[1], 0])
         #print(urls)
     else:
         sample = random.sample(range(buckets[k][0], buckets[k][1]), buckets[k][2])
         sample.sort()
         #print(sample)
         for s in sample:
-            urls.append([lines2[s][0], lines2[s][1], 0])
+            print(s)
+            final_urls.append([int(list_1m[s][0]), list_1m[s][1], 0])
 
-print(urls)
+print(final_urls)
 
 
 # Populating database
@@ -67,8 +94,12 @@ cursor.execute(
     "CREATE TABLE if not exists cookies (visit_id bigint, before_after varchar(24), short_url varchar(255), domain varchar(255), expires float(24), httpOnly bool, name varchar(255), path varchar(255), priority varchar(24), sameParty bool, sameSite varchar(25), secure bool, session bool, size int, sourcePort int, sourceScheme varchar(255), value varchar(255))")
 cursor.execute(
     "CREATE TABLE if not exists elements (visit_id bigint, site_nr int, sitename varchar(255), element_type tinyint, visited tinyint, result varchar(255), element_text varchar(255), element_css varchar(255), iframe_css varchar(255), location_x int, location_y int, text_color varchar(255), background_color varchar(255), width varchar(24), height varchar(24), font_size varchar(24), PRIMARY KEY (site_nr, element_type))")
+cursor.execute(
+    "CREATE TABLE if not exists redirects (visit_id bigint, data varchar(32), url_from varchar(1024), url_to varchar(1024), content_type varchar(264))")
+cursor.execute(
+    "CREATE TABLE if not exists all_requests (visit_id bigint, data varchar(32), url_from varchar(1024), url_to varchar(1024), content_type varchar(264))")
 # Fill in all rows of to be visited websites if they do not exist
-for url in urls:
+for url in final_urls:
     print(url)
     # cursor.execute("INSERT OR IGNORE INTO cookie_numbers VALUES (?,?,?,?,?,?,?,?,?)", (url[0], url[1], None, None, None, None, None, None, None))
     #cursor.execute("INSERT OR IGNORE INTO cookie_numbers (site_nr, sitename) VALUES (?,?)",
