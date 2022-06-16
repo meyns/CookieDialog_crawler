@@ -68,6 +68,13 @@ button_dict = {"ACCEPT": 1,
                
 MAKE_SCREENSHOTS = True
 
+user_agents = ["Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/101.0.4951.67 Safari/537.36",
+              "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/102.0.0.0 Safari/537.36",
+              "Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:100.0) Gecko/20100101 Firefox/100.0",
+              "Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:101.0) Gecko/20100101 Firefox/101.0",
+              "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/102.0.5005.63 Safari/537.36",
+              "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/101.0.4951.64 Safari/537.36"]
+
 def main():
     chromedriver_autoinstaller.install()  # only used for docker run
     LIMIT_CPU = Value('i', 1)
@@ -808,7 +815,7 @@ def session(lock, stop, start_time, short_url, url, visit_type, site_nr, fails, 
     # options.add_argument('--https_only_mode_enabled')
     options.page_load_strategy = 'eager'  # eager -> enkel DOM laden, normal -> alles laden
     options.add_argument(
-        "--user-agent=Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/99.0.4844.51 Safari/537.36")
+        "--user-agent=" + user_agents[visit_type])
     # ????    options.enable_mobile()
     options.add_argument("--disable-notifications")
     # options.add_argument("--disable-geolocation")
