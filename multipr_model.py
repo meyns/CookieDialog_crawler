@@ -80,7 +80,7 @@ def main():
     LIMIT_CPU = Value('i', 1)
     
     if platform == "linux" or platform == "linux2":
-        LIMIT_CPU.value = 20
+        LIMIT_CPU.value = 28
     elif platform == "win32":
         LIMIT_CPU.value = 2
 
@@ -208,7 +208,7 @@ def main():
     print(res)
     urls = Manager().list([])
 
-    for r in res[:20]:
+    for r in res:
         urls.append(list(r))
     print(urls)
 
@@ -585,7 +585,7 @@ def gui_thread(stop, fails, LIMIT_CPU):
         line += ' count ' + str(count) + '\n'
         
         if count > 6:
-            LIMIT_CPU.value -= 1
+            LIMIT_CPU.value -= 2
             fails.value = nr_fails
             line += '\n' + ' CPU or RAM usage too high reducing CPU threads'
         
