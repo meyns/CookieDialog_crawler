@@ -46,9 +46,9 @@ cursor.execute(
 cursor.execute(
     "CREATE TABLE if not exists elements (visit_id bigint, site_nr int, sitename varchar(255), element_type tinyint, visited tinyint, result varchar(255), element_text varchar(255), element_css varchar(255), iframe_css varchar(255), location_x int, location_y int, text_color varchar(255), background_color varchar(255), width varchar(24), height varchar(24), font_size varchar(24), PRIMARY KEY (site_nr, element_type))")
 cursor.execute(
-    "CREATE TABLE if not exists redirects (visit_id bigint, data varchar(32), url_from varchar(1024), url_to varchar(1024), content_type varchar(264))")
+    "CREATE TABLE if not exists redirects (visit_id bigint, status_code int, data varchar(32), url_from varchar(1024), url_to varchar(1024), content_type varchar(264))")
 cursor.execute(
-    "CREATE TABLE if not exists all_requests (visit_id bigint, data varchar(32), url_from varchar(1024), url_to varchar(1024), content_type varchar(264))")
+    "CREATE TABLE if not exists all_requests (visit_id bigint, status_code int, data varchar(32), url_from varchar(1024), url_to varchar(1024), content_type varchar(264))")
 # Fill in all rows of to be visited websites if they do not exist
 for url in urls:
     print(url)
