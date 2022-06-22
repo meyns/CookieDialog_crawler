@@ -31,7 +31,7 @@ from simpletransformers.classification import ClassificationModel
 from simpletransformers.config.model_args import ClassificationArgs
 
 from sys import platform
-    
+
 if platform == "linux" or platform == "linux2":
     ML_dir_cookie_dialog = "./model_dialog" #Ubuntu
     ML_dir_buttons = "./model_buttons" #Ubuntu
@@ -65,7 +65,7 @@ button_dict = {"ACCEPT": 1,
                "MODIFY": 3,
                "SAVE": 4
                }
-               
+
 MAKE_SCREENSHOTS = True
 
 user_agents = ["Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/101.0.4951.67 Safari/537.36",
@@ -78,7 +78,7 @@ user_agents = ["Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KH
 def main():
     chromedriver_autoinstaller.install()  # only used for docker run
     LIMIT_CPU = Value('i', 1)
-    
+
     if platform == "linux" or platform == "linux2":
         LIMIT_CPU.value = 28
     elif platform == "win32":
@@ -98,7 +98,7 @@ def main():
 
     if not os.path.exists(BASE_PATH + 'screenshots'):
         os.mkdir(BASE_PATH + 'screenshots')
-        
+
     if not os.path.exists(BASE_PATH + 'cookies.db'):
         import populate_database
 
@@ -200,7 +200,7 @@ def main():
     print('Reading in database')
     conn = sqlite3.connect(BASE_PATH + 'cookies.db')
     cursor = conn.cursor()
-    cursor.execute('SELECT site_nr, sitename, element_type FROM elements where visited == ? ORDER BY site_nr ASC', (0,))
+    cursor.execute('SELECT site_nr, sitename, element_type FROM elements where visited == 0')
     res = cursor.fetchall()
     conn.close()
 
@@ -236,6 +236,7 @@ def main():
     # Load variables
     runn = Value('i', 1)
     stop = Value('b', False)
+    pause = Value('b', False)
     fails = Value('i', 0)
 
     # Read in previously visited nrs of sites -> reread every run to only visit unvisited sites
@@ -253,12 +254,12 @@ def main():
         print("Limit CPU: " + str(LIMIT_CPU.value))
 
         # Start GUI thread
-        n = Process(target=gui_thread, args=(stop, fails, LIMIT_CPU))
+        n = Process(target=gui_thread, args=(stop, pause, fails, LIMIT_CPU))
         n.start()
 
         # start writing process
         o = Process(target=writing_thread,
-                    args=(lock, urls, stop, fails, cookies, cookies2, visits, do_not_visit, elements, redirects, all_requests))
+                    args=(lock, urls, stop, pause, fails, cookies, cookies2, visits, do_not_visit, elements, redirects, all_requests))
         o.start()
 
         fails.value = 0
@@ -266,7 +267,7 @@ def main():
         # start browser sessions
         for thread_nr in range(LIMIT_CPU.value):
             p = Process(target=session_checker, args=(
-                lock, thread_nr, runn, stop, now, urls, fails, cookies, cookies2, previously_visited_nrs, visits,
+                lock, thread_nr, runn, stop, pause, now, urls, fails, cookies, cookies2, previously_visited_nrs, visits,
                 do_not_visit, elements, LIMIT_CPU, redirects, all_requests))
             session_ch.append(p)
             p.start()
@@ -274,6 +275,19 @@ def main():
 
         # wait until > nr_fails fails or stop value
         while fails.value < nr_fails and not stop.value:
+            if not n.is_alive():
+                n.join()
+                del n
+                n = Process(target=gui_thread, args=(stop, pause, fails, LIMIT_CPU))
+                n.start()
+            if not o.is_alive():
+                o.join()
+                del o
+                o = Process(target=writing_thread,
+                    args=(lock, urls, stop, pause, fails, cookies, cookies2, visits, do_not_visit, elements, redirects, all_requests))
+                o.start()
+            while pause.value == True:
+                time.sleep(1)
             time.sleep(1)
 
         if stop.value:
@@ -313,7 +327,7 @@ def main():
 
         #killtree(os.getpid())
         kill_processes()
-        
+
 
     print('One last write')
     print(cookies)
@@ -329,7 +343,7 @@ def main():
 
 # Interceptor voor seleniumwire (deze items worden geblokkeerd)
 def interceptor(request):
-    # Block PNG, JPEG and GIF images
+    # Block PNG, JPG, JPEG, GIF, ICO and MP3
     if request.path.endswith(('.png', '.jpg', '.gif', '.jpeg', '.ico', '.mp3')):
         request.abort()
 
@@ -556,16 +570,31 @@ def get_status_code(driver, url):
                             return response_status
 
 
-def gui_thread(stop, fails, LIMIT_CPU):
+def gui_thread(stop, pause, fails, LIMIT_CPU):
     print('Starting gui thread')
     layout = [
+        [sg.Button('Pause crawling'), sg.Button('Resume'), sg.Button('Stop crawling')],
+        [sg.Text('', key='-TEXT-')],
         [sg.Text(size=(600, 600), key='-CPU-', background_color="black")]
     ]
     window = sg.Window('My Program', layout, size=(400, 400), finalize=True)
 
     count = 0.0
     while fails.value < nr_fails and not stop.value:
-        window.read(1000)
+        event, values = window.read(1)
+        if event == 'Pause crawling':
+            pause.value = True
+            window['-TEXT-'].update('Pause')
+        if event == 'Resume':
+            pause.value = False
+            window['-TEXT-'].update('')
+        if event == 'Stop crawling':
+            stop.value = True
+            window['-TEXT-'].update('Gracefully shutting down')
+        if event == sg.WIN_CLOSED:
+            window.close()
+            sys.exit()
+
         cpu = psutil.cpu_percent()
         ram = psutil.virtual_memory().percent
         if cpu > 70:
@@ -580,28 +609,32 @@ def gui_thread(stop, fails, LIMIT_CPU):
         elif count > 0:
             count -= 0.5
             count = round(count, 1)
-            
+
         line = "CPU " + str(cpu) + "% - RAM " + str(ram) + "% cpu " + str(LIMIT_CPU.value)
         line += ' count ' + str(count) + '\n'
-        
+
         if count > 6:
             LIMIT_CPU.value -= 2
             fails.value = nr_fails
             line += '\n' + ' CPU or RAM usage too high reducing CPU threads'
-        
+
         window['-CPU-'].update(line + window['-CPU-'].get())
 
         with open(BASE_PATH + "resources.txt", "a") as file:
             file.write(time.ctime() + " " + line)
 
+        time.sleep(1)
+
     window.close()
 
 
-def writing_thread(lock, urls, stop, fails, cookies, cookies2, visits, do_not_visit, elements, redirects, all_requests):
+def writing_thread(lock, urls, stop, pause, fails, cookies, cookies2, visits, do_not_visit, elements, redirects, all_requests):
     print("Starting writing thread")
     while fails.value < nr_fails and not stop.value:
         time_slept = 0
         while fails.value < nr_fails and not stop.value and time_slept < 30:
+            while pause.value:
+                time.sleep(1)
             time.sleep(1)
             time_slept += 1
         if time_slept == 30:
@@ -686,8 +719,8 @@ def writing(lock, urls, stop, cookies, cookies2, visits, do_not_visit, elements,
             # print('Writing to database file visits')
             cursor = conn.cursor()
             for r in redirects_dupl:
-                cursor.execute('INSERT INTO redirects VALUES(?, ?, ?, ?, ?)',
-                               (r[0], r[1], r[2], r[3], r[4]))
+                cursor.execute('INSERT INTO redirects VALUES(?, ?, ?, ?, ?, ?)',
+                               (r[0], r[1], r[2], r[3], r[4], r[5]))
             cursor.execute('COMMIT')
             cursor.close()
 
@@ -695,8 +728,8 @@ def writing(lock, urls, stop, cookies, cookies2, visits, do_not_visit, elements,
             # print('Writing to database file visits')
             cursor = conn.cursor()
             for a in all_requests_dupl:
-                cursor.execute('INSERT INTO all_requests VALUES(?, ?, ?, ?, ?)',
-                               (a[0], a[1], a[2], a[3], a[4]))
+                cursor.execute('INSERT INTO all_requests VALUES(?, ?, ?, ?, ?, ?)',
+                               (a[0], a[1], a[2], a[3], a[4], a[5]))
             cursor.execute('COMMIT')
             cursor.close()
 
@@ -1453,12 +1486,17 @@ def session(lock, stop, start_time, short_url, url, visit_type, site_nr, fails, 
 
 
 # i = thread number
-def session_checker(lock, thread_nr, runn, stop, now, urls, fails, cookies, cookies2, previously_visited_nrs, visits,
+def session_checker(lock, thread_nr, runn, stop, pause, now, urls, fails, cookies, cookies2, previously_visited_nrs, visits,
                     do_not_visit, elements, LIMIT_CPU, redirects, all_requests):
     # lock file, thread_nr,
     print('Starting session ' + str(thread_nr))
 
     while fails.value < nr_fails and not stop.value:  # keep this running until stop signal
+        if pause.value:
+            print(f'Pausing thread {thread_nr}')
+        while pause.value:
+            time.sleep(1)
+
         with runn:
             j = runn.value
             runn.value += 1
@@ -1513,6 +1551,11 @@ def session_checker(lock, thread_nr, runn, stop, now, urls, fails, cookies, cook
                 else:
                     p.terminate()
                     p.join()
+
+        if pause.value:
+            print(f'Pausing thread {thread_nr}')
+        while pause.value:
+            time.sleep(1)
 
     print('Ending session ' + str(thread_nr))
 
