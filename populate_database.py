@@ -97,6 +97,7 @@ for site_nr, url in list_1m.items():
     print(f"{country} {len(urls)}")'''
 
 
+final_urls_top_500 = []
 print("Filling up final list of urls with top 500 list and reducing the buckets and list_1m")
 for country, sites_from_country in urls_top_500.items():
     for url in sites_from_country:
@@ -104,7 +105,7 @@ for country, sites_from_country in urls_top_500.items():
         try:
             pos = list(list_1m).index(url[0])
             del list_1m[int(url[0])]
-            final_urls.append([int(url[0]), url[1], 0])
+            final_urls_top_500.append([int(url[0]), url[1], 0])
             for k in range(len(buckets)):
                 if pos > buckets[k][0] and pos <= buckets[k][1]:
                     buckets[k][2] -= 1
@@ -115,6 +116,9 @@ for country, sites_from_country in urls_top_500.items():
         except:
             print(f"Skipping url because already filtered by manual list: {url[0]}-{url[1]}")
 
+final_urls_top_500.sort()
+for url in final_urls_top_500:
+    final_urls.append(url)
 
 print(buckets)
 print(len(list_1m))

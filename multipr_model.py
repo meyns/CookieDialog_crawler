@@ -72,8 +72,7 @@ user_agents = ["Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KH
               "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/102.0.0.0 Safari/537.36",
               "Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:100.0) Gecko/20100101 Firefox/100.0",
               "Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:101.0) Gecko/20100101 Firefox/101.0",
-              "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/102.0.5005.63 Safari/537.36",
-              "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/101.0.4951.64 Safari/537.36"]
+              "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/102.0.5005.63 Safari/537.36"]
 
 def main():
     chromedriver_autoinstaller.install()  # only used for docker run
@@ -200,7 +199,7 @@ def main():
     print('Reading in database')
     conn = sqlite3.connect(BASE_PATH + 'cookies.db')
     cursor = conn.cursor()
-    cursor.execute('SELECT site_nr, sitename, element_type FROM elements where visited == 0')
+    cursor.execute('SELECT site_nr, sitename, element_type FROM elements where visited == 0 ORDER BY element_type DESC')
     res = cursor.fetchall()
     conn.close()
 
