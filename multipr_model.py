@@ -18,6 +18,7 @@ import sys
 from selenium.webdriver.chrome.service import Service
 from multiprocessing import Process, Value, cpu_count, Queue, freeze_support, Lock, Manager, Pool, Value
 import os
+import shutil
 import socket
 import chromedriver_autoinstaller
 import psutil
@@ -36,6 +37,7 @@ if platform == "linux" or platform == "linux2":
     ML_dir_cookie_dialog = "./model_dialog" #Ubuntu
     ML_dir_buttons = "./model_buttons" #Ubuntu
     BASE_PATH = "./data/" # Ubuntu
+    PATH_CHROME = "./chromedriver"
 elif platform == "darwin":
     # OS X
     pass
@@ -44,7 +46,7 @@ elif platform == "win32":
     ML_dir_buttons = "D:/temp/cookie-notice selector/output 10epochs 2e05 64bs 10 evalbs 64maxsl/"
     BASE_PATH = "d:/temp/Selenium-model/"
 
-PATH_CHROME = './chromedriver.exe'
+#PATH_CHROME = './chromedriver.exe'
 PATH_FIREFOX = 'D:/Documenten/Maarten/Open universiteit/VAF/selenium/geckodriver.exe'
 # PATH_EDGE
 # PATH_SAFARI
@@ -75,11 +77,11 @@ user_agents = ["Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KH
               "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/102.0.5005.63 Safari/537.36"]
 
 def main():
-    chromedriver_autoinstaller.install()  # only used for docker run
+    #chromedriver_autoinstaller.install()  # only used for docker run
     LIMIT_CPU = Value('i', 1)
 
     if platform == "linux" or platform == "linux2":
-        LIMIT_CPU.value = 28
+        LIMIT_CPU.value = 18
     elif platform == "win32":
         LIMIT_CPU.value = 2
 
@@ -199,7 +201,8 @@ def main():
     print('Reading in database')
     conn = sqlite3.connect(BASE_PATH + 'cookies.db')
     cursor = conn.cursor()
-    cursor.execute('SELECT site_nr, sitename, element_type FROM elements where visited == 0 ORDER BY element_type DESC')
+    #cursor.execute('SELECT site_nr, sitename, element_type, result FROM elements where visited == 0 or (result == "# Skipped because can\'t be reached" and site_nr > 320000) ORDER BY element_type DESC')
+    cursor.execute('SELECT site_nr, sitename, element_type, result FROM elements where visited == 0 ORDER BY element_type DESC')
     res = cursor.fetchall()
     conn.close()
 
@@ -273,7 +276,7 @@ def main():
             time.sleep(60 / LIMIT_CPU.value)  # To make sure not all threads start at the same time
 
         # wait until > nr_fails fails or stop value
-        while fails.value < nr_fails and not stop.value:
+        while fails.value < nr_fails and not stop.value:# and LIMIT_CPU.value/2 > len(p.is_alive() for p in session_ch):
             if not n.is_alive():
                 n.join()
                 del n
@@ -296,7 +299,7 @@ def main():
 
         # nr_fails fails have occurred, or we want to stop -> wait until all running processes timeout
         start = time.time()
-        while time.time() - start <= TIMEOUT + 20:
+        while time.time() - start <= TIMEOUT + 30:
             if not any(p.is_alive() for p in session_ch):
                 # All the processes have finished, break now.
                 for s in session_ch:
@@ -326,6 +329,14 @@ def main():
 
         #killtree(os.getpid())
         kill_processes()
+        
+        if platform == "linux" or platform == "linux2":
+            print("Cleaning temp files")
+            for root, dirs, files in os.walk('/tmp/'):
+                for f in files:
+                    os.unlink(os.path.join(root, f))
+                for d in dirs:
+                    shutil.rmtree(os.path.join(root, d))
 
 
     print('One last write')
@@ -578,13 +589,17 @@ def gui_thread(stop, pause, fails, LIMIT_CPU):
     ]
     window = sg.Window('My Program', layout, size=(400, 400), finalize=True)
 
+    start = time.time()
     count = 0.0
+    pausebutton = False
     while fails.value < nr_fails and not stop.value:
         event, values = window.read(1)
         if event == 'Pause crawling':
+            pausebutton = True
             pause.value = True
             window['-TEXT-'].update('Pause')
         if event == 'Resume':
+            pausebutton = False
             pause.value = False
             window['-TEXT-'].update('')
         if event == 'Stop crawling':
@@ -612,8 +627,15 @@ def gui_thread(stop, pause, fails, LIMIT_CPU):
         line = "CPU " + str(cpu) + "% - RAM " + str(ram) + "% cpu " + str(LIMIT_CPU.value)
         line += ' count ' + str(count) + '\n'
 
-        if count > 6:
-            LIMIT_CPU.value -= 2
+        '''if pausebutton == False and count > 9:
+            pause.value = True
+            line += '\n' + ' CPU or RAM usage too high pausing threads'
+        if pause.value == True and pausebutton == False and count <= 9:
+            pause.value = False'''
+            
+        if count > 9:
+            pause.value = False
+            LIMIT_CPU.value -= 1
             fails.value = nr_fails
             line += '\n' + ' CPU or RAM usage too high reducing CPU threads'
 
@@ -621,6 +643,10 @@ def gui_thread(stop, pause, fails, LIMIT_CPU):
 
         with open(BASE_PATH + "resources.txt", "a") as file:
             file.write(time.ctime() + " " + line)
+        
+        # Signal that threads need to be restarted (to be able to flush the tmp folder and keep nr of threads at max)
+        if (time.time() - start > 60*60): # 60s*60m = 1hour
+            fails.value = nr_fails
 
         time.sleep(1)
 
@@ -776,6 +802,24 @@ def check_response(url):
             response = False
     # print(url + " -> " + str(response))
     return response
+    
+    
+# Try the website if it is alive
+def check_response2(url):
+    try:
+        socket.getaddrinfo(url, 80)
+        response = url
+    except:
+        try:
+            socket.getaddrinfo("www." + url, 80)
+            response = "www." + url
+        except:
+            response = False
+    # print(url + " -> " + str(response))
+    return response
+    
+    
+print(check_response2("google.com"))
 
 
 # writing to cookies variable
@@ -824,7 +868,7 @@ def get_redirects(driver, visit_id, redirects, all_requests):
 
 # This is the session that visits the website
 def session(lock, stop, start_time, short_url, url, visit_type, site_nr, fails, cookies, cookies2, visit_id, visits,
-            elements, urls, runn, LIMIT_CPU, redirects, all_requests):
+            elements, urls, runn, LIMIT_CPU, redirects, all_requests, thread_nr):
     print('')
     #pprint.pprint(list(urls))
     print(str(runn.value) + '-(' + str(site_nr) + '-' + str(visit_type) + ') Thread started ' + url + " - Visit_id: " + str(visit_id) + " - Visit_type: " + str(
@@ -921,20 +965,8 @@ def session(lock, stop, start_time, short_url, url, visit_type, site_nr, fails, 
         type_text = "MODIFY"
     elif visit_type == 4:
         type_text = "SAVE"
-
-    # starting up webdriver
-    if BROWSER == "chrome":
-        # driver = webdriver.Chrome(service=Service(PATH_CHROME), options=options)
-        driver = webdriver.Chrome(options=options, desired_capabilities=capabilities, seleniumwire_options={})
-    if BROWSER == "firefox":
-        driver = webdriver.Firefox(service=Service(PATH_FIREFOX), options=options, desired_capabilities=capabilities, seleniumwire_options={"enable_har":True})
-
-    driver.set_window_size(1920, 1080)
-    # driver.set_page_load_timeout(10)
-    driver.set_script_timeout(10)
-    driver.request_interceptor = interceptor
-
-    #############################
+        
+    ports = [9951, 9952, 9953, 9954, 9955, 9956, 9957, 9958, 9959, 9960, 9961, 9962, 9963, 9964, 9965, 9966, 9967, 9968, 9969, 9970, 9971, 9972, 9973, 9974, 9975, 9976, 9977, 9978, 9979, 9980, 9981]
 
     # Check database for entries
     with lock:
@@ -945,9 +977,24 @@ def session(lock, stop, start_time, short_url, url, visit_type, site_nr, fails, 
         conn.close()
         # print(res)
 
+    # starting up webdriver
+    if BROWSER == "chrome":
+        # driver = webdriver.Chrome(service=Service(PATH_CHROME), options=options)
+        driver = webdriver.Chrome(service=Service(PATH_CHROME), options=options, desired_capabilities=capabilities, seleniumwire_options={'verify_ssl': False, 'backend': 'mitmproxy', 'mitmproxy_log_level': 'INFO', 'port': ports[thread_nr]})
+    if BROWSER == "firefox":
+        driver = webdriver.Firefox(service=Service(PATH_FIREFOX), options=options, desired_capabilities=capabilities, seleniumwire_options={})
+
+    driver.set_window_size(1920, 1080)
+    # driver.set_page_load_timeout(10)
+    driver.set_script_timeout(10)
+    driver.request_interceptor = interceptor
+
+    #############################
+
     visit = False
     element_css = ""
-    if (res[0][3] == 0 and res[0][4] == 0) and visit_type == 0:
+    #if (res[0][3] == 0 and res[0][4] == 0) and visit_type == 0:
+    if res[0][3] == 0 and visit_type == 0:
         visit = True
         try:
             driver_time = time.time()
@@ -1232,7 +1279,7 @@ def session(lock, stop, start_time, short_url, url, visit_type, site_nr, fails, 
 
                                                         # Add the new visits for detected buttons to url list. If list is too low then add to end of list
                                                         try:
-                                                            urls.insert(runn.value + button_dict[button_type] * 2 + LIMIT_CPU, [site_nr, short_url, button_dict[button_type]])
+                                                            urls.insert(runn.value + button_dict[button_type] * 3 + LIMIT_CPU.value, [site_nr, short_url, button_dict[button_type]])
                                                         except:
                                                             urls.append([site_nr, short_url, button_dict[button_type]])
                                                         # print([site_nr, short_url, button_dict[button_type], 0, save_element_text, save_element_css, iframe_element_css])
@@ -1401,6 +1448,8 @@ def session(lock, stop, start_time, short_url, url, visit_type, site_nr, fails, 
                         time.sleep(0.5)
 
                     css_elements = driver.find_elements(By.CSS_SELECTOR, r[7])
+                    #print(css_elements)
+                    clicked = False
                     for n, element in enumerate(css_elements):
                         #print(element.text)
                         #print(r[6])
@@ -1408,6 +1457,7 @@ def session(lock, stop, start_time, short_url, url, visit_type, site_nr, fails, 
                             #print('element reached')
                             element.click()
                             time.sleep(3)
+                            clicked = True
 
                             # Save cookies
                             cookies_temp = driver.execute_cdp_cmd('Network.getAllCookies', {})['cookies']
@@ -1432,6 +1482,12 @@ def session(lock, stop, start_time, short_url, url, visit_type, site_nr, fails, 
 
                     '''if r[7]:
                         driver.switch_to.parent_frame()'''
+                        
+                    if not clicked:
+                        elements.append(
+                                [visit_id, r[1], r[2], r[3], 1, "# css_element not found", r[6], r[7], r[8], r[9],
+                                 r[10], r[11], r[12], r[13], r[14], r[15]])
+                        print(f"Element not found on site {r[2]}")
 
                 except TimeoutError as err:
                     print('({}) http://{} Timeout      {:.2f}-{:.2f}  (Error type {})'.format(site_nr, url,
@@ -1476,7 +1532,7 @@ def session(lock, stop, start_time, short_url, url, visit_type, site_nr, fails, 
             cookies.append([site_nr, short_url, None, None, None, None, cookies_voor, None, None])'''
 
     # driver.close()
-    # driver.quit()
+    driver.quit()
 
     if visit:
         print('URL visit finished - ' + short_url)
@@ -1507,7 +1563,7 @@ def session_checker(lock, thread_nr, runn, stop, pause, now, urls, fails, cookie
         short_url = urls[j - 1][1]
         visit_type = int(urls[j - 1][2])
 
-        visit_url = check_response(short_url)
+        visit_url = check_response2(short_url)
 
         visit_id = random.randrange(1, 1000000000000)
 
@@ -1521,7 +1577,7 @@ def session_checker(lock, thread_nr, runn, stop, pause, now, urls, fails, cookie
         else:
             p = Process(target=session, args=(
                 lock, stop, now, short_url, visit_url, visit_type, site_nr, fails, cookies, cookies2, visit_id, visits,
-                elements, urls, runn, LIMIT_CPU, redirects, all_requests))
+                elements, urls, runn, LIMIT_CPU, redirects, all_requests, thread_nr))
             p.start()
 
             start = time.time()
@@ -1546,7 +1602,7 @@ def session_checker(lock, thread_nr, runn, stop, pause, now, urls, fails, cookie
                         #cookies.append(
                         #    [visit_id, site_nr, short_url, "error", None, None, None, None, None])
                         visits.append([visit_id, site_nr, short_url, visit_type, "° Timeout", -1])
-                        elements.append([visit_id, site_nr, short_url, 0, 1, "° Timeout during session", "", "", "", "", "", "", "", "", "", ""])
+                        elements.append([visit_id, site_nr, short_url, visit_type, 1, "° Timeout during session", "", "", "", "", "", "", "", "", "", ""])
                 else:
                     p.terminate()
                     p.join()
