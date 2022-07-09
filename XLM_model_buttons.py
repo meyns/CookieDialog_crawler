@@ -1,148 +1,201 @@
 import os
+import random
 
 from simpletransformers.classification import ClassificationModel, ClassificationArgs
 import pandas as pd
 import logging
 import pprint
+import torch
 
 # Using simple transformers: https://github.com/ThilinaRajapakse/simpletransformers
 
-datadir = "D:/temp/cookie-notice selector/output"
+#datadir = "D:/temp/cookie-notice selector/output"
 
 logging.basicConfig(level=logging.INFO)
 transformers_logger = logging.getLogger("transformers")
 transformers_logger.setLevel(logging.WARNING)
 
-
-# Preparing train data
-'''train_data = [
-    ["Aragorn was the heir of Isildur", 1],
-    ["Frodo was the heir of Isildur", 0],
-]'''
-with open('D:/temp/cookie-notice selector/buttons.csv', 'r', encoding="utf-8") as file:
+# Preparing dataset
+with open('D:/Documenten/Maarten/Open universiteit/VAF/DATA/Classification file for buttons.csv', 'r', encoding="utf-8") as file:
     dataset = file.read().splitlines()
 
 for index, d in enumerate(dataset):
     dataset[index] = d.split(';')
+    dataset[index][3] = dataset[index][3].lower()
 
-#print(dataset)
+for i in range(1):
+    datadir = "D:/temp/training model buttons/" + str(i) + "/"
+    if not os.path.isdir(datadir):
+        dataset_shuffle = random.sample(dataset, len(dataset))
+        print(f'Start training {i}')
 
-# Preparing train data
-train_data = []
-for d in dataset[355:]:
-    train_data.append([d[3], d[4]])
+        training_group = int(len(dataset_shuffle) * 0.7)
+        eval_group = int((len(dataset_shuffle) - training_group) / 2)
+        prediction_group = len(dataset_shuffle) - training_group - eval_group
 
-train_df = pd.DataFrame(train_data)
-train_df.columns = ["text", "labels"]
+        print(f"Total length of dataset: {len(dataset_shuffle)}")
+        print(f"Length of training_group: {training_group}")
+        print(f"Length of eval group: {eval_group}")
+        print(f"Length of prediction group: {prediction_group}")
 
-# Preparing eval data
-eval_data = []
-for d in dataset[180:355]:
-    eval_data.append([d[3], d[4]])
-eval_df = pd.DataFrame(eval_data)
-eval_df.columns = ["text", "labels"]
+        # Preparing train data
+        train_data = []
+        for d in dataset_shuffle[:training_group]:
+            train_data.append([d[3].lower(), d[4]])
 
-# Optional model configuration
-#model_args = ClassificationArgs(num_train_epochs=3)
-model_args = ClassificationArgs()
-model_args.labels_list = ["ACCEPT", "DECLINE", "MODIFY", "SAVE", "OTHER"]
-model_args.output_dir = datadir
-model_args.num_train_epochs = 20
-model_args.learning_rate = 2e-05
-model_args.eval_batch_size = 20
-model_args.max_seq_length = 64
-model_args.encoding = 'utf-8'
-#model_args.process_count = 8
-model_args.evaluate_during_training = True
-model_args.use_multiprocessing_for_evaluation = False
-#model_args.sliding_window = True
-model_args.evaluate_each_epoch = True
+        train_df = pd.DataFrame(train_data)
+        train_df.columns = ["text", "labels"]
 
-if os.path.isdir(datadir):
-    print("Model is present, testing all data")
+        # Preparing eval data
+        eval_data = []
+        for d in dataset_shuffle[training_group:training_group + eval_group]:
+            eval_data.append([d[3].lower(), d[4]])
+        eval_df = pd.DataFrame(eval_data)
+        eval_df.columns = ["text", "labels"]
+
+        # Optional model configuration
+        #model_args = ClassificationArgs(num_train_epochs=3)
+        model_args = ClassificationArgs()
+        model_args.labels_list = ["ACCEPT", "DECLINE", "MODIFY", "SAVE", "OTHER"]
+        model_args.output_dir = datadir
+        model_args.cache_dir = datadir + "cache/"
+
+        model_args.learning_rate = 2e-05
+        model_args.train_batch_size = 32
+        model_args.eval_batch_size = 32
+        model_args.max_seq_length = 64
+        model_args.encoding = 'utf-8'
+        #model_args.process_count = 8
+        model_args.evaluate_during_training = True
+        model_args.evaluate_during_training_verbose = True
+        model_args.use_multiprocessing_for_evaluation = False
+        #model_args.sliding_window = True
+        model_args.evaluate_each_epoch = True
+        model_args.do_lower_case = True
+        model_args.save_model_every_epoch = False
+        model_args.save_steps = -1
+        model_args.save_eval_checkpoints = False
+        model_args.best_model_dir = datadir + "best_model/"
+        model_args.save_best_model = True
+
+        #Early stopping metric
+        model_args.num_train_epochs = 20
+        model_args.use_early_stopping = True
+        model_args.early_stopping_delta = 0.001
+        model_args.early_stopping_metric = "mcc"
+        model_args.early_stopping_metric_minimize = False
+        model_args.early_stopping_patience = 5
+        model_args.evaluate_during_training_steps = int(training_group/model_args.train_batch_size/3*4)
+
+        print(f'No model preset, doing training {i}')
+
+        # Create a ClassificationModel
+        model = ClassificationModel(
+            "xlmroberta", "xlm-roberta-base", num_labels=5,
+            # "xlmroberta", "facebook/xlm-roberta-xxl", #Download 40GB
+            args=model_args, use_cuda=False
+        )  # FutureWarning: This implementation of AdamW is deprecated and will be removed in a future version. Use the PyTorch implementation torch.optim.AdamW instead, or set `no_deprecation_warning=True` to disable this warning
+
+        # Train the model
+        model.train_model(train_df, eval_df=eval_df)
+        print('--------------model trained--------------------')
+
+        # Prepare predictions for the dataset
+        pred_data = []
+        res_data = []
+        for d in dataset_shuffle[training_group + eval_group:training_group + eval_group + prediction_group]:
+            pred_data.append(d[3].lower())
+            res_data.append(d[4])
+
+        print('--------------Doing predictions on small dataset--------------------')
+
+        # Make predictions with the model
+        predictions, raw_outputs = model.predict(pred_data)
+
+        # results = []
+        right = 0
+        wrong = 0
+        for index in range(len(pred_data)):
+            # print(predictions[index], end=" - ")
+            # print(res_data[index])
+            # results.append([predictions[index], res_data[index]])
+            if res_data[index] == predictions[index]:
+                right += 1
+            else:
+                wrong += 1
+                print(index, end=" - ")
+                print(pred_data[index], end=" - ")
+                print(res_data[index], end=" - ")
+                print(predictions[index])
+
+        print('--------------prediction made on small dataset--------------------')
+
+
+    print('--------------Doing predictions on full dataset--------------------')
     # Reuse model
-    model = ClassificationModel()#"xlmroberta",
-    #model = ClassificationModel("xlm-roberta-xl",
-                                #datadir, use_cuda=False
-    #)
+    model = ClassificationModel("xlmroberta", datadir, use_cuda=False)
 
-else:
-    print("No model is present, doing training")
-    # Create a ClassificationModel
-    model = ClassificationModel(
-        "xlmroberta", "xlm-roberta-base", num_labels=5,
-        #"xlmroberta", "facebook/xlm-roberta-xxl", #Download 40GB
-        args=model_args, use_cuda=False
-    )  # FutureWarning: This implementation of AdamW is deprecated and will be removed in a future version. Use the PyTorch implementation torch.optim.AdamW instead, or set `no_deprecation_warning=True` to disable this warning
-
-    # Train the model
-    model.train_model(train_df, eval_df=eval_df)
-    print('--------------model trained--------------------')
-
-    print('--------------Testing model--------------------')
-    # Prepare predictions
+    # Prepare predictions for the whole dataset
     pred_data = []
     res_data = []
-    for d in dataset[:180]:
-        pred_data.append(d[3])
+    for d in dataset:
+        pred_data.append(d[3].lower())
         res_data.append(d[4])
 
     # Make predictions with the model
     predictions, raw_outputs = model.predict(pred_data)
 
-    results = []
-    for index, pred in enumerate(predictions):
-        # print(predictions[index], end=" - ")
-        # print(res_data[index])
-        results.append([pred, res_data[index], pred_data[index]])
-
-    # pprint.pprint(results)
+    #results = []
     right = 0
+    wrong = 0
+    for index in range(len(pred_data)):
+        #print(predictions[index], end=" - ")
+        #print(res_data[index])
+        #results.append([predictions[index], res_data[index]])
+        if res_data[index] == predictions[index]:
+            right += 1
+        else:
+            wrong += 1
+            print(index, end=" - ")
+            print(pred_data[index], end=" - ")
+            print(res_data[index], end=" - ")
+            print(predictions[index])
+
+    print("{} right".format(right))
+    print("{} wrong".format(wrong))
+
+    '''print('Make predictions per result')
+    right = 0
+    wrong = 0
+    for d in dataset:
+        predictions, raw_outputs = model.predict([d[3]])
+        if d[4] == predictions[0]:
+            right += 1
+        else:
+            wrong += 1
+            print(index, end=" - ")
+            print(d, end=" - ")
+            print(predictions[0])
+
+    print("{} right".format(right))
+    print("{} wrong".format(wrong))'''
+
+    #pprint.pprint(results)
+    '''right = 0
     wrong = 0
     for index, r in enumerate(results):
         if r[0] == r[1]:
             right += 1
         else:
             wrong += 1
-            print(r[0], end=" - ")
-            print(r[1], end=" - ")
-            print(r[2])
+            print(dataset[index], end=" - ")
+            print(r[0])'''
 
-    print("{} right".format(right))
-    print("{} wrong".format(wrong))
 
-    print('-------------Prediction data set made--------------------')
 
-print('---------------Doing prediction on all data')
-# Prepare predictions
-pred_data = []
-res_data = []
-for d in dataset:
-    pred_data.append(d[3])
-    res_data.append(d[4])
+    print('--------------prediction made on full dataset--------------------')
 
-# Make predictions with the model
-predictions, raw_outputs = model.predict(pred_data)
-
-results = []
-for index, pred in enumerate(predictions):
-    # print(predictions[index], end=" - ")
-    # print(res_data[index])
-    results.append([pred, res_data[index], pred_data[index]])
-
-# pprint.pprint(results)
-right = 0
-wrong = 0
-for index, r in enumerate(results):
-    if r[0] == r[1]:
-        right += 1
-    else:
-        wrong += 1
-        print(r[0], end=" - ")
-        print(r[1], end=" - ")
-        print(r[2])
-
-print("{} right".format(right))
-print("{} wrong".format(wrong))
-
-print('--------------Full prediction made--------------------')
+    '''for p in pred_data:
+        result = model.predict([p])
+        print(p)
+        print(result)'''

@@ -9,18 +9,18 @@ from sys import platform
 # This file is used to populate the database for the big crawl, it includes the sites from the manual crawl
 
 BASE_PATH = "d:/temp/Selenium-model/"
-aerts_country_list = ['fr', 'ir', 'nl', 'co.uk', 'ch', 'lu', 'be', 'es', 'it', 'tr', 'se', 'pt', 'mt', 'fi', 'si', 'ro', 'de', 'lt', 'lv', 'gr', 'cz', 'hu', 'hr', 'sk', 'ee', 'no', 'bg', 'pl']
+aerts_country_list = ['fr', 'ie', 'nl', 'co.uk', 'ch', 'lu', 'be', 'es', 'it', 'tr', 'se', 'pt', 'mt', 'fi', 'si', 'ro', 'de', 'lt', 'lv', 'gr', 'cz', 'hu', 'hr', 'sk', 'ee', 'no', 'bg', 'pl']
 
 if platform == "linux" or platform == "linux2":
     BASE_PATH = "./data/" # Ubuntu
     buckets = [[0, 5000, 5000],
                [5000, 25000, 20000],
-               [25000, 100000, 32500],
-               [100000, 1000000, 32500]]
+               [25000, 100000, 30000],
+               [100000, 1000000, 45000]]
     buckets2 = [[0, 5000, 5000],
                 [5000, 25000, 20000],
-                [25000, 100000, 32500],
-                [100000, 1000000, 32500]]
+                [25000, 100000, 30000],
+                [100000, 1000000, 45000]]
 elif platform == "darwin":
     # OS X
     pass
@@ -28,23 +28,23 @@ elif platform == "win32":
     BASE_PATH = "d:/temp/Selenium-model/"
     buckets = [[0, 5000, 5000],
                [5000, 25000, 20000],
-               [25000, 100000, 32500],
-               [100000, 1000000, 32500]]
+               [25000, 100000, 30000],
+               [100000, 1000000, 45000]]
     buckets2 = [[0, 5000, 5000],
                 [5000, 25000, 20000],
-                [25000, 100000, 32500],
-                [100000, 1000000, 32500]]
+                [25000, 100000, 30000],
+                [100000, 1000000, 45000]]
 
 
 print('Getting manual list from Koen -> int(site_nr), url (zonder www.)')
-filename = "domains_18-06-2022.csv"
+filename = "list manual crawl final.csv"
 urls_manual_crawl = [] # manual crawl url list
 with open(BASE_PATH + filename) as file:
     lines = file.read()
     lines = lines.splitlines()
 
 for line in lines:
-    line = line.replace('"','').split(',')
+    line = line.replace('"','').split(';')
     urls_manual_crawl.append([int(line[0]), line[1].replace('www.','')])
 urls_manual_crawl.sort()
 
@@ -74,6 +74,9 @@ for url in urls_manual_crawl:
             buckets[k][1] -= 1
         if pos <= buckets[k][0]:
             buckets[k][0] -= 1
+    print(f"{len(final_urls)} urls added of 100000", end="\r")
+
+print('')
 
 print(buckets)
 print(len(list_1m))
@@ -94,8 +97,9 @@ for country in aerts_country_list:
 for site_nr, url in list_1m.items():
     for country in aerts_country_list:
         if len(urls_top_500[country]) < 500:
-            if url.endswith("." + country):
+            if url.endswith("." + country) and url.count('.') == 1:
                 urls_top_500[country].append([site_nr, url])
+                print(f"{len(urls_top_500)} urls added to top_500", end="\r")
 
 '''for country, urls in urls_top_500.items():
     print(f"{country} {len(urls)}")'''
@@ -117,12 +121,14 @@ for country, sites_from_country in urls_top_500.items():
                     buckets[k][1] -= 1
                 if pos <= buckets[k][0]:
                     buckets[k][0] -= 1
+            print(f"{len(final_urls_top_500)} urls added to top_500", end="\r")
         except:
             print(f"Skipping url because already filtered by manual list: {url[0]}-{url[1]}")
 
 final_urls_top_500.sort()
 for url in final_urls_top_500:
     final_urls.append(url)
+    print(f"{len(final_urls)} urls added of 100000", end="\r")
 
 print(buckets)
 print(len(list_1m))
@@ -136,12 +142,15 @@ for url in final_urls:
 print(count_buckets)
 
 print("Filling final list with extra sites to fill bucket")
+print('')
 list_1m = list(list_1m.items())
 for k in range(4):
     print(buckets[k])
     if buckets[k][2] == (buckets[k][1] - buckets[k][0]):
         for line in list_1m[buckets[k][0]:buckets[k][1]]:
             final_urls.append([line[0], line[1], 0])
+            print(f"{len(final_urls)} urls added of 100000", end="\r")
+
         #print(urls)
     else:
         sample = random.sample(range(buckets[k][0], buckets[k][1]), buckets[k][2])
@@ -150,6 +159,7 @@ for k in range(4):
         for s in sample:
             #print(s)
             final_urls.append([list_1m[s][0], list_1m[s][1], 0])
+            print(f"{len(final_urls)} urls added of 100000", end="\r")
     #print(len(final_urls))
 
 
@@ -183,11 +193,13 @@ cursor.execute(
 cursor.execute(
     "CREATE TABLE if not exists cookies (visit_id bigint, before_after varchar(24), short_url varchar(255), domain varchar(255), expires float(24), httpOnly bool, name varchar(255), path varchar(255), priority varchar(24), sameParty bool, sameSite varchar(25), secure bool, session bool, size int, sourcePort int, sourceScheme varchar(255), value varchar(255))")
 cursor.execute(
-    "CREATE TABLE if not exists elements (visit_id bigint, site_nr int, sitename varchar(255), element_type tinyint, visited tinyint, result varchar(255), element_text varchar(255), element_css varchar(255), iframe_css varchar(255), location_x int, location_y int, text_color varchar(255), background_color varchar(255), width varchar(24), height varchar(24), font_size varchar(24), PRIMARY KEY (site_nr, element_type))")
+    "CREATE TABLE if not exists elements (visit_id bigint, site_nr int, sitename varchar(255), element_type tinyint, visited tinyint, result varchar(255), element_text varchar(1024), element_css varchar(255), iframe_css varchar(255), location_x int, location_y int, text_color varchar(255), background_color varchar(255), width varchar(24), height varchar(24), font_size varchar(24), PRIMARY KEY (site_nr, element_type))")
 cursor.execute(
     "CREATE TABLE if not exists redirects (visit_id bigint, status_code int, date varchar(32), url_from varchar(1024), url_to varchar(1024), content_type varchar(264))")
 cursor.execute(
     "CREATE TABLE if not exists all_requests (visit_id bigint, status_code int, date varchar(32), url_from varchar(1024), url_to varchar(1024), content_type varchar(264))")
+cursor.execute(
+    "CREATE TABLE if not exists predictions (visit_id bigint, element_type varchar(32), element_type2 varchar(32), element_text varchar(1024), prediction varchar(32))")
 # Fill in all rows of to be visited websites if they do not exist
 for url in final_urls:
     #print(url)

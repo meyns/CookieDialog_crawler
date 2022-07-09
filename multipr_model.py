@@ -4,9 +4,11 @@ import random
 import sqlite3
 import pprint
 
-#from selenium import webdriver
+from selenium import webdriver
 #import seleniumwire.undetected_chromedriver as webdriver
-from seleniumwire import webdriver
+#from seleniumwire import webdriver
+import undetected_chromedriver as uc
+from selenium_stealth import stealth
 from selenium.common.exceptions import *
 from selenium.webdriver import DesiredCapabilities
 from selenium.webdriver.common.by import By
@@ -45,6 +47,7 @@ elif platform == "win32":
     ML_dir_cookie_dialog = "D:/temp/cookie-notice selector backup/output/"
     ML_dir_buttons = "D:/temp/cookie-notice selector/output 10epochs 2e05 64bs 10 evalbs 64maxsl/"
     BASE_PATH = "d:/temp/Selenium-model/"
+    PATH_CHROME = "./chromedriver.exe"
 
 #PATH_CHROME = './chromedriver.exe'
 PATH_FIREFOX = 'D:/Documenten/Maarten/Open universiteit/VAF/selenium/geckodriver.exe'
@@ -56,11 +59,11 @@ PATH_FIREFOX = 'D:/Documenten/Maarten/Open universiteit/VAF/selenium/geckodriver
 
 # BASE_PATH = "Selenium/" # voor docker run
 
-TIMEOUT = 90
+TIMEOUT = 100
 TYPES_WEBSITES = []  # BE NL COM EU ORG COM
 BROWSER = "chrome"  # firefox,chrome,edge,safari
 RUNS = 1  # how many repeats
-nr_fails = 200 # How many fails before restarting processes
+nr_fails = 100 # How many fails before restarting processes
 
 button_dict = {"ACCEPT": 1,
                "DECLINE": 2,
@@ -70,10 +73,11 @@ button_dict = {"ACCEPT": 1,
 
 MAKE_SCREENSHOTS = True
 
-user_agents = ["Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/101.0.4951.67 Safari/537.36",
+user_agents = ["Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/103.0.0.0 Safari/537.36",
+            "Mozilla/5.0 (Windows NT 10.0; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/103.0.0.0 Safari/537.36",
+               "Mozilla/5.0 (Windows NT 10.0) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/103.0.0.0 Safari/537.36",
+               "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/101.0.4951.67 Safari/537.36",
               "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/102.0.0.0 Safari/537.36",
-              "Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:100.0) Gecko/20100101 Firefox/100.0",
-              "Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:101.0) Gecko/20100101 Firefox/101.0",
               "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/102.0.5005.63 Safari/537.36"]
 
 def main():
@@ -81,11 +85,11 @@ def main():
     LIMIT_CPU = Value('i', 1)
 
     if platform == "linux" or platform == "linux2":
-        LIMIT_CPU.value = 18
+        LIMIT_CPU.value = 16
+        kill_processes()
     elif platform == "win32":
-        LIMIT_CPU.value = 2
+        LIMIT_CPU.value = 1
 
-    kill_processes()
 
     logging.basicConfig(level=logging.ERROR)
     transformers_logger = logging.getLogger("simpletransformers")
@@ -102,74 +106,6 @@ def main():
 
     if not os.path.exists(BASE_PATH + 'cookies.db'):
         import populate_database
-
-    ''''# Load list of websites
-    # urls = []
-    urls = Manager().list([])
-
-    with open('top-1m.csv') as file:
-        # lines = file.readlines()
-        lines = [next(file) for x in range(START_SITE + LIMIT_NR_SITES)]
-    lines = lines[START_SITE - 1:-1]
-    # print(lines)
-
-    if LIMIT_NR_SITES < 100:
-        batch_size = LIMIT_NR_SITES
-    else:
-        batch_size = 100
-    batch = 0
-    while batch < LIMIT_NR_SITES:
-        for visit_type in range(1, 2):  # 0=collect elements 1=accept 2=decline 3=modify 4=save
-            append = False
-            for line in lines[batch:batch + batch_size]:
-                line2 = line.replace('\n', "").split(",")
-                if not TYPES_WEBSITES or any(type in line2[1] for type in TYPES_WEBSITES):
-                    urls.append([line2[0], line2[1], visit_type])
-        batch += batch_size
-    # print(urls)
-
-    # Seting up databases if not exisits
-    print('setting up database')
-    conn = sqlite3.connect(BASE_PATH + 'cookies.db')
-    cursor = conn.cursor()
-    cursor.execute(
-        "CREATE TABLE if not exists cookie_numbers (site_nr int PRIMARY KEY, sitename varchar(255), visit_result varchar(255), method varchar(24), button_accept varchar(255), button_decline varchar(255), cookies_before int, cookies_after_accept int, cookies_after_decline int)")
-    cursor.execute(
-        "CREATE TABLE if not exists visits (site_nr int, sitename varchar(255), visit_type int, visit_nr int, site_url varchar(255))")
-    cursor.execute(
-        "CREATE TABLE if not exists cookies (visit_id int, before_after varchar(24), short_url varchar(255), domain varchar(255), expires float(24), httpOnly bool, name varchar(255), path varchar(255), priority varchar(24), sameParty bool, sameSite varchar(25), secure bool, session bool, size int, sourcePort int, sourceScheme varchar(255), value varchar(255))")
-    cursor.execute(
-        "CREATE TABLE if not exists elements (site_nr int, sitename varchar(255), element_type int, visited int, element_text varchar(255), element_css varchar(255), iframe_css varchar(255), text_color varchar(255), background_color varchar(255), width varchar(24), height varchar(24), font_size varchar(24), PRIMARY KEY (site_nr, element_type))")
-    # Fill in all rows of to be visited websites if they do not exist
-    for url in urls:
-        print(url)
-        # cursor.execute("INSERT OR IGNORE INTO cookie_numbers VALUES (?,?,?,?,?,?,?,?,?)", (url[0], url[1], None, None, None, None, None, None, None))
-        cursor.execute("INSERT OR IGNORE INTO cookie_numbers (site_nr, sitename) VALUES (?,?)",
-                       (url[0], url[1]))
-        cursor.execute("INSERT OR IGNORE INTO elements (site_nr, sitename, element_type, visited) VALUES (?,?,?,?)",
-                       (url[0], url[1], 0, 0))
-    cursor.execute('commit')
-    cursor.close()
-    conn.close()'''
-
-    '''# Read in buttons list
-    accept_buttons_list = []
-    try:
-        file = open('accept_buttons_list.txt', 'r')
-        accept_buttons_list = file.read().splitlines()
-        file.close()
-        # print(buttons_list)
-    except:
-        pass
-
-    decline_buttons_list = []
-    try:
-        file = open('decline_buttons_list.txt', 'r')
-        decline_buttons_list = file.read().splitlines()
-        file.close()
-        # print(buttons_list)
-    except:
-        pass'''
 
     # read in already visited sites
     previously_visited_nrs = [[], []]
@@ -206,13 +142,13 @@ def main():
     res = cursor.fetchall()
     conn.close()
 
-    #random.shuffle(res)
-    print(res)
     urls = Manager().list([])
 
     for r in res:
         urls.append(list(r))
-    print(urls)
+    print("First 100 sites to visit:")
+    print(urls[:100])
+    print(f"Number of sites left to visit: {len(urls)}")
 
     now = time.time()
 
@@ -222,6 +158,7 @@ def main():
     elements = Manager().list([])
     redirects = Manager().list([])
     all_requests = Manager().list([])
+    predictions = Manager().list([])
     lock = Lock()
 
     session_ch = []
@@ -251,8 +188,8 @@ def main():
     print(previously_visited_nrs)'''
 
     # start processes
-    while not stop.value:
-        print('Staring while loop')
+    while not stop.value and LIMIT_CPU.value > 0:
+        print('Starting while loop')
         print("Limit CPU: " + str(LIMIT_CPU.value))
 
         # Start GUI thread
@@ -261,7 +198,7 @@ def main():
 
         # start writing process
         o = Process(target=writing_thread,
-                    args=(lock, urls, stop, pause, fails, cookies, cookies2, visits, do_not_visit, elements, redirects, all_requests))
+                    args=(lock, urls, stop, pause, fails, cookies, cookies2, visits, do_not_visit, elements, redirects, all_requests, predictions))
         o.start()
 
         fails.value = 0
@@ -270,7 +207,7 @@ def main():
         for thread_nr in range(LIMIT_CPU.value):
             p = Process(target=session_checker, args=(
                 lock, thread_nr, runn, stop, pause, now, urls, fails, cookies, cookies2, previously_visited_nrs, visits,
-                do_not_visit, elements, LIMIT_CPU, redirects, all_requests))
+                do_not_visit, elements, LIMIT_CPU, redirects, all_requests, predictions))
             session_ch.append(p)
             p.start()
             time.sleep(60 / LIMIT_CPU.value)  # To make sure not all threads start at the same time
@@ -286,7 +223,7 @@ def main():
                 o.join()
                 del o
                 o = Process(target=writing_thread,
-                    args=(lock, urls, stop, pause, fails, cookies, cookies2, visits, do_not_visit, elements, redirects, all_requests))
+                    args=(lock, urls, stop, pause, fails, cookies, cookies2, visits, do_not_visit, elements, redirects, all_requests, predictions))
                 o.start()
             while pause.value == True:
                 time.sleep(1)
@@ -327,10 +264,8 @@ def main():
                     pass
             print("{} threads have timed out".format(i))
 
-        #killtree(os.getpid())
-        kill_processes()
-        
         if platform == "linux" or platform == "linux2":
+            kill_processes()
             print("Cleaning temp files")
             for root, dirs, files in os.walk('/tmp/'):
                 for f in files:
@@ -344,7 +279,7 @@ def main():
     print(cookies2)
     print(visits)
     print(elements)
-    writing(lock, urls, stop, cookies, cookies2, visits, do_not_visit, elements, redirects, all_requests)
+    writing(lock, urls, stop, cookies, cookies2, visits, do_not_visit, elements, redirects, all_requests, predictions)
 
     print('Main thread finished')
     killtree(os.getpid(), including_parent=True)
@@ -354,7 +289,10 @@ def main():
 # Interceptor voor seleniumwire (deze items worden geblokkeerd)
 def interceptor(request):
     # Block PNG, JPG, JPEG, GIF, ICO and MP3
-    if request.path.endswith(('.png', '.jpg', '.gif', '.jpeg', '.ico', '.mp3')):
+    #if request.path.endswith('.png') or request.path.endswith('.jpg') or request.path.endswith('.gif') or request.path.endswith('.jpeg') or request.path.endswith('.ico') or request.path.endswith('.mp3'):
+    if request.path.endswith('.png') or request.path.endswith('.jpg') or request.path.endswith(
+            '.gif') or request.path.endswith('.jpeg') or request.path.endswith('.ico') or request.path.endswith(
+            '.mp3'):
         request.abort()
 
 
@@ -591,6 +529,7 @@ def gui_thread(stop, pause, fails, LIMIT_CPU):
 
     start = time.time()
     count = 0.0
+    count2 = 0
     pausebutton = False
     while fails.value < nr_fails and not stop.value:
         event, values = window.read(1)
@@ -611,10 +550,16 @@ def gui_thread(stop, pause, fails, LIMIT_CPU):
 
         cpu = psutil.cpu_percent()
         ram = psutil.virtual_memory().percent
+
+        line = "CPU " + str(cpu) + "% - RAM " + str(ram) + "% cpu " + str(LIMIT_CPU.value)
+        line += ' count ' + str(count)
+
         if cpu > 70:
             line += " CPU WARNING"
+            count2 = 0
         if ram > 70:
             line += " RAM WARNING"
+            count2 = 0
         # Check if resource usage is too high, count 5 times and then stop program
         if ram > 90:
             count += 3 # RAM moet bijna direct gestopt worden
@@ -624,8 +569,7 @@ def gui_thread(stop, pause, fails, LIMIT_CPU):
             count -= 0.5
             count = round(count, 1)
 
-        line = "CPU " + str(cpu) + "% - RAM " + str(ram) + "% cpu " + str(LIMIT_CPU.value)
-        line += ' count ' + str(count) + '\n'
+        line += '\n'
 
         '''if pausebutton == False and count > 9:
             pause.value = True
@@ -637,7 +581,13 @@ def gui_thread(stop, pause, fails, LIMIT_CPU):
             pause.value = False
             LIMIT_CPU.value -= 1
             fails.value = nr_fails
-            line += '\n' + ' CPU or RAM usage too high reducing CPU threads'
+            line += ' CPU or RAM usage too high reducing CPU threads' + '\n'
+
+        if count2 > 30 * 60:
+            count2 = 0
+            LIMIT_CPU.value += 1
+            fails.value = nr_fails
+            line += ' raising cpu limit not enough resources used last 30 min' + '\n'
 
         window['-CPU-'].update(line + window['-CPU-'].get())
 
@@ -648,12 +598,14 @@ def gui_thread(stop, pause, fails, LIMIT_CPU):
         if (time.time() - start > 60*60): # 60s*60m = 1hour
             fails.value = nr_fails
 
+        count2 += 1
+
         time.sleep(1)
 
     window.close()
 
 
-def writing_thread(lock, urls, stop, pause, fails, cookies, cookies2, visits, do_not_visit, elements, redirects, all_requests):
+def writing_thread(lock, urls, stop, pause, fails, cookies, cookies2, visits, do_not_visit, elements, redirects, all_requests, predictions):
     print("Starting writing thread")
     while fails.value < nr_fails and not stop.value:
         time_slept = 0
@@ -663,11 +615,11 @@ def writing_thread(lock, urls, stop, pause, fails, cookies, cookies2, visits, do
             time.sleep(1)
             time_slept += 1
         if time_slept == 30:
-            writing(lock, urls, stop, cookies, cookies2, visits, do_not_visit, elements, redirects, all_requests)
+            writing(lock, urls, stop, cookies, cookies2, visits, do_not_visit, elements, redirects, all_requests, predictions)
     print('End writing thread')
 
 
-def writing(lock, urls, stop, cookies, cookies2, visits, do_not_visit, elements, redirects, all_requests):
+def writing(lock, urls, stop, cookies, cookies2, visits, do_not_visit, elements, redirects, all_requests, predictions):
     # print('Locking cookie data')
     cookies_dupl = []
     cookies2_dupl = []
@@ -675,6 +627,7 @@ def writing(lock, urls, stop, cookies, cookies2, visits, do_not_visit, elements,
     elements_dupl = []
     redirects_dupl = []
     all_requests_dupl = []
+    predictions_dupl = []
 
     with lock:
         '''if len(cookies) > 0:
@@ -695,6 +648,9 @@ def writing(lock, urls, stop, cookies, cookies2, visits, do_not_visit, elements,
         if len(all_requests) > 0:
             all_requests_dupl = list(all_requests)
             del all_requests[:]
+        if len(predictions) > 0:
+            predictions_dupl = list(predictions)
+            del predictions[:]
 
     with lock:
         conn = sqlite3.connect(BASE_PATH + 'cookies.db')
@@ -731,12 +687,23 @@ def writing(lock, urls, stop, cookies, cookies2, visits, do_not_visit, elements,
             cursor = conn.cursor()
             for e in elements_dupl:
                 #print(e)
-                cursor.execute('INSERT OR IGNORE INTO elements VALUES(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)',
-                               (e[0], e[1], e[2], e[3], e[4], e[5], e[6], e[7], e[8], e[9], e[10], e[11], e[12], e[13], e[14], e[15]))
-                cursor.execute('UPDATE elements SET visit_id = ?, visited = ?, result = ?, element_text = ?, element_css = ?, iframe_css = ?, '
-                               'location_x = ?, location_y = ?, text_color = ?, background_color = ?, width = ?, height = ?, '
-                               'font_size = ? WHERE site_nr = ? AND element_type = ?',
-                                (e[0], e[4], e[5], e[6], e[7], e[8], e[9], e[10], e[11], e[12], e[13], e[14], e[14], e[1], e[3]))
+                if len(e) == 7:
+                    cursor.execute('INSERT OR IGNORE INTO elements VALUES(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)',
+                                   (e[0], e[1], e[2], e[3], e[4], e[5], e[6], "", "", "", "", "", "", "", "", ""))
+                    cursor.execute('UPDATE elements SET visit_id = ?, visited = ?, result = ?, element_text = ? WHERE site_nr = ? and sitename = ? and element_type = ?',
+                        (e[0], e[4], e[5], e[6], e[1], e[2], e[3]))
+                elif len(e) == 6:
+                    cursor.execute('INSERT OR IGNORE INTO elements VALUES(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)',
+                                   (e[0], e[1], e[2], e[3], e[4], e[5], "", "", "", "", "", "", "", "", "", ""))
+                    cursor.execute('UPDATE elements SET visit_id = ?, visited = ?, result = ? WHERE site_nr = ? and sitename = ? and element_type = ?',
+                        (e[0], e[4], e[5], e[1], e[2], e[3]))
+                else:
+                    cursor.execute('INSERT OR IGNORE INTO elements VALUES(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)',
+                                   (e[0], e[1], e[2], e[3], e[4], e[5], e[6], e[7], e[8], e[9], e[10], e[11], e[12], e[13], e[14], e[15]))
+                    cursor.execute('UPDATE elements SET visit_id = ?, visited = ?, result = ?, element_text = ?, element_css = ?, iframe_css = ?, '
+                                   'location_x = ?, location_y = ?, text_color = ?, background_color = ?, width = ?, height = ?, '
+                                   'font_size = ? WHERE site_nr = ? AND element_type = ?',
+                                    (e[0], e[4], e[5], e[6], e[7], e[8], e[9], e[10], e[11], e[12], e[13], e[14], e[14], e[1], e[3]))
             cursor.execute('COMMIT')
             cursor.close()
 
@@ -755,6 +722,14 @@ def writing(lock, urls, stop, cookies, cookies2, visits, do_not_visit, elements,
             for a in all_requests_dupl:
                 cursor.execute('INSERT INTO all_requests VALUES(?, ?, ?, ?, ?, ?)',
                                (a[0], a[1], a[2], a[3], a[4], a[5]))
+            cursor.execute('COMMIT')
+            cursor.close()
+
+        if len(predictions_dupl) > 0:
+            cursor = conn.cursor()
+            for p in predictions_dupl:
+                cursor.execute('INSERT INTO predictions VALUES(?,?,?,?,?)',
+                               (p[0], p[1], p[2], p[3], p[4]))
             cursor.execute('COMMIT')
             cursor.close()
 
@@ -818,9 +793,6 @@ def check_response2(url):
     # print(url + " -> " + str(response))
     return response
     
-    
-print(check_response2("google.com"))
-
 
 # writing to cookies variable
 def write_cookies(before_after, visit_id, cookies_temp, cookies2, short_url, driver_time):
@@ -848,7 +820,7 @@ def write_cookies(before_after, visit_id, cookies_temp, cookies2, short_url, dri
         cookies2.append(list_temp)
         # print(list_temp)
 
-
+# Haalt alle redirects op (werkt enkel met Selenium-wire)
 def get_redirects(driver, visit_id, redirects, all_requests):
     for req in driver.requests:
         #print(req.response.headers)
@@ -868,7 +840,7 @@ def get_redirects(driver, visit_id, redirects, all_requests):
 
 # This is the session that visits the website
 def session(lock, stop, start_time, short_url, url, visit_type, site_nr, fails, cookies, cookies2, visit_id, visits,
-            elements, urls, runn, LIMIT_CPU, redirects, all_requests, thread_nr):
+            elements, urls, runn, LIMIT_CPU, redirects, all_requests, thread_nr, predictions):
     print('')
     #pprint.pprint(list(urls))
     print(str(runn.value) + '-(' + str(site_nr) + '-' + str(visit_type) + ') Thread started ' + url + " - Visit_id: " + str(visit_id) + " - Visit_type: " + str(
@@ -889,48 +861,49 @@ def session(lock, stop, start_time, short_url, url, visit_type, site_nr, fails, 
     options.add_argument('--disable-extensions')
     options.add_argument('--disable-cookie-encryption')  # ?
     # options.add_argument('--https_only_mode_enabled')
-    options.page_load_strategy = 'eager'  # eager -> enkel DOM laden, normal -> alles laden
+    options.page_load_strategy = 'normal'  # eager -> enkel DOM laden, normal -> alles laden
     options.add_argument(
-        "--user-agent=" + user_agents[visit_type])
+        "user-agent=" + user_agents[visit_type])
     # ????    options.enable_mobile()
-    options.add_argument("--disable-notifications")
+    #options.add_argument("--disable-notifications")
     # options.add_argument("--disable-geolocation")
     # options.add_argument("--disable-media-stream")
-    options.add_argument("--disable-infobars")
+    #options.add_argument("--disable-infobars")
     options.add_argument("--log-level=3")
-    options.add_argument("--verbose")
+    #options.add_argument("--verbose")
     #options.add_experimental_option('excludeSwitches', ['enable-logging'])
+    options.add_argument("--disable-automation")
     options.add_argument("enable-automation")
-    #options.add_argument("--no-sandbox")
+    options.add_argument("--no-sandbox")
     options.add_argument("--disable-dev-shm-usage")
     options.add_argument("--use--fake-ui-for-media-stream")
-    # options.add_argument("--disable-browser-side-navigation")
-    # options.add_argument("--dns-prefetch-disable")
+    options.add_argument("--disable-browser-side-navigation")
+    options.add_argument("--dns-prefetch-disable")
     # options.add_experimental_option("prefs", {"profile.default_content_setting_values.geolocation": 1,
     #                                          "profile.managed_default_content_settings.images": 2})
 
     # Make detection of automation less likely
-    #options.add_experimental_option("excludeSwitches", ["enable-automation"])
-    #options.add_experimental_option('useAutomationExtension', False)
+    options.add_experimental_option("useAutomationExtension", False)
+    options.add_experimental_option("excludeSwitches", ["enable-automation"])
     options.add_argument('--useAutomationExtension=false')
 
     # This works only in headless for blocking images
-    options.add_argument('--blink-settings=imagesEnabled=false')
-    options.add_argument('--blink-settings=loadsImagesAutomatically=false')
-    #options.add_argument('--disable-blink-features=AutomationControlled')
+    '''options.add_argument('--blink-settings=imagesEnabled=false')
+    options.add_argument('--blink-settings=loadsImagesAutomatically=false')'''
+    options.add_argument('--disable-blink-features=AutomationControlled')
 
     options.add_argument('--allow-insecure-localhost')
     options.add_argument('--ignore-ssl-errors=yes')
     options.add_argument('--ignore-certificate-errors')
 
     capabilities = DesiredCapabilities.CHROME
-    capabilities['goog:loggingPrefs'] = {'performance': 'ALL'}
+    #capabilities['goog:loggingPrefs'] = {'performance': 'ALL'}
 
-    capabilities['chromeOptions'] = {"prefs": {#"profile.default_content_settings.cookies": 2#,
+    '''capabilities['chromeOptions'] = {"prefs": {#"profile.default_content_settings.cookies": 2#,
                                                #"intl.accept_languages": 'nl'
                                                }
-                                     }
-    #capabilities['acceptSslCerts'] = True
+                                     }'''
+    capabilities['acceptSslCerts'] = True
     '''options.add_experimental_option("prefs", {#"profile.default_content_setting_values.geolocation": 1,
                                               #"profile.default_content_setting_values.cookies": 2,
                                               "profile.managed_default_content_setting_values.images": 2, #only works in headfull to block images
@@ -939,12 +912,14 @@ def session(lock, stop, start_time, short_url, url, visit_type, site_nr, fails, 
                                               #"intl.accept_languages": 'nl, nl-NL'
                                               }
                                     )'''
+
+    # Kan niet in combinatie met undetected chromedriver
     prefs = {  # "profile.default_content_setting_values.geolocation": 1,
-        # "profile.default_content_setting_values.cookies": 2,
-        "profile.managed_default_content_setting_values.images": 2,  # only works in headfull to block images
-        "profile.managed_default_content_settings.images": 2,
+        #"profile.default_content_setting_values.cookies": 2,
+        #"profile.managed_default_content_setting_values.images": 2,  # only works in headfull to block images
+        #"profile.managed_default_content_settings.images": 2,
         "profile.default_content_setting_values.notifications": 2,
-        # "intl.accept_languages": 'nl, nl-NL'
+        "intl.accept_languages": 'nl, nl-NL'
     }
     options.add_experimental_option("prefs", prefs)
 
@@ -965,8 +940,9 @@ def session(lock, stop, start_time, short_url, url, visit_type, site_nr, fails, 
         type_text = "MODIFY"
     elif visit_type == 4:
         type_text = "SAVE"
-        
-    ports = [9951, 9952, 9953, 9954, 9955, 9956, 9957, 9958, 9959, 9960, 9961, 9962, 9963, 9964, 9965, 9966, 9967, 9968, 9969, 9970, 9971, 9972, 9973, 9974, 9975, 9976, 9977, 9978, 9979, 9980, 9981]
+
+    # Dit werd gebruikt voor Selenium wire
+    #ports = [9951, 9952, 9953, 9954, 9955, 9956, 9957, 9958, 9959, 9960, 9961, 9962, 9963, 9964, 9965, 9966, 9967, 9968, 9969, 9970, 9971, 9972, 9973, 9974, 9975, 9976, 9977, 9978, 9979, 9980, 9981]
 
     # Check database for entries
     with lock:
@@ -979,15 +955,25 @@ def session(lock, stop, start_time, short_url, url, visit_type, site_nr, fails, 
 
     # starting up webdriver
     if BROWSER == "chrome":
-        # driver = webdriver.Chrome(service=Service(PATH_CHROME), options=options)
-        driver = webdriver.Chrome(service=Service(PATH_CHROME), options=options, desired_capabilities=capabilities, seleniumwire_options={'verify_ssl': False, 'backend': 'mitmproxy', 'mitmproxy_log_level': 'INFO', 'port': ports[thread_nr]})
+        driver = webdriver.Chrome(service=Service(PATH_CHROME), options=options, desired_capabilities=capabilities)
+        #driver = webdriver.Chrome(service=Service(PATH_CHROME), options=options, desired_capabilities=capabilities, seleniumwire_options={'verify_ssl': False, 'backend': 'mitmproxy', 'mitmproxy_log_level': 'INFO', 'port': ports[thread_nr]})
+        '''stealth(driver,
+                languages=["en-US", "en"],
+                vendor="Google Inc.",
+                platform="Win64",
+                webgl_vendor="Intel Inc.",
+                renderer="Intel Iris OpenGL Engine",
+                fix_hairline=True,
+                )''' # Results in missing cookies
+        #driver = uc.Chrome(se_subprocess=True)
     if BROWSER == "firefox":
-        driver = webdriver.Firefox(service=Service(PATH_FIREFOX), options=options, desired_capabilities=capabilities, seleniumwire_options={})
+        driver = webdriver.Firefox(service=Service(PATH_FIREFOX), options=options, desired_capabilities=capabilities)
 
     driver.set_window_size(1920, 1080)
     # driver.set_page_load_timeout(10)
     driver.set_script_timeout(10)
-    driver.request_interceptor = interceptor
+    #driver.request_interceptor = interceptor # Voor Selenium-wire
+    driver.execute_script("Object.defineProperty(navigator, 'webdriver', {get: () => undefined})")
 
     #############################
 
@@ -999,47 +985,44 @@ def session(lock, stop, start_time, short_url, url, visit_type, site_nr, fails, 
         try:
             driver_time = time.time()
             driver.get("http://" + url)
+            #driver.get("https://nowsecure.nl/") # cloudflare test
+            #driver.get("https://webscraping.pro/wp-content/uploads/2021/02/testresult2.html")
+            #driver.get("https://bot.sannysoft.com/") # Automation test
             time.sleep(5)
 
             # Count the non ascii characters if more than 30% are non-ascii characters then skip this site (probably chinese)
             html = driver.find_element(By.XPATH, "/*").text
             ascii_count = html.encode("ascii", "ignore") # Haalt alle normale letters uit de html
-            if len(ascii_count)/len(html) < 0.7:
+            if len(html) > 0 and len(ascii_count)/len(html) < 0.7: # Check for empty html because can be iframe
                 print(str(site_nr) + "-" + short_url + " - Skipping url because more non-ascii letters than ascii letters (probably chinese website)")
                 with open(BASE_PATH + "output.txt", "a") as file:
                     file.write(str(site_nr) + "°" + short_url + " Skipped because unreadable\n")
+                short_text = ''.join([x for i, x in enumerate(html.replace('\n', ' ')) if i < 1020])
                 cookies.append(
                         [visit_id, site_nr, short_url, "# unraedable", None, None, None, None, None])
                 elements.append(
-                    [visit_id, site_nr, short_url, 0, 1, "# Skipped unreadable", "", "", "", "", "", "", "", "", "", ""])
-                visits.append([visit_id, site_nr, short_url, visit_type, "# chinese", -1])
+                    [visit_id, site_nr, short_url, 0, 1, "# Skipped unreadable", short_text])
+                visits.append([visit_id, site_nr, short_url, visit_type, "# unreadable", -1])
 
-            elif not get_status_code(driver, driver.current_url) == 200:
-                print(str(site_nr) + "-" + short_url + " - Skipping url because not 200 status code")
-                with open(BASE_PATH + "output.txt", "a") as file:
-                    file.write(str(site_nr) + "°" + short_url + " Skipped because not 200 status code\n")
-                cookies.append(
-                    [visit_id, site_nr, short_url, "# no 200 response", None, None, None, None, None])
-                elements.append(
-                    [visit_id, site_nr, short_url, 0, 1, "# Skipped no 200 response", "", "", "", "", "", "", "", "", "", ""])
-                visits.append([visit_id, site_nr, short_url, visit_type, "no 200 response", -1])
-            elif "ERR_" in html or "_ERR" in html:
-                print(str(site_nr) + "-" + short_url + " - Skipping url because error code")
-                with open(BASE_PATH + "output.txt", "a") as file:
-                    file.write(str(site_nr) + "°" + short_url + " Skipping url because error code\n")
-                cookies.append(
-                    [visit_id, site_nr, short_url, "error code", None, None, None, None, None])
-                elements.append(
-                    [visit_id, site_nr, short_url, 0, 1, "# Skipped error code", "", "", "", "", "", "", "", "", "", ""])
-                visits.append([visit_id, site_nr, short_url, visit_type, "error code", -1])
-            elif "Website Blocked" in html or "This site is blocked due" in html or "block.opendns.com" in driver.current_url or "Bot detection" in html:
+            #elif not get_status_code(driver, driver.current_url) == 200:
+            #    print(str(site_nr) + "-" + short_url + " - Skipping url because not 200 status code")
+            #    with open(BASE_PATH + "output.txt", "a") as file:
+            #        file.write(str(site_nr) + "°" + short_url + " Skipped because not 200 status code\n")
+            #    cookies.append(
+            #        [visit_id, site_nr, short_url, "# no 200 response", None, None, None, None, None])
+            #    elements.append(
+            #        [visit_id, site_nr, short_url, 0, 1, "# Skipped no 200 response", "", "", "", "", "", "", "", "", "", ""])
+            #    visits.append([visit_id, site_nr, short_url, visit_type, "no 200 response", -1])
+
+            elif "ERR_" in html or "_ERR" in html or "Website Blocked" in html or "This site is blocked due" in html or "block.opendns.com" in driver.current_url or "Bot detection" in html or "DDoS protection by " in html:
                 print(str(site_nr) + "-" + short_url + " - Skipping url because website blocked")
                 with open(BASE_PATH + "output.txt", "a") as file:
-                    file.write(str(site_nr) + "°" + short_url + " Skipping url because website blocked\n")
+                    file.write(str(site_nr) + "°" + short_url + " Skipping url because website blocked or error\n")
+                short_text = ''.join([x for i, x in enumerate(html.replace('\n', ' ')) if i < 1020])
                 cookies.append(
-                    [visit_id, site_nr, short_url, "# Website blocked", None, None, None, None, None])
+                    [visit_id, site_nr, short_url, "# Website blocked or error", None, None, None, None, None])
                 elements.append(
-                    [visit_id, site_nr, short_url, 0, 1, "# Skipped website blocked", "", "", "", "", "", "", "", "", "", ""])
+                    [visit_id, site_nr, short_url, 0, 1, "# Skipped website blocked or error", short_text])
                 visits.append([visit_id, site_nr, short_url, visit_type, "# Website blocked", -1])
             else:
                 visits.append([visit_id, site_nr, short_url, visit_type, driver.current_url, -1])
@@ -1052,7 +1035,7 @@ def session(lock, stop, start_time, short_url, url, visit_type, site_nr, fails, 
                 write_cookies(0, visit_id, cookies_temp, cookies2, short_url, driver_time)
                 #write_cookies(0, visit_id, cookies_temp, cookies2, short_url)
                 visits.append([visit_id, site_nr, short_url, 0, driver.current_url, len(cookies_temp)])
-                get_redirects(driver, visit_id, redirects, all_requests)
+                #get_redirects(driver, visit_id, redirects, all_requests) # Enkel voor Selenium-wire
 
                 # Save screenshot
                 if MAKE_SCREENSHOTS:
@@ -1112,13 +1095,15 @@ def session(lock, stop, start_time, short_url, url, visit_type, site_nr, fails, 
                             # print(c.size['width'])
                             # print(c.size['height'])
                             #print(c.get_attribute('outerHTML'))
-                            iframe_test = (c.tag_name == 'iframe')
                             iframe_element_css = ""
+                            iframe_test = (c.tag_name == 'iframe')
                             if iframe_test:
                                 #iframe = c
                                 # Setting up CSS info for iframe element (only save when right iframe)
-                                iframe_element_class = "." + ".".join(
-                                    c.get_attribute('class').split())
+                                iframe_element_class = (c.get_attribute('class') or '')
+                                if not iframe_element_class == '':
+                                    iframe_element_class = "." + ".".join(
+                                        iframe_element_class.split())
                                 iframe_element_name = c.tag_name
                                 iframe_element_id = (c.get_attribute('id') or '')
                                 if not iframe_element_id == '':
@@ -1142,13 +1127,16 @@ def session(lock, stop, start_time, short_url, url, visit_type, site_nr, fails, 
                                 if (c.size['width'] > 10 or c.size['height'] > 10) and text3 and len(text3) >= 20:
                                     # Check for cookie dialog with trained model
                                     with lock:
-                                        predictions, raw_outputs = model_dialog.predict(
+                                        prediction_CD, raw_outputs = model_dialog.predict(
                                             [text3.lower().replace('\n', ' ').replace(';', ',')])
 
-                                    print("Prediction made, result: {} - {}".format(predictions[0], ''.join(
-                                        [x for i, x in enumerate(text3.replace('\n', ' ')) if i < 50])))
+                                    print("Prediction made, result: {} - {}".format(prediction_CD[0], ''.join(
+                                        [x for i, x in enumerate(text3.replace('\n', ' ')) if i < 124])))
+                                    short_text = ''.join(
+                                        [x for i, x in enumerate(text3.replace('\n', ' ')) if i < 1020])
+                                    predictions.append([visit_id, "cookie dialog", c.tag_name, short_text, prediction_CD[0]])
 
-                                    if predictions[0] == "True":
+                                    if prediction_CD[0] == "True":
                                         cookie_dialog_found = True
                                         if MAKE_SCREENSHOTS:
                                             try:
@@ -1184,10 +1172,16 @@ def session(lock, stop, start_time, short_url, url, visit_type, site_nr, fails, 
                                             location_x = ""
                                             location_y = ""
 
-                                        short_text = ''.join([x for i, x in enumerate(text3.replace('\n', ' ')) if i < 240])
+                                        if iframe_test:
+                                            iframe_element_css = iframe_element_name + iframe_element_class + iframe_element_id
+                                        else:
+                                            iframe_element_css = ''
 
+                                        short_text = ''.join([x for i, x in enumerate(text3.replace('\n', ' ')) if i < 1020])
+
+                                        # Add cookie dialog info to database
                                         elements.append([visit_id, site_nr, short_url, visit_type, 1, "Normal visit", short_text, "",
-                                                        "", location_x, location_y, text_color, background_color, width, height, font_size])
+                                                        iframe_element_css, location_x, location_y, text_color, background_color, width, height, font_size])
 
                                         # Extract elements from cookie dialog:
                                         # print(c.text)
@@ -1211,17 +1205,18 @@ def session(lock, stop, start_time, short_url, url, visit_type, site_nr, fails, 
                                                     # print(text)
 
                                                     # Check elements for buttons with trained model
-                                                    predictions2, raw_outputs2 = model_buttons.predict(
+                                                    prediction_B, raw_outputs2 = model_buttons.predict(
                                                         [text.replace("\n", " ")])
-                                                    print("Prediction made, result: {} - {}".format(predictions2[0],
+                                                    print("Prediction made, result: {} - {}".format(prediction_B[0],
                                                                                                     ''.join(
                                                                                                         [x for index, x in
                                                                                                          enumerate(
                                                                                                              text.replace(
                                                                                                                  '\n', ' '))
-                                                                                                         if index < 50])))
+                                                                                                         if index < 124])))
+                                                    predictions.append([visit_id, "button", el.tag_name, text, prediction_B[0]])
 
-                                                    button_type = predictions2[0]
+                                                    button_type = prediction_B[0]
 
                                                     if not button_type == "OTHER":
                                                         save_element_class = (el.get_attribute('class') or '')
@@ -1258,8 +1253,6 @@ def session(lock, stop, start_time, short_url, url, visit_type, site_nr, fails, 
                                                         if button_type == "ACCEPT":
                                                             element_text = save_element_text
                                                             element_css = save_element_css
-                                                            if iframe_test:
-                                                                iframe_element_css = iframe_element_name + iframe_element_class + iframe_element_id
 
                                                         # Writing buttons to csv file
                                                         line_to_add = str(site_nr).zfill(
@@ -1271,17 +1264,18 @@ def session(lock, stop, start_time, short_url, url, visit_type, site_nr, fails, 
                                                             file.write(line_to_add + '\n')
 
 
-                                                        # Writing to database
+                                                        # Writing to database all elements without OTHER
                                                         # [site nr, sitename, element_type, visited?, element_text, element_css]
                                                         elements.append([0, site_nr, short_url, button_dict[button_type], 0, "",
                                                                          save_element_text, save_element_css,
                                                                          iframe_element_css, location_x, location_y, text_color, background_color, width, height, font_size])
 
                                                         # Add the new visits for detected buttons to url list. If list is too low then add to end of list
-                                                        try:
-                                                            urls.insert(runn.value + button_dict[button_type] * 3 + LIMIT_CPU.value, [site_nr, short_url, button_dict[button_type]])
-                                                        except:
-                                                            urls.append([site_nr, short_url, button_dict[button_type]])
+                                                        if not button_type == 'ACCEPT':
+                                                            try:
+                                                                urls.insert(runn.value + button_dict[button_type] * 2 + LIMIT_CPU.value, [site_nr, short_url, button_dict[button_type]])
+                                                            except:
+                                                                urls.append([site_nr, short_url, button_dict[button_type]])
                                                         # print([site_nr, short_url, button_dict[button_type], 0, save_element_text, save_element_css, iframe_element_css])
 
                                             # print("-------------------elements printed")
@@ -1296,6 +1290,7 @@ def session(lock, stop, start_time, short_url, url, visit_type, site_nr, fails, 
                             try:
                                 if iframe_test:
                                     driver.switch_to.parent_frame()
+                                    #driver.switch_to.default_content()
                                     time.sleep(0.5)
                             except Exception as err:
                                 print("Error while switching to parent frame")
@@ -1305,17 +1300,18 @@ def session(lock, stop, start_time, short_url, url, visit_type, site_nr, fails, 
                             print(traceback.format_exc())
                             print(err)
                             cookie_dialog_found = True
+                            short_text = ''.join([x for i, x in enumerate(str(err).replace('\n', ' ')) if i < 1020])
                             elements.append(
-                                [visit_id, site_nr, short_url, visit_type, 1, "° Error during visit", "", "", "", "", "", "", "", "", "", ""])
+                                [visit_id, site_nr, short_url, visit_type, 1, "° Error during visit", short_text])
 
                     del model_dialog
                 if not cookie_dialog_found:
                     elements.append(
-                        [visit_id, site_nr, short_url, visit_type, 1, "No cookie dialog found during visit", "", "", "", "", "", "", "", "", "", ""])
+                        [visit_id, site_nr, short_url, visit_type, 1, "No cookie dialog found during visit", ""])
 
                 # print('Saving page source')
                 # html = driver.execute_script("""return arguments[0].innerText;""", driver.find_element(By.XPATH, "/*"))
-                html = driver.find_element(By.XPATH, "/*").text
+                #html = driver.find_element(By.XPATH, "/*").text
                 '''with open(BASE_PATH + str(site_nr).zfill(7) + "°" + short_url + ".txt",
                           "w") as file:
                     file.write(html)'''
@@ -1360,7 +1356,7 @@ def session(lock, stop, start_time, short_url, url, visit_type, site_nr, fails, 
                                      background_color, width, height, font_size])
 
                                 element.click()
-                                time.sleep(3)
+                                time.sleep(5)
 
                                 # Save cookies
                                 cookies_temp = driver.execute_cdp_cmd('Network.getAllCookies', {})['cookies']
@@ -1371,7 +1367,7 @@ def session(lock, stop, start_time, short_url, url, visit_type, site_nr, fails, 
                                 write_cookies(1, visit_id, cookies_temp, cookies2, short_url, driver_time)
                                 #write_cookies(1, visit_id, cookies_temp, cookies2, short_url)
                                 visits.append([visit_id, site_nr, short_url, 1, driver.current_url, len(cookies_temp)])
-                                get_redirects(driver, visit_id, redirects, all_requests)
+                                #get_redirects(driver, visit_id, redirects, all_requests) # Enkel voor Selenium-wire
 
                                 # Save screenshot
                                 if MAKE_SCREENSHOTS:
@@ -1391,12 +1387,12 @@ def session(lock, stop, start_time, short_url, url, visit_type, site_nr, fails, 
                         # print("Error while switching to parent frame")
                         pass'''
 
-                except:
+                except Exception as err:
                     print(traceback.format_exc())
                     fails.value += 1
+                    short_text = ''.join([x for i, x in enumerate(str(err).replace('\n', ' ')) if i < 1020])
                     elements.append(
-                        [visit_id, site_nr, short_url, 1, 1, "° Error during accept visit after normal visit", "", "", "", "", "", "", "",
-                         "", "", ""])
+                        [visit_id, site_nr, short_url, 1, 1, short_text])
 
         except TimeoutError as err:
             print('({}) http://{} Timeout      {:.2f}-{:.2f}  (Error type {})'.format(site_nr, url,
@@ -1405,8 +1401,9 @@ def session(lock, stop, start_time, short_url, url, visit_type, site_nr, fails, 
                                                                                       type(err)))
             print(traceback.format_exc())
             fails.value += 1
+            short_text = ''.join([x for i, x in enumerate(str(err).replace('\n', ' ')) if i < 1020])
             elements.append(
-                                [visit_id, site_nr, short_url, visit_type, 1, "° Timeout error during visit", "", "", "", "", "", "", "", "", "", ""])
+                                [visit_id, site_nr, short_url, visit_type, 1, short_text])
         except WebDriverException as err:
             print("({}) http://{} WebDriverException     {:.2f}-{:.2f} (Error type {} - Message)".format(site_nr, url,
                                                                                                  time.time() - this_url_start,
@@ -1414,8 +1411,9 @@ def session(lock, stop, start_time, short_url, url, visit_type, site_nr, fails, 
                                                                                                  type(err), err.msg))
             print(traceback.format_exc())
             fails.value += 1
+            short_text = ''.join([x for i, x in enumerate(str(err).replace('\n', ' ')) if i < 1020])
             elements.append(
-                                [visit_id, site_nr, short_url, visit_type, 1, "° WebdriverException during visit", "", "", "", "", "", "", "", "", "", ""])
+                                [visit_id, site_nr, short_url, visit_type, 1, short_text])
         except Exception as err:
             print('({}) http://{} Error      {:.2f}-{:.2f}  (Error type {})'.format(site_nr, url,
                                                                                     time.time() - this_url_start,
@@ -1424,8 +1422,9 @@ def session(lock, stop, start_time, short_url, url, visit_type, site_nr, fails, 
             print(traceback.format_exc())
             #print(err)
             fails.value += 1
+            short_text = ''.join([x for i, x in enumerate(str(err).replace('\n', ' ')) if i < 1020])
             elements.append(
-                                [visit_id, site_nr, short_url, visit_type, 1, "° Other error during visit", "", "", "", "", "", "", "", "", "", ""])
+                                [visit_id, site_nr, short_url, visit_type, 1, short_text])
 
         finally:
             driver.quit()
@@ -1456,7 +1455,7 @@ def session(lock, stop, start_time, short_url, url, visit_type, site_nr, fails, 
                         if element.text == r[6]:
                             #print('element reached')
                             element.click()
-                            time.sleep(3)
+                            time.sleep(5)
                             clicked = True
 
                             # Save cookies
@@ -1471,7 +1470,7 @@ def session(lock, stop, start_time, short_url, url, visit_type, site_nr, fails, 
                             write_cookies(visit_type, visit_id, cookies_temp, cookies2, short_url, driver_time)
                             #write_cookies(visit_type, visit_id, cookies_temp, cookies2, short_url)
                             visits.append([visit_id, site_nr, short_url, visit_type, driver.current_url, len(cookies_temp)])
-                            get_redirects(driver, visit_id, redirects, all_requests)
+                            #get_redirects(driver, visit_id, redirects, all_requests) # Enkel voor Selenium-wire
 
                             # Save screenshot
                             if MAKE_SCREENSHOTS:
@@ -1542,7 +1541,7 @@ def session(lock, stop, start_time, short_url, url, visit_type, site_nr, fails, 
 
 # i = thread number
 def session_checker(lock, thread_nr, runn, stop, pause, now, urls, fails, cookies, cookies2, previously_visited_nrs, visits,
-                    do_not_visit, elements, LIMIT_CPU, redirects, all_requests):
+                    do_not_visit, elements, LIMIT_CPU, redirects, all_requests, predictions):
     # lock file, thread_nr,
     print('Starting session ' + str(thread_nr))
 
@@ -1555,9 +1554,6 @@ def session_checker(lock, thread_nr, runn, stop, pause, now, urls, fails, cookie
         with runn:
             j = runn.value
             runn.value += 1
-            if runn.value > len(urls):
-                stop.value = True
-                print('Starting visit of last website, finishing visits')
 
         site_nr = int(urls[j - 1][0])
         short_url = urls[j - 1][1]
@@ -1577,7 +1573,7 @@ def session_checker(lock, thread_nr, runn, stop, pause, now, urls, fails, cookie
         else:
             p = Process(target=session, args=(
                 lock, stop, now, short_url, visit_url, visit_type, site_nr, fails, cookies, cookies2, visit_id, visits,
-                elements, urls, runn, LIMIT_CPU, redirects, all_requests, thread_nr))
+                elements, urls, runn, LIMIT_CPU, redirects, all_requests, thread_nr, predictions))
             p.start()
 
             start = time.time()
@@ -1602,7 +1598,7 @@ def session_checker(lock, thread_nr, runn, stop, pause, now, urls, fails, cookie
                         #cookies.append(
                         #    [visit_id, site_nr, short_url, "error", None, None, None, None, None])
                         visits.append([visit_id, site_nr, short_url, visit_type, "° Timeout", -1])
-                        elements.append([visit_id, site_nr, short_url, visit_type, 1, "° Timeout during session", "", "", "", "", "", "", "", "", "", ""])
+                        elements.append([visit_id, site_nr, short_url, visit_type, 1, "° Timeout during session", ""])
                 else:
                     p.terminate()
                     p.join()
@@ -1611,6 +1607,10 @@ def session_checker(lock, thread_nr, runn, stop, pause, now, urls, fails, cookie
             print(f'Pausing thread {thread_nr}')
         while pause.value:
             time.sleep(1)
+
+        if runn.value > len(urls):
+            stop.value = True
+            print('Last website reached, finishing threads')
 
     print('Ending session ' + str(thread_nr))
 
