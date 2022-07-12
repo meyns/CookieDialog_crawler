@@ -7,8 +7,8 @@ import pprint
 from selenium import webdriver
 #import seleniumwire.undetected_chromedriver as webdriver
 #from seleniumwire import webdriver
-import undetected_chromedriver as uc
-from selenium_stealth import stealth
+#import undetected_chromedriver as uc
+#from selenium_stealth import stealth
 from selenium.common.exceptions import *
 from selenium.webdriver import DesiredCapabilities
 from selenium.webdriver.common.by import By
@@ -264,14 +264,17 @@ def main():
                     pass
             print("{} threads have timed out".format(i))
 
-        if platform == "linux" or platform == "linux2":
-            kill_processes()
-            print("Cleaning temp files")
-            for root, dirs, files in os.walk('/tmp/'):
-                for f in files:
-                    os.unlink(os.path.join(root, f))
-                for d in dirs:
-                    shutil.rmtree(os.path.join(root, d))
+        try:
+            if platform == "linux" or platform == "linux2":
+                kill_processes()
+                print("Cleaning temp files")
+                for root, dirs, files in os.walk('/tmp/'):
+                    for f in files:
+                        os.unlink(os.path.join(root, f))
+                    for d in dirs:
+                        shutil.rmtree(os.path.join(root, d))
+        except:
+            pass
 
 
     print('One last write')
