@@ -5,10 +5,10 @@ import sqlite3
 import pprint
 
 from selenium import webdriver
-#import seleniumwire.undetected_chromedriver as webdriver
-#from seleniumwire import webdriver
-#import undetected_chromedriver as uc
-#from selenium_stealth import stealth
+# import seleniumwire.undetected_chromedriver as webdriver
+# from seleniumwire import webdriver
+# import undetected_chromedriver as uc
+# from selenium_stealth import stealth
 from selenium.common.exceptions import *
 from selenium.webdriver import DesiredCapabilities
 from selenium.webdriver.common.by import By
@@ -36,9 +36,9 @@ from simpletransformers.config.model_args import ClassificationArgs
 from sys import platform
 
 if platform == "linux" or platform == "linux2":
-    ML_dir_cookie_dialog = "./model_dialog" #Ubuntu
-    ML_dir_buttons = "./model_buttons" #Ubuntu
-    BASE_PATH = "./data/" # Ubuntu
+    ML_dir_cookie_dialog = "./model_dialog"  # Ubuntu
+    ML_dir_buttons = "./model_buttons"  # Ubuntu
+    BASE_PATH = "./data/"  # Ubuntu
     PATH_CHROME = "./chromedriver"
 elif platform == "darwin":
     # OS X
@@ -49,7 +49,7 @@ elif platform == "win32":
     BASE_PATH = "d:/temp/Selenium-model/"
     PATH_CHROME = "./chromedriver.exe"
 
-#PATH_CHROME = './chromedriver.exe'
+# PATH_CHROME = './chromedriver.exe'
 PATH_FIREFOX = 'D:/Documenten/Maarten/Open universiteit/VAF/selenium/geckodriver.exe'
 # PATH_EDGE
 # PATH_SAFARI
@@ -63,7 +63,7 @@ TIMEOUT = 100
 TYPES_WEBSITES = []  # BE NL COM EU ORG COM
 BROWSER = "chrome"  # firefox,chrome,edge,safari
 RUNS = 1  # how many repeats
-nr_fails = 100 # How many fails before restarting processes
+nr_fails = 100  # How many fails before restarting processes
 
 button_dict = {"ACCEPT": 1,
                "DECLINE": 2,
@@ -73,15 +73,17 @@ button_dict = {"ACCEPT": 1,
 
 MAKE_SCREENSHOTS = True
 
-user_agents = ["Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/103.0.0.0 Safari/537.36",
-            "Mozilla/5.0 (Windows NT 10.0; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/103.0.0.0 Safari/537.36",
-               "Mozilla/5.0 (Windows NT 10.0) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/103.0.0.0 Safari/537.36",
-               "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/101.0.4951.67 Safari/537.36",
-              "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/102.0.0.0 Safari/537.36",
-              "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/102.0.5005.63 Safari/537.36"]
+user_agents = [
+    "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/103.0.0.0 Safari/537.36",
+    "Mozilla/5.0 (Windows NT 10.0; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/103.0.0.0 Safari/537.36",
+    "Mozilla/5.0 (Windows NT 10.0) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/103.0.0.0 Safari/537.36",
+    "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/101.0.4951.67 Safari/537.36",
+    "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/102.0.0.0 Safari/537.36",
+    "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/102.0.5005.63 Safari/537.36"]
+
 
 def main():
-    #chromedriver_autoinstaller.install()  # only used for docker run
+    # chromedriver_autoinstaller.install()  # only used for docker run
     LIMIT_CPU = Value('i', 1)
 
     if platform == "linux" or platform == "linux2":
@@ -89,7 +91,6 @@ def main():
         kill_processes()
     elif platform == "win32":
         LIMIT_CPU.value = 1
-
 
     logging.basicConfig(level=logging.ERROR)
     transformers_logger = logging.getLogger("simpletransformers")
@@ -137,8 +138,9 @@ def main():
     print('Reading in database')
     conn = sqlite3.connect(BASE_PATH + 'cookies.db')
     cursor = conn.cursor()
-    #cursor.execute('SELECT site_nr, sitename, element_type, result FROM elements where visited == 0 or (result == "# Skipped because can\'t be reached" and site_nr > 320000) ORDER BY element_type DESC')
-    cursor.execute('SELECT site_nr, sitename, element_type, result FROM elements where visited == 0 ORDER BY element_type DESC')
+    # cursor.execute('SELECT site_nr, sitename, element_type, result FROM elements where visited == 0 or (result == "# Skipped because can\'t be reached" and site_nr > 320000) ORDER BY element_type DESC')
+    cursor.execute(
+        'SELECT site_nr, sitename, element_type, result FROM elements where visited == 0 ORDER BY element_type DESC')
     res = cursor.fetchall()
     conn.close()
 
@@ -198,7 +200,8 @@ def main():
 
         # start writing process
         o = Process(target=writing_thread,
-                    args=(lock, urls, stop, pause, fails, cookies, cookies2, visits, do_not_visit, elements, redirects, all_requests, predictions))
+                    args=(lock, urls, stop, pause, fails, cookies, cookies2, visits, do_not_visit, elements, redirects,
+                          all_requests, predictions))
         o.start()
 
         fails.value = 0
@@ -213,7 +216,7 @@ def main():
             time.sleep(60 / LIMIT_CPU.value)  # To make sure not all threads start at the same time
 
         # wait until > nr_fails fails or stop value
-        while fails.value < nr_fails and not stop.value:# and LIMIT_CPU.value/2 > len(p.is_alive() for p in session_ch):
+        while fails.value < nr_fails and not stop.value:  # and LIMIT_CPU.value/2 > len(p.is_alive() for p in session_ch):
             if not n.is_alive():
                 n.join()
                 del n
@@ -223,7 +226,8 @@ def main():
                 o.join()
                 del o
                 o = Process(target=writing_thread,
-                    args=(lock, urls, stop, pause, fails, cookies, cookies2, visits, do_not_visit, elements, redirects, all_requests, predictions))
+                            args=(lock, urls, stop, pause, fails, cookies, cookies2, visits, do_not_visit, elements,
+                                  redirects, all_requests, predictions))
                 o.start()
             while pause.value == True:
                 time.sleep(1)
@@ -276,7 +280,6 @@ def main():
         except:
             pass
 
-
     print('One last write')
     print(cookies)
     print(cookies2)
@@ -292,10 +295,10 @@ def main():
 # Interceptor voor seleniumwire (deze items worden geblokkeerd)
 def interceptor(request):
     # Block PNG, JPG, JPEG, GIF, ICO and MP3
-    #if request.path.endswith('.png') or request.path.endswith('.jpg') or request.path.endswith('.gif') or request.path.endswith('.jpeg') or request.path.endswith('.ico') or request.path.endswith('.mp3'):
+    # if request.path.endswith('.png') or request.path.endswith('.jpg') or request.path.endswith('.gif') or request.path.endswith('.jpeg') or request.path.endswith('.ico') or request.path.endswith('.mp3'):
     if request.path.endswith('.png') or request.path.endswith('.jpg') or request.path.endswith(
             '.gif') or request.path.endswith('.jpeg') or request.path.endswith('.ico') or request.path.endswith(
-            '.mp3'):
+        '.mp3'):
         request.abort()
 
 
@@ -401,7 +404,7 @@ def highest_z_index(driver, do_layers):
             .sort((r1, r2) => r2.zIndex - r1.zIndex)\
             .slice(0, 30);\
           console.table(data);""")  # sorted list of z-indexes
-        #pprint.pprint(z_indexes)
+        # pprint.pprint(z_indexes)
         # time.sleep(0.05)
         # print(z_indexes)
         if z_indexes:
@@ -420,7 +423,7 @@ def highest_z_index(driver, do_layers):
                 '''print("highest z-score candidate: " + str(z_score) + "-" + element.tag_name + "-" + str(
                     element.size['width'])) # + "-" + highest_element.get_attribute('outerHTML').replace("\n", " "))'''
                 new_candidates.append(element)
-                #print('###############"""')
+                # print('###############"""')
     except Exception as err:
         print(traceback.format_exc())
         print(err)
@@ -565,9 +568,9 @@ def gui_thread(stop, pause, fails, LIMIT_CPU):
             count2 = 0
         # Check if resource usage is too high, count 5 times and then stop program
         if ram > 90:
-            count += 3 # RAM moet bijna direct gestopt worden
+            count += 3  # RAM moet bijna direct gestopt worden
         elif cpu > 90:
-            count += 1 # CPU maar stoppen na 10 counts
+            count += 1  # CPU maar stoppen na 10 counts
         elif count > 0:
             count -= 0.5
             count = round(count, 1)
@@ -579,7 +582,7 @@ def gui_thread(stop, pause, fails, LIMIT_CPU):
             line += '\n' + ' CPU or RAM usage too high pausing threads'
         if pause.value == True and pausebutton == False and count <= 9:
             pause.value = False'''
-            
+
         if count > 9:
             pause.value = False
             LIMIT_CPU.value -= 1
@@ -596,9 +599,9 @@ def gui_thread(stop, pause, fails, LIMIT_CPU):
 
         with open(BASE_PATH + "resources.txt", "a") as file:
             file.write(time.ctime() + " " + line)
-        
+
         # Signal that threads need to be restarted (to be able to flush the tmp folder and keep nr of threads at max)
-        if (time.time() - start > 60*60): # 60s*60m = 1hour
+        if (time.time() - start > 60 * 60):  # 60s*60m = 1hour
             fails.value = nr_fails
 
         count2 += 1
@@ -608,7 +611,8 @@ def gui_thread(stop, pause, fails, LIMIT_CPU):
     window.close()
 
 
-def writing_thread(lock, urls, stop, pause, fails, cookies, cookies2, visits, do_not_visit, elements, redirects, all_requests, predictions):
+def writing_thread(lock, urls, stop, pause, fails, cookies, cookies2, visits, do_not_visit, elements, redirects,
+                   all_requests, predictions):
     print("Starting writing thread")
     while fails.value < nr_fails and not stop.value:
         time_slept = 0
@@ -618,7 +622,8 @@ def writing_thread(lock, urls, stop, pause, fails, cookies, cookies2, visits, do
             time.sleep(1)
             time_slept += 1
         if time_slept == 30:
-            writing(lock, urls, stop, cookies, cookies2, visits, do_not_visit, elements, redirects, all_requests, predictions)
+            writing(lock, urls, stop, cookies, cookies2, visits, do_not_visit, elements, redirects, all_requests,
+                    predictions)
     print('End writing thread')
 
 
@@ -689,24 +694,29 @@ def writing(lock, urls, stop, cookies, cookies2, visits, do_not_visit, elements,
             # print('Writing to database file elements')
             cursor = conn.cursor()
             for e in elements_dupl:
-                #print(e)
+                # print(e)
                 if len(e) == 7:
                     cursor.execute('INSERT OR IGNORE INTO elements VALUES(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)',
                                    (e[0], e[1], e[2], e[3], e[4], e[5], e[6], "", "", "", "", "", "", "", "", ""))
-                    cursor.execute('UPDATE elements SET visit_id = ?, visited = ?, result = ?, element_text = ? WHERE site_nr = ? and sitename = ? and element_type = ?',
+                    cursor.execute(
+                        'UPDATE elements SET visit_id = ?, visited = ?, result = ?, element_text = ? WHERE site_nr = ? and sitename = ? and element_type = ?',
                         (e[0], e[4], e[5], e[6], e[1], e[2], e[3]))
                 elif len(e) == 6:
                     cursor.execute('INSERT OR IGNORE INTO elements VALUES(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)',
                                    (e[0], e[1], e[2], e[3], e[4], e[5], "", "", "", "", "", "", "", "", "", ""))
-                    cursor.execute('UPDATE elements SET visit_id = ?, visited = ?, result = ? WHERE site_nr = ? and sitename = ? and element_type = ?',
+                    cursor.execute(
+                        'UPDATE elements SET visit_id = ?, visited = ?, result = ? WHERE site_nr = ? and sitename = ? and element_type = ?',
                         (e[0], e[4], e[5], e[1], e[2], e[3]))
                 else:
                     cursor.execute('INSERT OR IGNORE INTO elements VALUES(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)',
-                                   (e[0], e[1], e[2], e[3], e[4], e[5], e[6], e[7], e[8], e[9], e[10], e[11], e[12], e[13], e[14], e[15]))
-                    cursor.execute('UPDATE elements SET visit_id = ?, visited = ?, result = ?, element_text = ?, element_css = ?, iframe_css = ?, '
-                                   'location_x = ?, location_y = ?, text_color = ?, background_color = ?, width = ?, height = ?, '
-                                   'font_size = ? WHERE site_nr = ? AND element_type = ?',
-                                    (e[0], e[4], e[5], e[6], e[7], e[8], e[9], e[10], e[11], e[12], e[13], e[14], e[14], e[1], e[3]))
+                                   (e[0], e[1], e[2], e[3], e[4], e[5], e[6], e[7], e[8], e[9], e[10], e[11], e[12],
+                                    e[13], e[14], e[15]))
+                    cursor.execute(
+                        'UPDATE elements SET visit_id = ?, visited = ?, result = ?, element_text = ?, element_css = ?, iframe_css = ?, '
+                        'location_x = ?, location_y = ?, text_color = ?, background_color = ?, width = ?, height = ?, '
+                        'font_size = ? WHERE site_nr = ? AND element_type = ?',
+                        (
+                        e[0], e[4], e[5], e[6], e[7], e[8], e[9], e[10], e[11], e[12], e[13], e[14], e[14], e[1], e[3]))
             cursor.execute('COMMIT')
             cursor.close()
 
@@ -780,8 +790,8 @@ def check_response(url):
             response = False
     # print(url + " -> " + str(response))
     return response
-    
-    
+
+
 # Try the website if it is alive
 def check_response2(url):
     try:
@@ -795,7 +805,7 @@ def check_response2(url):
             response = False
     # print(url + " -> " + str(response))
     return response
-    
+
 
 # writing to cookies variable
 def write_cookies(before_after, visit_id, cookies_temp, cookies2, short_url, driver_time):
@@ -823,30 +833,37 @@ def write_cookies(before_after, visit_id, cookies_temp, cookies2, short_url, dri
         cookies2.append(list_temp)
         # print(list_temp)
 
+
 # Haalt alle redirects op (werkt enkel met Selenium-wire)
 def get_redirects(driver, visit_id, redirects, all_requests):
     for req in driver.requests:
-        #print(req.response.headers)
+        # print(req.response.headers)
         if not req.response is None:
-            #print(req)
-            location = req.response.headers.get("Location") # If redirect then this is the to field
-            #result = req.headers.get("Host") # From result
-            if not location is None and req.response.headers.get("content-type") is None and req.response.status_code >= 300 and req.response.status_code < 400:
-                #print(result)
-                #print(req.response.status_code)
-                #print(req.date)
-                redirects.append([visit_id, req.response.status_code, req.date.strftime("%Y/%m/%d, %H:%M:%S"), req.url, location, req.response.headers.get("content-type")])
+            # print(req)
+            location = req.response.headers.get("Location")  # If redirect then this is the to field
+            # result = req.headers.get("Host") # From result
+            if not location is None and req.response.headers.get(
+                    "content-type") is None and req.response.status_code >= 300 and req.response.status_code < 400:
+                # print(result)
+                # print(req.response.status_code)
+                # print(req.date)
+                redirects.append(
+                    [visit_id, req.response.status_code, req.date.strftime("%Y/%m/%d, %H:%M:%S"), req.url, location,
+                     req.response.headers.get("content-type")])
             if not req.headers.get("referer") is None:
-                if not req.response.status_code == 403 and not req.url.endswith(".woff2") and not req.url.endswith(".woff"): # 403 = blocked and woff is font
-                    all_requests.append([visit_id, req.response.status_code, req.date.strftime("%Y/%m/%d, %H:%M:%S"), req.headers.get("referer"), req.url, req.response.headers.get("content-type")])
+                if not req.response.status_code == 403 and not req.url.endswith(".woff2") and not req.url.endswith(
+                        ".woff"):  # 403 = blocked and woff is font
+                    all_requests.append([visit_id, req.response.status_code, req.date.strftime("%Y/%m/%d, %H:%M:%S"),
+                                         req.headers.get("referer"), req.url, req.response.headers.get("content-type")])
 
 
 # This is the session that visits the website
 def session(lock, stop, start_time, short_url, url, visit_type, site_nr, fails, cookies, cookies2, visit_id, visits,
             elements, urls, runn, LIMIT_CPU, redirects, all_requests, thread_nr, predictions):
     print('')
-    #pprint.pprint(list(urls))
-    print(str(runn.value) + '-(' + str(site_nr) + '-' + str(visit_type) + ') Thread started ' + url + " - Visit_id: " + str(visit_id) + " - Visit_type: " + str(
+    # pprint.pprint(list(urls))
+    print(str(runn.value) + '-(' + str(site_nr) + '-' + str(
+        visit_type) + ') Thread started ' + url + " - Visit_id: " + str(visit_id) + " - Visit_type: " + str(
         visit_type))
     this_url_start = time.time()
 
@@ -856,9 +873,9 @@ def session(lock, stop, start_time, short_url, url, visit_type, site_nr, fails, 
         options = webdriver.FirefoxOptions()
 
     # Running headless makes the detection of selenium more likely
-    #options.add_argument('--headless')  # headfull not working in docker
-    #options.add_argument('--disable-gpu') # seleniumwire.undetected_chromedriver only works headfull
-    #options.add_argument("--incognito")
+    # options.add_argument('--headless')  # headfull not working in docker
+    # options.add_argument('--disable-gpu') # seleniumwire.undetected_chromedriver only works headfull
+    # options.add_argument("--incognito")
     '''Incognito does not block third party cookies in combination with headless. Incognito + headfull does block the third party cookies'''
 
     options.add_argument('--disable-extensions')
@@ -868,13 +885,13 @@ def session(lock, stop, start_time, short_url, url, visit_type, site_nr, fails, 
     options.add_argument(
         "user-agent=" + user_agents[visit_type])
     # ????    options.enable_mobile()
-    #options.add_argument("--disable-notifications")
+    # options.add_argument("--disable-notifications")
     # options.add_argument("--disable-geolocation")
     # options.add_argument("--disable-media-stream")
-    #options.add_argument("--disable-infobars")
+    # options.add_argument("--disable-infobars")
     options.add_argument("--log-level=3")
-    #options.add_argument("--verbose")
-    #options.add_experimental_option('excludeSwitches', ['enable-logging'])
+    # options.add_argument("--verbose")
+    # options.add_experimental_option('excludeSwitches', ['enable-logging'])
     options.add_argument("--disable-automation")
     options.add_argument("enable-automation")
     options.add_argument("--no-sandbox")
@@ -900,7 +917,7 @@ def session(lock, stop, start_time, short_url, url, visit_type, site_nr, fails, 
     options.add_argument('--ignore-certificate-errors')
 
     capabilities = DesiredCapabilities.CHROME
-    #capabilities['goog:loggingPrefs'] = {'performance': 'ALL'}
+    # capabilities['goog:loggingPrefs'] = {'performance': 'ALL'}
 
     '''capabilities['chromeOptions'] = {"prefs": {#"profile.default_content_settings.cookies": 2#,
                                                #"intl.accept_languages": 'nl'
@@ -918,13 +935,16 @@ def session(lock, stop, start_time, short_url, url, visit_type, site_nr, fails, 
 
     # Kan niet in combinatie met undetected chromedriver
     prefs = {  # "profile.default_content_setting_values.geolocation": 1,
-        #"profile.default_content_setting_values.cookies": 2,
-        #"profile.managed_default_content_setting_values.images": 2,  # only works in headfull to block images
-        #"profile.managed_default_content_settings.images": 2,
+        # "profile.default_content_setting_values.cookies": 2,
+        # "profile.managed_default_content_setting_values.images": 2,  # only works in headfull to block images
+        # "profile.managed_default_content_settings.images": 2,
         "profile.default_content_setting_values.notifications": 2,
         "intl.accept_languages": 'nl, nl-NL'
     }
     options.add_experimental_option("prefs", prefs)
+
+    # Disable javascript
+    options.set_preference('javascript.enabled', False)
 
     # print('Opstart tijd driver: {:.2f}'.format(time.time() - this_thread_start))
 
@@ -945,7 +965,7 @@ def session(lock, stop, start_time, short_url, url, visit_type, site_nr, fails, 
         type_text = "SAVE"
 
     # Dit werd gebruikt voor Selenium wire
-    #ports = [9951, 9952, 9953, 9954, 9955, 9956, 9957, 9958, 9959, 9960, 9961, 9962, 9963, 9964, 9965, 9966, 9967, 9968, 9969, 9970, 9971, 9972, 9973, 9974, 9975, 9976, 9977, 9978, 9979, 9980, 9981]
+    # ports = [9951, 9952, 9953, 9954, 9955, 9956, 9957, 9958, 9959, 9960, 9961, 9962, 9963, 9964, 9965, 9966, 9967, 9968, 9969, 9970, 9971, 9972, 9973, 9974, 9975, 9976, 9977, 9978, 9979, 9980, 9981]
 
     # Check database for entries
     with lock:
@@ -959,7 +979,7 @@ def session(lock, stop, start_time, short_url, url, visit_type, site_nr, fails, 
     # starting up webdriver
     if BROWSER == "chrome":
         driver = webdriver.Chrome(service=Service(PATH_CHROME), options=options, desired_capabilities=capabilities)
-        #driver = webdriver.Chrome(service=Service(PATH_CHROME), options=options, desired_capabilities=capabilities, seleniumwire_options={'verify_ssl': False, 'backend': 'mitmproxy', 'mitmproxy_log_level': 'INFO', 'port': ports[thread_nr]})
+        # driver = webdriver.Chrome(service=Service(PATH_CHROME), options=options, desired_capabilities=capabilities, seleniumwire_options={'verify_ssl': False, 'backend': 'mitmproxy', 'mitmproxy_log_level': 'INFO', 'port': ports[thread_nr]})
         '''stealth(driver,
                 languages=["en-US", "en"],
                 vendor="Google Inc.",
@@ -967,47 +987,48 @@ def session(lock, stop, start_time, short_url, url, visit_type, site_nr, fails, 
                 webgl_vendor="Intel Inc.",
                 renderer="Intel Iris OpenGL Engine",
                 fix_hairline=True,
-                )''' # Results in missing cookies
-        #driver = uc.Chrome(se_subprocess=True)
+                )'''  # Results in missing cookies
+        # driver = uc.Chrome(se_subprocess=True)
     if BROWSER == "firefox":
         driver = webdriver.Firefox(service=Service(PATH_FIREFOX), options=options, desired_capabilities=capabilities)
 
     driver.set_window_size(1920, 1080)
     # driver.set_page_load_timeout(10)
     driver.set_script_timeout(10)
-    #driver.request_interceptor = interceptor # Voor Selenium-wire
+    # driver.request_interceptor = interceptor # Voor Selenium-wire
     driver.execute_script("Object.defineProperty(navigator, 'webdriver', {get: () => undefined})")
 
     #############################
 
     visit = False
     element_css = ""
-    #if (res[0][3] == 0 and res[0][4] == 0) and visit_type == 0:
+    # if (res[0][3] == 0 and res[0][4] == 0) and visit_type == 0:
     if res[0][3] == 0 and visit_type == 0:
         visit = True
         try:
             driver_time = time.time()
             driver.get("http://" + url)
-            #driver.get("https://nowsecure.nl/") # cloudflare test
-            #driver.get("https://webscraping.pro/wp-content/uploads/2021/02/testresult2.html")
-            #driver.get("https://bot.sannysoft.com/") # Automation test
+            # driver.get("https://nowsecure.nl/") # cloudflare test
+            # driver.get("https://webscraping.pro/wp-content/uploads/2021/02/testresult2.html")
+            # driver.get("https://bot.sannysoft.com/") # Automation test
             time.sleep(5)
 
             # Count the non ascii characters if more than 30% are non-ascii characters then skip this site (probably chinese)
             html = driver.find_element(By.XPATH, "/*").text
-            ascii_count = html.encode("ascii", "ignore") # Haalt alle normale letters uit de html
-            if len(html) > 0 and len(ascii_count)/len(html) < 0.7: # Check for empty html because can be iframe
-                print(str(site_nr) + "-" + short_url + " - Skipping url because more non-ascii letters than ascii letters (probably chinese website)")
+            ascii_count = html.encode("ascii", "ignore")  # Haalt alle normale letters uit de html
+            if len(html) > 0 and len(ascii_count) / len(html) < 0.7:  # Check for empty html because can be iframe
+                print(
+                    str(site_nr) + "-" + short_url + " - Skipping url because more non-ascii letters than ascii letters (probably chinese website)")
                 with open(BASE_PATH + "output.txt", "a") as file:
                     file.write(str(site_nr) + "°" + short_url + " Skipped because unreadable\n")
                 short_text = ''.join([x for i, x in enumerate(html.replace('\n', ' ')) if i < 1020])
                 cookies.append(
-                        [visit_id, site_nr, short_url, "# unraedable", None, None, None, None, None])
+                    [visit_id, site_nr, short_url, "# unraedable", None, None, None, None, None])
                 elements.append(
                     [visit_id, site_nr, short_url, 0, 1, "# Skipped unreadable", short_text])
                 visits.append([visit_id, site_nr, short_url, visit_type, "# unreadable", -1])
 
-            #elif not get_status_code(driver, driver.current_url) == 200:
+            # elif not get_status_code(driver, driver.current_url) == 200:
             #    print(str(site_nr) + "-" + short_url + " - Skipping url because not 200 status code")
             #    with open(BASE_PATH + "output.txt", "a") as file:
             #        file.write(str(site_nr) + "°" + short_url + " Skipped because not 200 status code\n")
@@ -1028,7 +1049,7 @@ def session(lock, stop, start_time, short_url, url, visit_type, site_nr, fails, 
                     [visit_id, site_nr, short_url, 0, 1, "# Skipped website blocked or error", short_text])
                 visits.append([visit_id, site_nr, short_url, visit_type, "# Website blocked", -1])
             else:
-                visits.append([visit_id, site_nr, short_url, visit_type, driver.current_url, -1])
+                #visits.append([visit_id, site_nr, short_url, visit_type, driver.current_url, -1])
 
                 # Save cookies
                 cookies_temp = driver.execute_cdp_cmd('Network.getAllCookies', {})['cookies']
@@ -1036,9 +1057,9 @@ def session(lock, stop, start_time, short_url, url, visit_type, site_nr, fails, 
                                                                           time.time() - this_url_start,
                                                                           time.time() - start_time))
                 write_cookies(0, visit_id, cookies_temp, cookies2, short_url, driver_time)
-                #write_cookies(0, visit_id, cookies_temp, cookies2, short_url)
+                # write_cookies(0, visit_id, cookies_temp, cookies2, short_url)
                 visits.append([visit_id, site_nr, short_url, 0, driver.current_url, len(cookies_temp)])
-                #get_redirects(driver, visit_id, redirects, all_requests) # Enkel voor Selenium-wire
+                # get_redirects(driver, visit_id, redirects, all_requests) # Enkel voor Selenium-wire
 
                 # Save screenshot
                 if MAKE_SCREENSHOTS:
@@ -1057,7 +1078,8 @@ def session(lock, stop, start_time, short_url, url, visit_type, site_nr, fails, 
 
                 if do_layers:
                     # print('Testing layers')
-                    candidates.extend(volgende_laag(driver.find_element(By.XPATH, "/*"), driver, candidates))  # root element
+                    candidates.extend(
+                        volgende_laag(driver.find_element(By.XPATH, "/*"), driver, candidates))  # root element
                     print(f"Do layers: {len(candidates)}")
                     # print("----{:2f}s-----Finished layers--".format(time.time() - this_url_start))
                 else:
@@ -1089,7 +1111,7 @@ def session(lock, stop, start_time, short_url, url, visit_type, site_nr, fails, 
                     model_dialog = ClassificationModel("xlmroberta", ML_dir_cookie_dialog, args={"silent": True},
                                                        use_cuda=False)
                     index = 0
-                    #for index, c in enumerate(candidates):
+                    # for index, c in enumerate(candidates):
                     while not cookie_dialog_found and index < len(candidates):
                         c = candidates[index]
                         index += 1
@@ -1097,11 +1119,11 @@ def session(lock, stop, start_time, short_url, url, visit_type, site_nr, fails, 
                         try:
                             # print(c.size['width'])
                             # print(c.size['height'])
-                            #print(c.get_attribute('outerHTML'))
+                            # print(c.get_attribute('outerHTML'))
                             iframe_element_css = ""
                             iframe_test = (c.tag_name == 'iframe')
                             if iframe_test:
-                                #iframe = c
+                                # iframe = c
                                 # Setting up CSS info for iframe element (only save when right iframe)
                                 iframe_element_class = (c.get_attribute('class') or '')
                                 if not iframe_element_class == '':
@@ -1112,13 +1134,12 @@ def session(lock, stop, start_time, short_url, url, visit_type, site_nr, fails, 
                                 if not iframe_element_id == '':
                                     iframe_element_id = "#" + iframe_element_id
 
-                                #print(c.tag_name)
+                                # print(c.tag_name)
                                 driver.switch_to.frame(c)
                                 time.sleep(0.5)
                                 c = driver.find_element(By.XPATH, '/*')  # first child in iframe
                                 c = finetune_element(c, 'iframe')
-                                #print(f"Iframe text: {c.text}")
-
+                                # print(f"Iframe text: {c.text}")
 
                             # text = driver.execute_script("""return arguments[0].innerText;""", c)
                             # text2 = c.get_attribute('innerHTML')
@@ -1137,22 +1158,26 @@ def session(lock, stop, start_time, short_url, url, visit_type, site_nr, fails, 
                                         [x for i, x in enumerate(text3.replace('\n', ' ')) if i < 124])))
                                     short_text = ''.join(
                                         [x for i, x in enumerate(text3.replace('\n', ' ')) if i < 1020])
-                                    predictions.append([visit_id, "cookie dialog", c.tag_name, short_text, prediction_CD[0]])
+                                    predictions.append(
+                                        [visit_id, "cookie dialog", c.tag_name, short_text, prediction_CD[0]])
 
                                     if prediction_CD[0] == "True":
                                         cookie_dialog_found = True
                                         if MAKE_SCREENSHOTS:
                                             try:
-                                                with open(BASE_PATH + "screenshots/" + str(site_nr).zfill(7) + "°" + short_url + "°" + str(
-                                                          index).zfill(2) + "°" + c.tag_name + "°element.png", "wb") as file:
+                                                with open(BASE_PATH + "screenshots/" + str(site_nr).zfill(
+                                                        7) + "°" + short_url + "°" + str(
+                                                        index).zfill(2) + "°" + c.tag_name + "°element.png",
+                                                          "wb") as file:
                                                     # print('Saved screenshot1')
                                                     file.write(c.screenshot_as_png)
                                                     # print('Saved screenshot2')
                                             except:
                                                 print("Screenshot unsuccessful")
                                                 img = Image.new("RGB", (1, 1), (255, 255, 255))
-                                                img.save(BASE_PATH + "screenshots/" + str(site_nr).zfill(7) + "°" + short_url + "°" + str(
-                                                          index).zfill(2) + "°" + c.tag_name + "°element.png", "PNG")
+                                                img.save(BASE_PATH + "screenshots/" + str(site_nr).zfill(
+                                                    7) + "°" + short_url + "°" + str(
+                                                    index).zfill(2) + "°" + c.tag_name + "°element.png", "PNG")
                                         '''with open(BASE_PATH + str(site_nr).zfill(7) + "-" + short_url + "°" + str(
                                                 index).zfill(2) + "°" + c.tag_name + "°element.txt", "w") as file:
                                             file.write(text3)
@@ -1161,10 +1186,10 @@ def session(lock, stop, start_time, short_url, url, visit_type, site_nr, fails, 
                                         c.get_attribute("style")
                                         text_color = c.value_of_css_property('color')
                                         background_color = c.value_of_css_property('background-color')
-                                        width = c.value_of_css_property('width').replace('px','')
+                                        width = c.value_of_css_property('width').replace('px', '')
                                         if width.isnumeric():
                                             width = int(width)
-                                        height = c.value_of_css_property('height').replace('px','')
+                                        height = c.value_of_css_property('height').replace('px', '')
                                         if height.isnumeric():
                                             height = int(height)
                                         font_size = c.value_of_css_property('font-size')
@@ -1180,11 +1205,15 @@ def session(lock, stop, start_time, short_url, url, visit_type, site_nr, fails, 
                                         else:
                                             iframe_element_css = ''
 
-                                        short_text = ''.join([x for i, x in enumerate(text3.replace('\n', ' ')) if i < 1020])
+                                        short_text = ''.join(
+                                            [x for i, x in enumerate(text3.replace('\n', ' ')) if i < 1020])
 
                                         # Add cookie dialog info to database
-                                        elements.append([visit_id, site_nr, short_url, visit_type, 1, "Normal visit", short_text, "",
-                                                        iframe_element_css, location_x, location_y, text_color, background_color, width, height, font_size])
+                                        elements.append(
+                                            [visit_id, site_nr, short_url, visit_type, 1, "Normal visit", short_text,
+                                             "",
+                                             iframe_element_css, location_x, location_y, text_color, background_color,
+                                             width, height, font_size])
 
                                         # Extract elements from cookie dialog:
                                         # print(c.text)
@@ -1212,12 +1241,16 @@ def session(lock, stop, start_time, short_url, url, visit_type, site_nr, fails, 
                                                         [text.lower().replace("\n", " ")])
                                                     print("Prediction made, result: {} - {}".format(prediction_B[0],
                                                                                                     ''.join(
-                                                                                                        [x for index, x in
+                                                                                                        [x for index, x
+                                                                                                         in
                                                                                                          enumerate(
                                                                                                              text.replace(
-                                                                                                                 '\n', ' '))
-                                                                                                         if index < 124])))
-                                                    predictions.append([visit_id, "button", el.tag_name, text, prediction_B[0]])
+                                                                                                                 '\n',
+                                                                                                                 ' '))
+                                                                                                         if
+                                                                                                         index < 124])))
+                                                    predictions.append(
+                                                        [visit_id, "button", el.tag_name, text, prediction_B[0]])
 
                                                     button_type = prediction_B[0]
 
@@ -1263,22 +1296,28 @@ def session(lock, stop, start_time, short_url, url, visit_type, site_nr, fails, 
                                                             ";", ",").replace(
                                                             '\n', '') + ";" + button_type
                                                         line_to_add = line_to_add + ";" + save_element_css
-                                                        with open(BASE_PATH + "buttons.csv", 'a', encoding='utf-8') as file:
+                                                        with open(BASE_PATH + "buttons.csv", 'a',
+                                                                  encoding='utf-8') as file:
                                                             file.write(line_to_add + '\n')
-
 
                                                         # Writing to database all elements without OTHER
                                                         # [site nr, sitename, element_type, visited?, element_text, element_css]
-                                                        elements.append([0, site_nr, short_url, button_dict[button_type], 0, "",
-                                                                         save_element_text, save_element_css,
-                                                                         iframe_element_css, location_x, location_y, text_color, background_color, width, height, font_size])
+                                                        elements.append(
+                                                            [0, site_nr, short_url, button_dict[button_type], 0, "",
+                                                             save_element_text, save_element_css,
+                                                             iframe_element_css, location_x, location_y, text_color,
+                                                             background_color, width, height, font_size])
 
                                                         # Add the new visits for detected buttons to url list. If list is too low then add to end of list
                                                         if not button_type == 'ACCEPT':
                                                             try:
-                                                                urls.insert(runn.value + button_dict[button_type] * 2 + LIMIT_CPU.value, [site_nr, short_url, button_dict[button_type]])
+                                                                urls.insert(runn.value + button_dict[
+                                                                    button_type] * 2 + LIMIT_CPU.value,
+                                                                            [site_nr, short_url,
+                                                                             button_dict[button_type]])
                                                             except:
-                                                                urls.append([site_nr, short_url, button_dict[button_type]])
+                                                                urls.append(
+                                                                    [site_nr, short_url, button_dict[button_type]])
                                                         # print([site_nr, short_url, button_dict[button_type], 0, save_element_text, save_element_css, iframe_element_css])
 
                                             # print("-------------------elements printed")
@@ -1287,13 +1326,13 @@ def session(lock, stop, start_time, short_url, url, visit_type, site_nr, fails, 
                             except Exception as err:
                                 print(traceback.format_exc())
                                 print(err)
-                                #elements.append(
-                                #[visit_id, site_nr, short_url, 0, 1, "° Error during visit", "", "", "", "", "", "", "", "", "", ""])
+                                # elements.append(
+                                # [visit_id, site_nr, short_url, 0, 1, "° Error during visit", "", "", "", "", "", "", "", "", "", ""])
 
                             try:
                                 if iframe_test:
                                     driver.switch_to.parent_frame()
-                                    #driver.switch_to.default_content()
+                                    # driver.switch_to.default_content()
                                     time.sleep(0.5)
                             except Exception as err:
                                 print("Error while switching to parent frame")
@@ -1314,7 +1353,7 @@ def session(lock, stop, start_time, short_url, url, visit_type, site_nr, fails, 
 
                 # print('Saving page source')
                 # html = driver.execute_script("""return arguments[0].innerText;""", driver.find_element(By.XPATH, "/*"))
-                #html = driver.find_element(By.XPATH, "/*").text
+                # html = driver.find_element(By.XPATH, "/*").text
                 '''with open(BASE_PATH + str(site_nr).zfill(7) + "°" + short_url + ".txt",
                           "w") as file:
                     file.write(html)'''
@@ -1355,7 +1394,8 @@ def session(lock, stop, start_time, short_url, url, visit_type, site_nr, fails, 
                                     location_y = ""
 
                                 elements.append(
-                                    [visit_id, site_nr, short_url, 1, 1, "Normal visit", element_text, element_css, iframe_element_css, location_x, location_y, text_color,
+                                    [visit_id, site_nr, short_url, 1, 1, "Normal visit", element_text, element_css,
+                                     iframe_element_css, location_x, location_y, text_color,
                                      background_color, width, height, font_size])
 
                                 element.click()
@@ -1364,18 +1404,20 @@ def session(lock, stop, start_time, short_url, url, visit_type, site_nr, fails, 
                                 # Save cookies
                                 cookies_temp = driver.execute_cdp_cmd('Network.getAllCookies', {})['cookies']
                                 print(
-                                    '({}) {}: Na accept {} cookies   {:.2f}-{:.2f}'.format(site_nr, url, len(cookies_temp),
+                                    '({}) {}: Na accept {} cookies   {:.2f}-{:.2f}'.format(site_nr, url,
+                                                                                           len(cookies_temp),
                                                                                            time.time() - this_url_start,
                                                                                            time.time() - start_time))
                                 write_cookies(1, visit_id, cookies_temp, cookies2, short_url, driver_time)
-                                #write_cookies(1, visit_id, cookies_temp, cookies2, short_url)
+                                # write_cookies(1, visit_id, cookies_temp, cookies2, short_url)
                                 visits.append([visit_id, site_nr, short_url, 1, driver.current_url, len(cookies_temp)])
-                                #get_redirects(driver, visit_id, redirects, all_requests) # Enkel voor Selenium-wire
+                                # get_redirects(driver, visit_id, redirects, all_requests) # Enkel voor Selenium-wire
 
                                 # Save screenshot
                                 if MAKE_SCREENSHOTS:
                                     driver.save_screenshot(
-                                        BASE_PATH + "screenshots/" + str(site_nr).zfill(7) + "°" + short_url + "°" + str(1) + ".png")
+                                        BASE_PATH + "screenshots/" + str(site_nr).zfill(
+                                            7) + "°" + short_url + "°" + str(1) + ".png")
 
                                 # print('Added element to elements', end="")
                                 # print([site_nr, short_url, 1, 1, element_text, element_css, iframe_element_css])
@@ -1406,28 +1448,29 @@ def session(lock, stop, start_time, short_url, url, visit_type, site_nr, fails, 
             fails.value += 1
             short_text = ''.join([x for i, x in enumerate(str(err).replace('\n', ' ')) if i < 1020])
             elements.append(
-                                [visit_id, site_nr, short_url, visit_type, 1, short_text])
+                [visit_id, site_nr, short_url, visit_type, 1, short_text])
         except WebDriverException as err:
             print("({}) http://{} WebDriverException     {:.2f}-{:.2f} (Error type {} - Message)".format(site_nr, url,
-                                                                                                 time.time() - this_url_start,
-                                                                                                 time.time() - start_time,
-                                                                                                 type(err), err.msg))
+                                                                                                         time.time() - this_url_start,
+                                                                                                         time.time() - start_time,
+                                                                                                         type(err),
+                                                                                                         err.msg))
             print(traceback.format_exc())
             fails.value += 1
             short_text = ''.join([x for i, x in enumerate(str(err).replace('\n', ' ')) if i < 1020])
             elements.append(
-                                [visit_id, site_nr, short_url, visit_type, 1, short_text])
+                [visit_id, site_nr, short_url, visit_type, 1, short_text])
         except Exception as err:
             print('({}) http://{} Error      {:.2f}-{:.2f}  (Error type {})'.format(site_nr, url,
                                                                                     time.time() - this_url_start,
                                                                                     time.time() - start_time,
                                                                                     type(err)))
             print(traceback.format_exc())
-            #print(err)
+            # print(err)
             fails.value += 1
             short_text = ''.join([x for i, x in enumerate(str(err).replace('\n', ' ')) if i < 1020])
             elements.append(
-                                [visit_id, site_nr, short_url, visit_type, 1, short_text])
+                [visit_id, site_nr, short_url, visit_type, 1, short_text])
 
         finally:
             driver.quit()
@@ -1450,13 +1493,13 @@ def session(lock, stop, start_time, short_url, url, visit_type, site_nr, fails, 
                         time.sleep(0.5)
 
                     css_elements = driver.find_elements(By.CSS_SELECTOR, r[7])
-                    #print(css_elements)
+                    # print(css_elements)
                     clicked = False
                     for n, element in enumerate(css_elements):
-                        #print(element.text)
-                        #print(r[6])
+                        # print(element.text)
+                        # print(r[6])
                         if element.text == r[6]:
-                            #print('element reached')
+                            # print('element reached')
                             element.click()
                             time.sleep(5)
                             clicked = True
@@ -1471,52 +1514,60 @@ def session(lock, stop, start_time, short_url, url, visit_type, site_nr, fails, 
                                 [visit_id, r[1], r[2], r[3], 1, "Normal visit", r[6], r[7], r[8], r[9],
                                  r[10], r[11], r[12], r[13], r[14], r[15]])
                             write_cookies(visit_type, visit_id, cookies_temp, cookies2, short_url, driver_time)
-                            #write_cookies(visit_type, visit_id, cookies_temp, cookies2, short_url)
-                            visits.append([visit_id, site_nr, short_url, visit_type, driver.current_url, len(cookies_temp)])
-                            #get_redirects(driver, visit_id, redirects, all_requests) # Enkel voor Selenium-wire
+                            # write_cookies(visit_type, visit_id, cookies_temp, cookies2, short_url)
+                            visits.append(
+                                [visit_id, site_nr, short_url, visit_type, driver.current_url, len(cookies_temp)])
+                            # get_redirects(driver, visit_id, redirects, all_requests) # Enkel voor Selenium-wire
 
                             # Save screenshot
                             if MAKE_SCREENSHOTS:
                                 driver.save_screenshot(
-                                    BASE_PATH + "screenshots/" + str(site_nr).zfill(7) + "°" + short_url + "°" + str(visit_type) + ".png")
+                                    BASE_PATH + "screenshots/" + str(site_nr).zfill(7) + "°" + short_url + "°" + str(
+                                        visit_type) + ".png")
 
                             break
 
                     '''if r[7]:
                         driver.switch_to.parent_frame()'''
-                        
+
                     if not clicked:
                         elements.append(
-                                [visit_id, r[1], r[2], r[3], 1, "# css_element not found", r[6], r[7], r[8], r[9],
-                                 r[10], r[11], r[12], r[13], r[14], r[15]])
+                            [visit_id, r[1], r[2], r[3], 1, "# css_element not found", r[6], r[7], r[8], r[9],
+                             r[10], r[11], r[12], r[13], r[14], r[15]])
                         print(f"Element not found on site {r[2]}")
 
                 except TimeoutError as err:
                     print('({}) http://{} Timeout      {:.2f}-{:.2f}  (Error type {})'.format(site_nr, url,
                                                                                               time.time() - this_url_start,
-                                                                                              time.time() - start_time, type(err)))
+                                                                                              time.time() - start_time,
+                                                                                              type(err)))
                     print(traceback.format_exc())
                     fails.value += 1
                     elements.append(
-                                [visit_id, site_nr, short_url, visit_type, 1, "° Timeout error during visit", r[6], r[7], r[8], r[9], r[10], r[11], r[12], r[13], r[14], r[15]])
+                        [visit_id, site_nr, short_url, visit_type, 1, "° Timeout error during visit", r[6], r[7], r[8],
+                         r[9], r[10], r[11], r[12], r[13], r[14], r[15]])
                 except WebDriverException as err:
                     print("({}){} WebDriverException     {:.2f}-{:.2f} (Error type {} - Message)".format(site_nr, url,
                                                                                                          time.time() - this_url_start,
                                                                                                          time.time() - start_time,
-                                                                                                         type(err), err.msg))
+                                                                                                         type(err),
+                                                                                                         err.msg))
                     print(traceback.format_exc())
                     fails.value += 1
                     elements.append(
-                                [visit_id, site_nr, short_url, visit_type, 1, "° WebdriverException during visit", r[6], r[7], r[8], r[9], r[10], r[11], r[12], r[13], r[14], r[15]])
+                        [visit_id, site_nr, short_url, visit_type, 1, "° WebdriverException during visit", r[6], r[7],
+                         r[8], r[9], r[10], r[11], r[12], r[13], r[14], r[15]])
                 except Exception as err:
                     print('({}) http://{} Error      {:.2f}-{:.2f}  (Error type {})'.format(site_nr, url,
                                                                                             time.time() - this_url_start,
-                                                                                            time.time() - start_time, type(err)))
+                                                                                            time.time() - start_time,
+                                                                                            type(err)))
                     print(traceback.format_exc())
-                    #print(err)
+                    # print(err)
                     fails.value += 1
                     elements.append(
-                                [visit_id, site_nr, short_url, visit_type, 1, "° Other error during visit", r[6], r[7], r[8], r[9], r[10], r[11], r[12], r[13], r[14], r[15]])
+                        [visit_id, site_nr, short_url, visit_type, 1, "° Other error during visit", r[6], r[7], r[8],
+                         r[9], r[10], r[11], r[12], r[13], r[14], r[15]])
 
                 finally:
                     driver.quit()
@@ -1543,7 +1594,8 @@ def session(lock, stop, start_time, short_url, url, visit_type, site_nr, fails, 
 
 
 # i = thread number
-def session_checker(lock, thread_nr, runn, stop, pause, now, urls, fails, cookies, cookies2, previously_visited_nrs, visits,
+def session_checker(lock, thread_nr, runn, stop, pause, now, urls, fails, cookies, cookies2, previously_visited_nrs,
+                    visits,
                     do_not_visit, elements, LIMIT_CPU, redirects, all_requests, predictions):
     # lock file, thread_nr,
     print('Starting session ' + str(thread_nr))
@@ -1568,10 +1620,11 @@ def session_checker(lock, thread_nr, runn, stop, pause, now, urls, fails, cookie
 
         if not visit_url:
             print("({}) http://{} has been skipped because it can't be reached".format(site_nr, short_url))
-            #cookies.append(
+            # cookies.append(
             #    [visit_id, site_nr, short_url, "error", None, None, None, None, None])
             elements.append(
-                [visit_id, site_nr, short_url, 0, 1, "# Skipped because can't be reached", "", "", "", "", "", "", "", "", "", ""])
+                [visit_id, site_nr, short_url, 0, 1, "# Skipped because can't be reached", "", "", "", "", "", "", "",
+                 "", "", ""])
             visits.append([visit_id, site_nr, short_url, visit_type, "# can't be reached", -1])
         else:
             p = Process(target=session, args=(
@@ -1598,7 +1651,7 @@ def session_checker(lock, thread_nr, runn, stop, pause, now, urls, fails, cookie
                         # p.terminate()
                         # killing all children
                         killtree(os.getpid())
-                        #cookies.append(
+                        # cookies.append(
                         #    [visit_id, site_nr, short_url, "error", None, None, None, None, None])
                         visits.append([visit_id, site_nr, short_url, visit_type, "° Timeout", -1])
                         elements.append([visit_id, site_nr, short_url, visit_type, 1, "° Timeout during session", ""])
