@@ -939,12 +939,11 @@ def session(lock, stop, start_time, short_url, url, visit_type, site_nr, fails, 
         # "profile.managed_default_content_setting_values.images": 2,  # only works in headfull to block images
         # "profile.managed_default_content_settings.images": 2,
         "profile.default_content_setting_values.notifications": 2,
-        "intl.accept_languages": 'nl, nl-NL'
+        "intl.accept_languages": 'nl, nl-NL',
+        "profile.managed_default_content_settings.javascript": 2  # Disable javascript
     }
     options.add_experimental_option("prefs", prefs)
 
-    # Disable javascript
-    options.set_preference('javascript.enabled', False)
 
     # print('Opstart tijd driver: {:.2f}'.format(time.time() - this_thread_start))
 
