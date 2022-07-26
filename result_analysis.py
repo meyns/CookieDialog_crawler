@@ -672,7 +672,7 @@ def first_third_party_cookies():
     res_buckets = cursor.fetchall()
     conn.close()
 
-    results_sites = {}  # site_nr,element_type : [short_url, first_party, third_party]
+    results_sites = {}  # site_nr,element_type : [short_url, first_party, third_party, CD? 1=yes]
 
     for res in res_buckets:
         site_nr = int(res[0])
@@ -691,7 +691,15 @@ def first_third_party_cookies():
 
         if element_type == 0 and result_text == "Normal visit":
             if site_nr + element_type/10 not in results_sites:
-                results_sites[site_nr + element_type / 10] = [sitename, 0, 0]
+                results_sites[site_nr + element_type / 10] = [sitename, 0, 0, 1]
+            if domain is not None:
+                if sitename in domain:
+                    results_sites[site_nr + element_type / 10][1] += cookie_count
+                else:
+                    results_sites[site_nr + element_type / 10][2] += cookie_count
+        elif element_type == 0 and result_text == "No cookie dialog found during visit":
+            if site_nr + element_type/10 not in results_sites:
+                results_sites[site_nr + element_type / 10] = [sitename, 0, 0, 0]
             if domain is not None:
                 if sitename in domain:
                     results_sites[site_nr + element_type / 10][1] += cookie_count
@@ -700,7 +708,7 @@ def first_third_party_cookies():
 
         elif element_type in [1,2] and not '#' in result_text and not ':' in result_text and not '°' in result_text:  # no error in visit
             if site_nr + element_type/10 not in results_sites:
-                results_sites[site_nr + element_type / 10] = [sitename, 0, 0]
+                results_sites[site_nr + element_type / 10] = [sitename, 0, 0, -1]
             if domain is not None:
                 if sitename in domain:
                     results_sites[site_nr + element_type / 10][1] += cookie_count
@@ -710,34 +718,307 @@ def first_third_party_cookies():
     #print(results_buckets)
 
 
-    print(f'site_nr;element_type;sitename;first_party;third_party')
+    print(f'site_nr;element_type;sitename;first_party;third_party;CD?')
+    with open("d:/temp/first_third_party0.csv", "a") as file:
+        file.write('site_nr;element_type;sitename;first_party;third_party;CD?\n')
     for key in results_sites:
         if int(key*10%10) == 0:
-            print(f'{int(key)};{int(key*10%10)};{results_sites[key][0]};{results_sites[key][1]};{results_sites[key][2]}')
+            print(f'{int(key)};{int(key*10%10)};{results_sites[key][0]};{results_sites[key][1]};{results_sites[key][2]};{results_sites[key][3]}')
             with open("d:/temp/first_third_party0.csv", "a") as file:
-                file.write(f'{int(key)};{int(key*10%10)};{results_sites[key][0]};{results_sites[key][1]};{results_sites[key][2]}\n')
+                file.write(f'{int(key)};{int(key*10%10)};{results_sites[key][0]};{results_sites[key][1]};{results_sites[key][2]};{results_sites[key][3]}\n')
 
     #input('----------------')
 
-    print(f'site_nr;element_type;sitename;first_party;third_party')
+    print(f'site_nr;element_type;sitename;first_party;third_party;CD?')
+    with open("d:/temp/first_third_party1.csv", "a") as file:
+        file.write('site_nr;element_type;sitename;first_party;third_party;CD?\n')
     for key in results_sites:
         if int(key * 10 % 10) == 1:
             print(
-                f'{int(key)};{int(key * 10 % 10)};{results_sites[key][0]};{results_sites[key][1]};{results_sites[key][2]}')
+                f'{int(key)};{int(key * 10 % 10)};{results_sites[key][0]};{results_sites[key][1]};{results_sites[key][2]};{results_sites[key][3]}')
             with open("d:/temp/first_third_party1.csv", "a") as file:
                 file.write(
-                    f'{int(key)};{int(key * 10 % 10)};{results_sites[key][0]};{results_sites[key][1]};{results_sites[key][2]}\n')
+                    f'{int(key)};{int(key * 10 % 10)};{results_sites[key][0]};{results_sites[key][1]};{results_sites[key][2]};{results_sites[key][3]}\n')
 
     #input('----------------')
 
-    print(f'site_nr;element_type;sitename;first_party;third_party')
+    print(f'site_nr;element_type;sitename;first_party;third_party;CD?')
+    with open("d:/temp/first_third_party2.csv", "a") as file:
+        file.write('site_nr;element_type;sitename;first_party;third_party;CD?\n')
     for key in results_sites:
         if int(key * 10 % 10) == 2:
             print(
-                f'{int(key)};{int(key * 10 % 10)};{results_sites[key][0]};{results_sites[key][1]};{results_sites[key][2]}')
+                f'{int(key)};{int(key * 10 % 10)};{results_sites[key][0]};{results_sites[key][1]};{results_sites[key][2]};{results_sites[key][3]}')
             with open("d:/temp/first_third_party2.csv", "a") as file:
                 file.write(
-                    f'{int(key)};{int(key * 10 % 10)};{results_sites[key][0]};{results_sites[key][1]};{results_sites[key][2]}\n')
+                    f'{int(key)};{int(key * 10 % 10)};{results_sites[key][0]};{results_sites[key][1]};{results_sites[key][2]};{results_sites[key][3]}\n')
+
+def https_redirects():
+    buckets = set_buckets(False)
+    results_buckets = []
+
+    for index, bucket in enumerate(buckets):
+        # print(bucket)
+        results_buckets.append([bucket, [0, 0, 0]]) # count, count_http, count_https
+
+        conn = sqlite3.connect(BASE_PATH + 'cookies.db')
+        cursor = conn.cursor()
+        # cursor.execute('SELECT * FROM elements where result == "Normal visit" AND element_type == 0 ORDER BY site_nr ASC', (site_nr,))
+        cursor.execute('select E.site_nr, E.sitename, E.element_type, E.result, V.site_url '
+                       'from elements as E '
+                       'join visits as V on V.visit_id == E.visit_id and E.element_type == V.visit_type '
+                       'WHERE E.element_type == 0 and E.site_nr > ? and E.site_nr <= ? and (E.result == "Normal visit" or E.result == "No cookie dialog found during visit")'
+                       'group by E.sitename, E.element_type '
+                       'order by E.site_nr, E.element_type', (bucket[0], bucket[1]))
+        #cursor.execute('SELECT * FROM elements WHERE site_nr > ? and site_nr <= ?', (bucket[0], bucket[1]))
+        res_buckets = cursor.fetchall()
+        conn.close()
+
+        count = 0
+        count_http = 0
+        count_https = 0
+        for res in res_buckets:
+            site_nr = int(res[0])
+            sitename = res[1]
+            element_type = int(res[2])
+            result_text = res[3]
+            site_url = res[4]
+
+            results_buckets[index][1][0] += 1
+            if site_url.startswith("http://"):
+                results_buckets[index][1][1] += 1
+            if site_url.startswith("https://"):
+                results_buckets[index][1][2] += 1
+
+
+    print('key;count_http;count_https;count')
+    for bucket in results_buckets:
+        print(f'{bucket[0]};{bucket[1][1]};{bucket[1][2]};{bucket[1][0]}')
+
+
+def most_used_domain_third_party(visit_type):
+    results = {}
+    results2 = {}
+
+    conn = sqlite3.connect(BASE_PATH + 'cookies.db')
+    cursor = conn.cursor()
+    # cursor.execute('SELECT * FROM elements where result == "Normal visit" AND element_type == 0 ORDER BY site_nr ASC', (site_nr,))
+    cursor.execute('select count(C.domain), C.domain, V.site_url, V.sitename from cookies as C '
+                   'join visits as V on C.visit_id == V.visit_id and C.before_after == V.visit_type '
+                   'where C.before_after == ? group by C.domain, V.site_url order by count(C.domain) DESC', (visit_type, ))
+    #cursor.execute('SELECT * FROM elements WHERE site_nr > ? and site_nr <= ?', (bucket[0], bucket[1]))
+    res_domains = cursor.fetchall()
+    conn.close()
+
+    total_cookies = 0
+    total_sites = 0
+
+    for res in res_domains:
+        count = res[0]
+        domain = res[1].replace('www.', '')
+        if domain.startswith('.'):
+            domain = domain[1:]
+        if domain.startswith('c.'):
+            domain = domain[2:]
+        if domain.startswith('ads.'):
+            domain = domain[4:]
+        if domain.startswith('dpm.'):
+            domain = domain[4:]
+        if domain.startswith('analytics.'):
+            domain = domain[10:]
+
+        total_cookies += count
+        total_sites += 1
+
+        site_url = res[2]
+        sitename = res[3]
+
+        site_url = site_url.replace('http://', '').replace('https://', '').replace('www.', '')
+        site_url = site_url[:site_url.find("/")]
+        if sitename in site_url:
+            pass
+        else:
+            sitename = site_url
+
+        if domain not in results:
+            results[domain] = count
+            results2[domain] = 1
+        else:
+            results[domain] += count
+            results2[domain] += 1
+
+    print(f'Total cookies;{total_cookies}')
+    print(f'Total visits;{total_sites}')
+
+    count = 0
+    for w in sorted(results, key=results.get, reverse=True):
+        print(f"{w};{results[w]}")
+        count += 1
+        if count > 100:
+            break
+
+    print('---------------')
+
+    count = 0
+    for w in sorted(results2, key=results2.get, reverse=True):
+        print(f"{w};{results2[w]}")
+        count += 1
+        if count > 100:
+            break
+
+
+def most_used_domain_third_party2():
+    results = {}
+    results2 = {}
+    sites_list = []
+
+    conn = sqlite3.connect(BASE_PATH + 'cookies.db')
+    cursor = conn.cursor()
+    # cursor.execute('SELECT * FROM elements where result == "Normal visit" AND element_type == 0 ORDER BY site_nr ASC', (site_nr,))
+    cursor.execute('select count(C.domain), C.domain, V.site_url, V.sitename, V.site_nr from cookies as C '
+                   'join visits as V on C.visit_id == V.visit_id and C.before_after == V.visit_type '
+                   'where C.before_after == 1 group by C.domain, V.site_url order by count(C.domain) DESC')
+    #cursor.execute('SELECT * FROM elements WHERE site_nr > ? and site_nr <= ?', (bucket[0], bucket[1]))
+    res_domains = cursor.fetchall()
+    conn.close()
+
+    total_cookies = 0
+    total_sites = 0
+
+    for res in res_domains:
+        count = res[0]
+        domain = res[1].replace('www.', '')
+        if domain.startswith('.'):
+            domain = domain[1:]
+        if domain.startswith('c.'):
+            domain = domain[2:]
+        if domain.startswith('d.'):
+            domain = domain[2:]
+        if domain.startswith('ads.'):
+            domain = domain[4:]
+        if domain.startswith('dpm.'):
+            domain = domain[4:]
+        if domain.startswith('analytics.'):
+            domain = domain[10:]
+
+        total_cookies += count
+        total_sites += 1
+
+        site_url = res[2]
+        sitename = res[3]
+
+        site_nr = int(res[4])
+        sites_list.append(site_nr)
+
+        site_url = site_url.replace('http://', '').replace('https://', '').replace('www.', '')
+        site_url = site_url[:site_url.find("/")]
+        if sitename in site_url:
+            pass
+        else:
+            sitename = site_url
+
+        if domain not in results:
+            results[domain] = count
+            results2[domain] = 1
+        else:
+            results[domain] += count
+            results2[domain] += 1
+
+    print(f'Total cookies;{total_cookies}')
+    print(f'Total visits;{total_sites}')
+
+    count = 0
+    for w in sorted(results, key=results.get, reverse=True):
+        print(f"{w};{results[w]}")
+        count += 1
+        if count > 100:
+            break
+
+    print('------------------------------')
+
+    count = 0
+    for w in sorted(results2, key=results2.get, reverse=True):
+        print(f"{w};{results2[w]}")
+        count += 1
+        if count > 100:
+            break
+
+    tuple_url_nrs = tuple(sites_list)
+
+    print('°°°°°°°°°°°°°°°°°°°°°°°°°°°°°')
+
+    conn = sqlite3.connect(BASE_PATH + 'cookies.db')
+    cursor = conn.cursor()
+    # cursor.execute('SELECT * FROM elements where result == "Normal visit" AND element_type == 0 ORDER BY site_nr ASC', (site_nr,))
+    cursor.execute('select count(C.domain), C.domain, V.site_url, V.sitename, V.site_nr from cookies as C '
+                   'join visits as V on C.visit_id == V.visit_id and C.before_after == V.visit_type '
+                   'where C.before_after == 0 and V.site_nr IN (' + ','.join(map(str, tuple_url_nrs)) + ') group by C.domain, V.site_url order by count(C.domain) DESC')
+    # cursor.execute('SELECT * FROM elements WHERE site_nr > ? and site_nr <= ?', (bucket[0], bucket[1]))
+    res_domains = cursor.fetchall()
+    conn.close()
+
+    results = {}
+    results2 = {}
+    total_cookies = 0
+    total_sites = 0
+
+    for res in res_domains:
+        count = res[0]
+        domain = res[1].replace('www.', '')
+        if domain.startswith('.'):
+            domain = domain[1:]
+        if domain.startswith('c.'):
+            domain = domain[2:]
+        if domain.startswith('d.'):
+            domain = domain[2:]
+        if domain.startswith('ads.'):
+            domain = domain[4:]
+        if domain.startswith('dpm.'):
+            domain = domain[4:]
+        if domain.startswith('analytics.'):
+            domain = domain[10:]
+
+        total_cookies += count
+        total_sites += 1
+
+        site_url = res[2]
+        sitename = res[3]
+
+        site_nr = int(res[4])
+        sites_list.append(site_nr)
+
+        site_url = site_url.replace('http://', '').replace('https://', '').replace('www.', '')
+        site_url = site_url[:site_url.find("/")]
+        if sitename in site_url:
+            pass
+        else:
+            sitename = site_url
+
+        if domain not in results:
+            results[domain] = count
+            results2[domain] = 1
+        else:
+            results[domain] += count
+            results2[domain] += 1
+
+    print(f'Total cookies;{total_cookies}')
+    print(f'Total visits;{total_sites}')
+
+    count = 0
+    for w in sorted(results, key=results.get, reverse=True):
+        print(f"{w};{results[w]}")
+        count += 1
+        if count > 100:
+            break
+
+    print('------------------------------------')
+
+    count = 0
+    for w in sorted(results2, key=results2.get, reverse=True):
+        print(f"{w};{results2[w]}")
+        count += 1
+        if count > 100:
+            break
 
 
 if __name__ == '__main__':
@@ -749,6 +1030,8 @@ if __name__ == '__main__':
     print('6 = cookies/bucket normal and modified')
     print('7 = cookies all sites')
     print('8 = first/third party cookies')
+    print('9 = https redirects')
+    print('10 = cookie domains')
     choice = int(input('Which comparison would you like to show? '))
 
     if choice == 1:
@@ -788,3 +1071,11 @@ if __name__ == '__main__':
     if choice == 8:
         print('-----------First/third party cookies')
         first_third_party_cookies()
+
+    if choice == 9:
+        print('-----------https redirects')
+        https_redirects()
+
+    if choice == 10:
+        print('-----------most used cookie domain for third party cookies')
+        most_used_domain_third_party2()
