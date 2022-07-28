@@ -6,13 +6,14 @@ import matplotlib.pyplot as plt
 BASE_PATH = "o:/Crawl data2/data/"
 DOMAINS_FILE = "results_09-07-2022.csv"
 
-aerts_country_list = ['fr', 'ie', 'nl', 'co.uk', 'ch', 'lu', 'be', 'at', 'es', 'it', 'se', 'pt', 'mt', 'fi', 'si', 'ro', 'de', 'lt', 'lv', 'gr', 'cz', 'hu', 'hr', 'sk', 'ee', 'no', 'bg', 'pl', 'cy']
+aerts_country_list = ['fr', 'ie', 'nl', 'co.uk', 'ch', 'lu', 'be', 'at', 'es', 'it', 'se', 'pt', 'mt', 'fi', 'si',
+                      'ro', 'de', 'lt', 'lv', 'gr', 'cz', 'hu', 'hr', 'sk', 'ee', 'no', 'bg', 'pl', 'cy']
 
 def main_results():
     conn = sqlite3.connect(BASE_PATH + 'cookies.db')
     cursor = conn.cursor()
-    #cursor.execute('SELECT * FROM elements where result == "Normal visit" AND element_type == 0 ORDER BY site_nr ASC', (site_nr,))
-    cursor.execute('SELECT * FROM elements where (result == "Normal visit" OR result == "No cookie dialog found during visit") AND element_type == 0 ORDER BY site_nr ASC')
+    cursor.execute('SELECT * FROM elements where (result == "Normal visit" OR result == "No cookie dialog found during visit")'
+                   ' AND element_type == 0 ORDER BY site_nr ASC')
     res_cookie_dialog = cursor.fetchall()
     conn.close()
 
@@ -122,9 +123,7 @@ def main_results():
             visit_id = res_cookie_dialog[res_place][0]
     
             cursor = conn.cursor()
-            # cursor.execute('SELECT * FROM elements where result == "Normal visit" AND element_type == 0 ORDER BY site_nr ASC', (site_nr,))
-            cursor.execute(
-                'SELECT * FROM cookies where visit_id == ? AND before_after == 0', (visit_id,))
+            cursor.execute('SELECT * FROM cookies where visit_id == ? AND before_after == 0', (visit_id,))
             res_cookies = cursor.fetchall()
             cookies_numbers_list.append(len(res_cookies))
             if len(res_cookies) >= 2:
@@ -152,7 +151,6 @@ def main_results():
     print("Number of consent and reject elements per country")
     conn = sqlite3.connect(BASE_PATH + 'cookies.db')
     cursor = conn.cursor()
-    #cursor.execute('SELECT * FROM elements where result == "Normal visit" AND element_type == 0 ORDER BY site_nr ASC', (site_nr,))
     cursor.execute('SELECT * FROM elements ORDER BY site_nr ASC')
     res_elements_accept_reject = cursor.fetchall()
     conn.close()
@@ -204,71 +202,6 @@ def manual_crawl_comp():
                 "accept_all": [0, 0, 1, "manual-crawl comparison accept_all.csv", 0, 0],
                 "deny_basic": [0, 0, 2, "manual-crawl comparison deny_basic.csv", 0, 0],
                 "deny_advanced": [0, 0, 99, "manual-crawl comparison deny_advanced.csv", 0, 0],
-                "modify": [0, 0, 3, "manual-crawl comparison deny_advanced.csv", 0, 0],
-                "save": [0, 0, 4, "manual-crawl comparison deny_advanced.csv", 0, 0]}
-
-
-    urls_manual_crawl = {}  # manual crawl url list
-    with open(BASE_PATH + DOMAINS_FILE) as file:
-        lines = file.read()
-        lines = lines.splitlines()
-
-    for line in lines:
-        line = line.replace('"', '').split(';')
-        try:
-            urls_manual_crawl[line[0] + "-" + line[4]] = [line[1].replace('www.', ''), int(line[9])]  # url, nr_cookies
-            settings[line[3]][0] += 1
-        except Exception as err:
-            print(err)
-
-    pprint.pprint(urls_manual_crawl)
-
-    print('Loading in database (20s)')
-
-    conn = sqlite3.connect(BASE_PATH + 'cookies.db')
-    cursor = conn.cursor()
-    cursor.execute(
-        'select count(C.name) AS nr_cookies, E.site_nr, E.sitename, C.before_after from elements as E join cookies as C on E.visit_id == C.visit_id and E.element_type == C.before_after GROUP BY E.visit_id, C.before_after ORDER BY E.site_nr ASC, E.element_type ASC')
-    results_nr_cookies = cursor.fetchall()
-    conn.close()
-
-    for key in settings:
-        with open(BASE_PATH + settings[key][3], "w") as file:
-            file.write("site_nr; url; cookies_manual; cookies_crawl\n")
-
-    for res in results_nr_cookies:
-        for key in settings:
-            if str(res[1]) + "-" + key in urls_manual_crawl and res[3] == settings[key][2]:
-                with open(BASE_PATH + settings[key][3], "a") as file:
-                    file.write(str(res[1]) + ";" + res[2] + ";" + str(
-                        urls_manual_crawl[str(res[1]) + '-' + key][1]) + ";" + str(res[0]) + "\n")
-                settings[key][4] += urls_manual_crawl[str(res[1]) + '-' + key][1]
-                settings[key][5] += res[0]
-
-        if str(res[1]) + "-" + 'initial' in urls_manual_crawl:
-            for key in settings:
-                if res[3] == settings[key][2]:
-                    settings[key][1] += 1
-
-
-    #print(f"Final: {count}: Manual avg = {round(sum_manual / count, 2)} Crawl avg = {round(sum_crawl / count, 2)}")
-
-    #print("------Results:")
-    for key in settings:
-        print('country;Manual_cookies;Crawl_cookies')
-        print(f"{key};{settings[key][0]};{settings[key][1]}")
-        if not settings[key][1] == 0:
-            with open(BASE_PATH + settings[key][3], 'a') as file:
-                file.seek(1)
-                file.write("\n;;" + str(round(settings[key][4] / settings[key][1], 2)) + ";" + str(round(settings[key][5] / settings[key][1], 2)))
-
-
-def manual_crawl_comp2():
-    # name, [count_manual, count_crawl, setting_crawl, save_file, cookies_manual, cookies_crawl]
-    settings = {"initial": [0, 0, 0, "manual-crawl comparison initial visit.csv", 0, 0],
-                "accept_all": [0, 0, 1, "manual-crawl comparison accept_all.csv", 0, 0],
-                "deny_basic": [0, 0, 2, "manual-crawl comparison deny_basic.csv", 0, 0],
-                "deny_advanced": [0, 0, 99, "manual-crawl comparison deny_advanced.csv", 0, 0],
                 "modify": [0, 0, 3, "manual-crawl comparison modify.csv", 0, 0],
                 "save": [0, 0, 4, "manual-crawl comparison save.csv", 0, 0]}
 
@@ -297,8 +230,11 @@ def manual_crawl_comp2():
 
     conn = sqlite3.connect(BASE_PATH + 'cookies.db')
     cursor = conn.cursor()
-    cursor.execute('select count(C.name) AS nr_cookies, E.site_nr, E.sitename, E.element_type from elements as E LEFT join cookies as C on E.visit_id == C.visit_id '
-        'and E.element_type == C.before_after WHERE (E.result == "Normal visit" or E.result == "No cookie dialog found during visit") and E.site_nr IN (' + ','.join(map(str, tuple_url_nrs)) + ') GROUP BY E.visit_id, C.before_after ORDER BY E.site_nr ASC, E.element_type ASC')
+    cursor.execute('select count(C.name) AS nr_cookies, E.site_nr, E.sitename, E.element_type '
+                   'from elements as E LEFT join cookies as C on E.visit_id == C.visit_id '
+                   'and E.element_type == C.before_after WHERE (E.result == "Normal visit" or '
+                   'E.result == "No cookie dialog found during visit") and E.site_nr IN (' + ','.join(map(str, tuple_url_nrs)) + ') '
+                   'GROUP BY E.visit_id, C.before_after ORDER BY E.site_nr ASC, E.element_type ASC')
     results = cursor.fetchall()
     conn.close()
 
@@ -333,37 +269,10 @@ def manual_crawl_comp2():
     #Hfor url in urls_manual_crawl:
 
 
-    '''for url in urls_manual_crawl:
-        conn = sqlite3.connect(BASE_PATH + 'cookies.db')
-        cursor = conn.cursor()
-        cursor.execute(
-            'select count(C.name) AS nr_cookies, E.site_nr, E.sitename, C.before_after from elements as E join cookies as C on E.visit_id == C.visit_id '
-            'and E.element_type == C.before_after WHERE E.site_nr == ? and C.before_after == ? GROUP BY E.visit_id, C.before_after ORDER BY E.site_nr ASC, E.element_type ASC', (url[0], url[2]))
-        res = cursor.fetchall()
-        conn.close()
-        #print(url)
-        #print(res)
-
-        for key in settings:
-            if len(res) == 1:
-                res = list(res[0])
-                #print(res[3])
-                #print(settings[key][2])
-                if int(res[3]) == settings[key][2]:
-                    settings[key][1] += 1
-                    settings[key][5] += res[0]
-                    url[4] = res[0]
-                    with open(BASE_PATH + settings[key][3], "a") as file:
-                        file.write(str(res[1]) + ";" + res[2] + ";" + res[3] + ";" + str(url[3]) + ";" + str(res[0]) + "\n")'''
-
-        #print('-----')
-
-
 
 def accept_vs_decline():
     conn = sqlite3.connect(BASE_PATH + 'cookies.db')
     cursor = conn.cursor()
-    #cursor.execute('SELECT * FROM elements where result == "Normal visit" AND element_type == 0 ORDER BY site_nr ASC', (site_nr,))
     cursor.execute('SELECT * FROM elements WHERE element_type == 0 or element_type == 1 or element_type == 2 ORDER BY site_nr ASC, element_type ASC')
     res_elements_accept_reject = cursor.fetchall()
     conn.close()
@@ -440,7 +349,8 @@ def dialogs_buckets(buckets_type):
         conn = sqlite3.connect(BASE_PATH + 'cookies.db')
         cursor = conn.cursor()
         # cursor.execute('SELECT * FROM elements where result == "Normal visit" AND element_type == 0 ORDER BY site_nr ASC', (site_nr,))
-        cursor.execute('SELECT site_nr FROM elements WHERE element_type == 0 and (result == "No cookie dialog found during visit" or result == "Normal visit") ORDER BY site_nr ASC')
+        cursor.execute('SELECT site_nr FROM elements WHERE element_type == 0 and (result == "No cookie dialog found during visit" '
+                       'or result == "Normal visit") ORDER BY site_nr ASC')
         res_new_buckets = cursor.fetchall()
         conn.close()
 
@@ -767,7 +677,8 @@ def https_redirects():
         cursor.execute('select E.site_nr, E.sitename, E.element_type, E.result, V.site_url '
                        'from elements as E '
                        'join visits as V on V.visit_id == E.visit_id and E.element_type == V.visit_type '
-                       'WHERE E.element_type == 0 and E.site_nr > ? and E.site_nr <= ? and (E.result == "Normal visit" or E.result == "No cookie dialog found during visit")'
+                       'WHERE E.element_type == 0 and E.site_nr > ? and E.site_nr <= ? and (E.result == "Normal visit" '
+                       'or E.result == "No cookie dialog found during visit")'
                        'group by E.sitename, E.element_type '
                        'order by E.site_nr, E.element_type', (bucket[0], bucket[1]))
         #cursor.execute('SELECT * FROM elements WHERE site_nr > ? and site_nr <= ?', (bucket[0], bucket[1]))
@@ -796,89 +707,16 @@ def https_redirects():
         print(f'{bucket[0]};{bucket[1][1]};{bucket[1][2]};{bucket[1][0]}')
 
 
-def most_used_domain_third_party(visit_type):
-    results = {}
-    results2 = {}
-
-    conn = sqlite3.connect(BASE_PATH + 'cookies.db')
-    cursor = conn.cursor()
-    # cursor.execute('SELECT * FROM elements where result == "Normal visit" AND element_type == 0 ORDER BY site_nr ASC', (site_nr,))
-    cursor.execute('select count(C.domain), C.domain, V.site_url, V.sitename from cookies as C '
-                   'join visits as V on C.visit_id == V.visit_id and C.before_after == V.visit_type '
-                   'where C.before_after == ? group by C.domain, V.site_url order by count(C.domain) DESC', (visit_type, ))
-    #cursor.execute('SELECT * FROM elements WHERE site_nr > ? and site_nr <= ?', (bucket[0], bucket[1]))
-    res_domains = cursor.fetchall()
-    conn.close()
-
-    total_cookies = 0
-    total_sites = 0
-
-    for res in res_domains:
-        count = res[0]
-        domain = res[1].replace('www.', '')
-        if domain.startswith('.'):
-            domain = domain[1:]
-        if domain.startswith('c.'):
-            domain = domain[2:]
-        if domain.startswith('ads.'):
-            domain = domain[4:]
-        if domain.startswith('dpm.'):
-            domain = domain[4:]
-        if domain.startswith('analytics.'):
-            domain = domain[10:]
-
-        total_cookies += count
-        total_sites += 1
-
-        site_url = res[2]
-        sitename = res[3]
-
-        site_url = site_url.replace('http://', '').replace('https://', '').replace('www.', '')
-        site_url = site_url[:site_url.find("/")]
-        if sitename in site_url:
-            pass
-        else:
-            sitename = site_url
-
-        if domain not in results:
-            results[domain] = count
-            results2[domain] = 1
-        else:
-            results[domain] += count
-            results2[domain] += 1
-
-    print(f'Total cookies;{total_cookies}')
-    print(f'Total visits;{total_sites}')
-
-    count = 0
-    for w in sorted(results, key=results.get, reverse=True):
-        print(f"{w};{results[w]}")
-        count += 1
-        if count > 100:
-            break
-
-    print('---------------')
-
-    count = 0
-    for w in sorted(results2, key=results2.get, reverse=True):
-        print(f"{w};{results2[w]}")
-        count += 1
-        if count > 100:
-            break
-
-
-def most_used_domain_third_party2():
+def most_used_domain_third_party():
     results = {}
     results2 = {}
     sites_list = []
 
     conn = sqlite3.connect(BASE_PATH + 'cookies.db')
     cursor = conn.cursor()
-    # cursor.execute('SELECT * FROM elements where result == "Normal visit" AND element_type == 0 ORDER BY site_nr ASC', (site_nr,))
     cursor.execute('select count(C.domain), C.domain, V.site_url, V.sitename, V.site_nr from cookies as C '
                    'join visits as V on C.visit_id == V.visit_id and C.before_after == V.visit_type '
                    'where C.before_after == 1 group by C.domain, V.site_url order by count(C.domain) DESC')
-    #cursor.execute('SELECT * FROM elements WHERE site_nr > ? and site_nr <= ?', (bucket[0], bucket[1]))
     res_domains = cursor.fetchall()
     conn.close()
 
@@ -949,11 +787,9 @@ def most_used_domain_third_party2():
 
     conn = sqlite3.connect(BASE_PATH + 'cookies.db')
     cursor = conn.cursor()
-    # cursor.execute('SELECT * FROM elements where result == "Normal visit" AND element_type == 0 ORDER BY site_nr ASC', (site_nr,))
     cursor.execute('select count(C.domain), C.domain, V.site_url, V.sitename, V.site_nr from cookies as C '
                    'join visits as V on C.visit_id == V.visit_id and C.before_after == V.visit_type '
                    'where C.before_after == 0 and V.site_nr IN (' + ','.join(map(str, tuple_url_nrs)) + ') group by C.domain, V.site_url order by count(C.domain) DESC')
-    # cursor.execute('SELECT * FROM elements WHERE site_nr > ? and site_nr <= ?', (bucket[0], bucket[1]))
     res_domains = cursor.fetchall()
     conn.close()
 
@@ -1036,7 +872,7 @@ if __name__ == '__main__':
 
     if choice == 1:
         print('-----------Vergelijking met de manuele crawl van Koen')
-        manual_crawl_comp2()
+        manual_crawl_comp()
 
     if choice == 2:
         print('-----------Vergelijking met Koen Aerts')
@@ -1078,4 +914,4 @@ if __name__ == '__main__':
 
     if choice == 10:
         print('-----------most used cookie domain for third party cookies')
-        most_used_domain_third_party2()
+        most_used_domain_third_party()
