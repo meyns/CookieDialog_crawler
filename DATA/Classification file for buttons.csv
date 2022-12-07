@@ -1,0 +1,1155 @@
+0000001;google.com;button;NL;OTHER
+0000001;google.com;button;Inloggen;OTHER
+0000001;google.com;a;cookies;OTHER
+0000001;google.com;a;Privacy;OTHER
+0000001;google.com;a;Voorwaarden;OTHER
+0000001;google.com;button;Aanpassen;MODIFY
+0000001;google.com;button;Ik ga akkoord;ACCEPT
+0000001;google.com;button;Bevestigen;SAVE
+0000002;netflix.com;a;derden;OTHER
+0000002;netflix.com;a;cookies en soortgelijke technologieën;OTHER
+0000002;netflix.com;a;Lees meer over ons gebruik van cookies en gegevens.;OTHER
+0000002;netflix.com;button;Accepteren;ACCEPT
+0000002;netflix.com;button;Weigeren;DECLINE
+0000002;netflix.com;button;Mijn keuzes personaliseren;MODIFY
+0000002;netflix.com;button;Save setttings;SAVE
+0000003;youtube.com;a;NL;OTHER
+0000003;youtube.com;a;INLOGGEN;OTHER
+0000003;youtube.com;a;cookies;OTHER
+0000003;youtube.com;a;ALLES AFWIJZEN;DECLINE
+0000003;youtube.com;a;ALLES ACCEPTEREN;ACCEPT
+0000003;youtube.com;a;MEER OPTIES;MODIFY
+0000003;youtube.com;a;Privacybeleid;OTHER
+0000003;youtube.com;a;Servicevoorwaarden;OTHER
+0000003;youtube.com;a;CONFIRM YOUR SETTIGNS;SAVE
+0000003;youtube.com;a;REJECT ALL;DECLINE
+0000004;facebook.com;a;cookiebeleid;OTHER
+0000004;facebook.com;a;andere bedrijven;OTHER
+0000004;facebook.com;button;Meer informatie;OTHER
+0000004;facebook.com;button;Beheeropties in je Facebook-account;OTHER
+0000004;facebook.com;button;Meer informatie over online advertenties;OTHER
+0000004;facebook.com;button;Cookies beheren via browserinstellingen;OTHER
+0000004;facebook.com;button;Alleen essentiële cookies toestaan;DECLINE
+0000004;facebook.com;button;Essentiële en optionele cookies toestaan;ACCEPT
+0000005;microsoft.com;a;Déclaration de confidentialité;OTHER
+0000005;microsoft.com;a;Cookies tiers;OTHER
+0000005;microsoft.com;button;Accepter;ACCEPT
+0000005;microsoft.com;button;Refuser;DECLINE
+0000005;microsoft.com;button;Gérer les cookies;MODIFY
+0000005;microsoft.com;button;Enregistrer les modifications;SAVE
+0000006;twitter.com;span;Accept all cookies;ACCEPT
+0000006;twitter.com;span;Refuse non-essential cookies;DECLINE
+0000006;twitter.com;span;Show more about your choices;ACCEPT
+0000007;instagram.com;a;Cookiebeleid;OTHER
+0000007;instagram.com;button;Meer informatie;OTHER
+0000007;instagram.com;button;Instellingen in je Instagram-account;OTHER
+0000007;instagram.com;button;Meer informatie over online adverteren;OTHER
+0000007;instagram.com;button;Cookies beheren via browserinstellingen;OTHER
+0000007;instagram.com;button;Alleen essentiële cookies toestaan;DECLINE
+0000007;instagram.com;button;Essentiële en optionele cookies toestaan;ACCEPT
+0000008;linkedin.com;a;cookiebeleid;OTHER
+0000008;linkedin.com;a;instellingen;MODIFY
+0000008;linkedin.com;button;Accepteren;ACCEPT
+0000008;linkedin.com;button;Afwijzen;DECLINE
+0000008;linkedin.com;button;Back;OTHER
+0000019;yahoo.com;a;guce;OTHER
+0000019;yahoo.com;a;onze partners;OTHER
+0000019;yahoo.com;a;Je privacy-instellingen;OTHER
+0000019;yahoo.com;a;Privacybeleid;OTHER
+0000019;yahoo.com;a;Cookiebeleid;OTHER
+0000019;yahoo.com;a;hier;OTHER
+0000019;yahoo.com;button;Alles accepteren;ACCEPT
+0000019;yahoo.com;a;Instellingen beheren;MODIFY
+0000019;yahoo.com;a;Alles accepteren;ACCEPT
+0000019;yahoo.com;a;Alles weigeren;DECLINE
+0000019;yahoo.com;a;Opslaan en doorgaan;SAVE
+0000021;youtu.be;a;NL;OTHER
+0000021;youtu.be;a;INLOGGEN;OTHER
+0000021;youtu.be;a;cookies;OTHER
+0000021;youtu.be;a;ALLES AFWIJZEN;DECLINE
+0000021;youtu.be;a;ALLES ACCEPTEREN;ACCEPT
+0000021;youtu.be;a;MEER OPTIES;MODIFY
+0000021;youtu.be;a;Privacybeleid;OTHER
+0000021;youtu.be;a;Servicevoorwaarden;OTHER
+0000021;youtu.be;a;CONFIRM YOUR SETTINGS;SAVE
+0000021;youtu.be;a;REJECT ALL;DECLINE
+0000024;adobe.com;button;Aanpassen;MODIFY
+0000024;adobe.com;button;Alles inschakelen;ACCEPT
+0000024;adobe.com;button;Don't enable;DECLINE
+0000024;adobe.com;button;Enable all;ACCEPT
+0000026;windowsupdate.com;a;Privacy Statement;OTHER
+0000026;windowsupdate.com;a;Third-Party Cookies;OTHER
+0000026;windowsupdate.com;button;Accept;ACCEPT
+0000026;windowsupdate.com;button;Reject;DECLINE
+0000026;windowsupdate.com;button;Manage cookies;MODIFY
+0000027;office.com;a;Privacyverklaring;OTHER
+0000027;office.com;a;Cookies van derden;OTHER
+0000027;office.com;button;Accepteren;ACCEPT
+0000027;office.com;button;Weigeren;DECLINE
+0000027;office.com;button;Cookies beheren;MODIFY
+0000027;office.com;button;Save changes;SAVE
+0000027;office.com;button;Reset all;OTHER
+0000030;bing.com;a;Privacyverklaring;OTHER
+0000030;bing.com;button;Akkoord;ACCEPT
+0000030;bing.com;a;Meer opties;MODIFY
+0000031;amazonaws.com;button;Customize;MODIFY
+0000031;amazonaws.com;button;Accept all;ACCEPT
+0000032;goo.gl;a;MEER INFORMATIE;OTHER
+0000032;goo.gl;a;OK;ACCEPT
+0000034;wordpress.com;a;Aanpassen;MODIFY
+0000034;wordpress.com;a;Alles accepteren;ACCEPT
+0000034;wordpress.com;a;Accept Selection;SAVE
+0000034;wordpress.com;a;Selectie accepteren;SAVE
+0000034;wordpress.com;a;Customize;MODIFY
+0000034;wordpress.com;a;Accept all;ACCEPT
+0000037;reddit.com;a;Learn more about Reddit’s use of cookies;OTHER
+0000037;reddit.com;button;Reject non-essential;DECLINE
+0000037;reddit.com;button;Accept all;ACCEPT
+0000038;bit.ly;a;here;OTHER
+0000038;bit.ly;a;Learn More;OTHER
+0000038;bit.ly;a;GOT IT;ACCEPT
+0000039;zoom.us;a;Privacy Statement;OTHER
+0000039;zoom.us;button;DECLINE COOKIES;DECLINE
+0000039;zoom.us;button;ACCEPT COOKIES;ACCEPT
+0000039;zoom.us;button;COOKIES SETTINGS;MODIFY
+0000039;zoom.us;button;CONFIRM MY CHOICES;SAVE
+0000044;msn.com;a;Privacyverklaring.;OTHER
+0000044;msn.com;button;Partnerlijst (derden);OTHER
+0000044;msn.com;button;Aanvaarden;ACCEPT
+0000044;msn.com;button;Alles afwijzen;DECLINE
+0000044;msn.com;button;Doeleinden weergeven;MODIFY
+0000044;msn.com;button;Alles toestaan;ACCEPT
+0000044;msn.com;button;Mijn keuzes bevestigen;SAVE
+0000045;whatsapp.com;button;...;OTHER
+0000045;whatsapp.com;a;Cookiebeleid;OTHER
+0000045;whatsapp.com;button;COOKIES BEHEREN;MODIFY
+0000045;whatsapp.com;button;ACCEPTEREN;ACCEPT
+0000045;whatsapp.com;button;AGREE;ACCEPT
+0000046;doubleclick.net;a;Meer informatie;OTHER
+0000046;doubleclick.net;a;OK;ACCEPT
+0000049;tumblr.com;button;Partners weergeven;MODIFY
+0000049;tumblr.com;button;Meer informatie;OTHER
+0000049;tumblr.com;button;Ik ga akkoord!;ACCEPT
+0000049;tumblr.com;button;Agree to All;ACCEPT
+0000049;tumblr.com;button;Disagree to All;DECLINE
+0000051;skype.com;a;Privacyverklaring;OTHER
+0000051;skype.com;a;Cookies van derden;OTHER
+0000051;skype.com;button;Accepteren;ACCEPT
+0000051;skype.com;button;Weigeren;DECLINE
+0000051;skype.com;button;Cookies beheren;MODIFY
+0000051;skype.com;button;Accept;ACCEPT
+0000051;skype.com;button;Reject;DECLINE
+0000051;skype.com;button;Manage cookies;MODIFY
+0000051;skype.com;button;Save changes;SAVE
+0000051;skype.com;button;Reset all;OTHER
+0000054;nytimes.com;a;view our Cookie Policy;OTHER
+0000054;nytimes.com;a;object;OTHER
+0000054;nytimes.com;a;privacy policy;OTHER
+0000054;nytimes.com;button;ACCEPT;ACCEPT
+0000054;nytimes.com;button;REJECT;DECLINE
+0000055;europa.eu;a;how we use cookies.;OTHER
+0000055;europa.eu;a;Accept all cookies;ACCEPT
+0000055;europa.eu;a;Accept only essential cookies;DECLINE
+0000056;flickr.com;a;our partners:;OTHER
+0000056;flickr.com;a;Save and Exit;SAVE
+0000056;flickr.com;a;Reject All;DECLINE
+0000056;flickr.com;a;Accept All;ACCEPT
+0000056;flickr.com;a;Privacy Policy;OTHER
+0000056;flickr.com;a;Cookie Policy;OTHER
+0000058;gravatar.com;a;meer informatie;OTHER
+0000058;gravatar.com;a;Begrepen!;ACCEPT
+0000061;google-analytics.com;a;Meer informatie;OTHER
+0000061;google-analytics.com;a;OK;ACCEPT
+0000062;spotify.com;button;PARTNERLIJST (DERDEN);OTHER
+0000062;spotify.com;button;ACCEPTEER COOKIES;ACCEPT
+0000062;spotify.com;button;COOKIE INSTELLINGEN;MODIFY
+0000062;spotify.com;button;ALLE TOESTAAN;ACCEPT
+0000062;spotify.com;button;MIJN KEUZES BEVESTIGEN;SAVE
+0000063;soundcloud.com;button;Lijst met partners;OTHER
+0000063;soundcloud.com;button;Accepteren;ACCEPT
+0000063;soundcloud.com;button;Voorkeuren beheren;MODIFY
+0000063;soundcloud.com;button;I Accept;ACCEPT
+0000063;soundcloud.com;button;Manage Preferences;MODIFY
+0000063;soundcloud.com;button;Allow All;ACCEPT
+0000063;soundcloud.com;button;Confirm My Choices;SAVE
+0000065;dropbox.com;a;Privacyverklaring;OTHER
+0000065;dropbox.com;a;Privacyverklaring FAQ;OTHER
+0000065;dropbox.com;a;Tool voor Cookietoestemming;OTHER
+0000065;dropbox.com;button;Weigeren;DECLINE
+0000065;dropbox.com;button;Alles accepteren;ACCEPT
+0000068;medium.com;a;Privacy Policy;OTHER
+0000070;forbes.com;a;our partners:;OTHER
+0000070;forbes.com;button;Accept All;ACCEPT
+0000070;forbes.com;button;Choose Cookies;MODIFY
+0000070;forbes.com;a;Privacy Statement;OTHER
+0000070;forbes.com;button;Save and Exit;SAVE
+0000070;forbes.com;button;Reject All;DECLINE
+0000070;forbes.com;button;Accept All;ACCEPT
+0000072;canva.com;a;cookiebeleid;OTHER
+0000072;canva.com;button;Alle cookies accepteren;ACCEPT
+0000072;canva.com;button;Cookies beheren;MODIFY
+0000072;canva.com;button;Accept all cookies;ACCEPT
+0000072;canva.com;button;Manage cookies;MODIFY
+0000072;canva.com;button;Accept all;ACCEPT
+0000072;canva.com;button;Reject all;DECLINE
+0000072;canva.com;button;Save & Close;SAVE
+0000073;paypal.com;a;Manage cookies and learn more;MODIFY
+0000073;paypal.com;button;Accept;ACCEPT
+0000073;paypal.com;button;Decline;DECLINE
+0000073;paypal.com;button;Confirm ookie Settings;SAVE
+0000074;cnn.com;a;Affiliates;OTHER
+0000074;cnn.com;a;Vendors;OTHER
+0000074;cnn.com;a;Privacy Policy;OTHER
+0000074;cnn.com;button;Vendors;OTHER
+0000074;cnn.com;button;Accept All;ACCEPT
+0000074;cnn.com;button;Manage Cookies+;MODIFY
+0000074;cnn.com;button;Save Preferences;SAVE
+0000077;google.com.hk;button;NL;OTHER
+0000077;google.com.hk;button;Inloggen;OTHER
+0000077;google.com.hk;a;cookies;OTHER
+0000077;google.com.hk;a;Privacy;OTHER
+0000077;google.com.hk;a;Voorwaarden;OTHER
+0000077;google.com.hk;button;Aanpassen;MODIFY
+0000077;google.com.hk;button;Ik ga akkoord;ACCEPT
+0000078;cloudflare.com;button;Cookie Preferences;MODIFY
+0000078;cloudflare.com;button;Reject All;DECLINE
+0000078;cloudflare.com;button;Accept All Cookies;ACCEPT
+0000078;cloudflare.com;button;Allow All;ACCEPT
+0000078;cloudflare.com;button;Confirm My Choices;SAVE
+0000080;ebay.com;a;Cookie Notice;OTHER
+0000080;ebay.com;a;third-party companies;OTHER
+0000080;ebay.com;a;https://www.ebay.com/gdpr;OTHER
+0000080;ebay.com;a;Customise my choices;MODIFY
+0000080;ebay.com;button;Decline All;DECLINE
+0000080;ebay.com;button;Accept All;ACCEPT
+0000080;ebay.com;button;Continue;SAVE
+0000081;theguardian.com;a;partners;OTHER
+0000081;theguardian.com;button;Store and/or access information on a device;OTHER
+0000081;theguardian.com;button;Personalised ads and content, ad and content measurement, audience insights and product development;OTHER
+0000081;theguardian.com;a;privacy policy;OTHER
+0000081;theguardian.com;a;cookie policy;OTHER
+0000081;theguardian.com;button;Yes, I’m happy;ACCEPT
+0000081;theguardian.com;button;Manage my cookies;MODIFY
+0000081;theguardian.com;button;Save and close;SAVE
+0000081;theguardian.com;a;Reject all;DECLINE
+0000081;theguardian.com;a;Accept all;ACCEPT
+0000089;bbc.co.uk;a;cookies;OTHER
+0000089;bbc.co.uk;button;Yes, I agree;ACCEPT
+0000089;bbc.co.uk;a;No, take me to settings;MODIFY
+0000089;bbc.co.uk;button;expand_moreLearn more;OTHER
+0000089;bbc.co.uk;a;third-party vendors;OTHER
+0000089;bbc.co.uk;button;Consent;ACCEPT
+0000089;bbc.co.uk;button;Do not consent;DECLINE
+0000089;bbc.co.uk;button;Manage options;MODIFY
+0000089;bbc.co.uk;button;Confirm choices;SAVE
+0000089;bbc.co.uk;button;Accept all;ACCEPT
+0000092;digicert.com;a;knop Cookie-instellingen;MODIFY
+0000092;digicert.com;a;Privacybeleid;OTHER
+0000092;digicert.com;button;Cookies accepteren;ACCEPT
+0000092;digicert.com;a;Click here;MODIFY
+0000094;bbc.com;a;cookies;OTHER
+0000094;bbc.com;button;Yes, I agree;ACCEPT
+0000094;bbc.com;a;No, take me to settings;MODIFY
+0000094;bbc.com;button;expand_moreLearn more;OTHER
+0000094;bbc.com;a;third-party vendors;OTHER
+0000094;bbc.com;button;Consent;ACCEPT
+0000094;bbc.com;button;Do not consent;DECLINE
+0000094;bbc.com;button;Manage options;MODIFY
+0000097;twitch.tv;a;cookies;OTHER
+0000097;twitch.tv;button;partners;OTHER
+0000097;twitch.tv;a;Cookieverklaring;OTHER
+0000097;twitch.tv;button;Cookies beheren;MODIFY
+0000097;twitch.tv;button;Cookies accepteren;ACCEPT
+0000097;twitch.tv;button;Save Changes;SAVE
+0000097;twitch.tv;button;Set Cookies by Purpose;OTHER
+0000103;windows.net;a;Privacy Statement;OTHER
+0000103;windows.net;a;Third-Party Cookies;OTHER
+0000103;windows.net;button;Accept;ACCEPT
+0000103;windows.net;button;Reject;DECLINE
+0000103;windows.net;button;Manage cookies;MODIFY
+0000108;issuu.com;a;Consent;ACCEPT
+0000108;issuu.com;a;Details;OTHER
+0000108;issuu.com;a;Ad Settings;OTHER
+0000108;issuu.com;a;About;OTHER
+0000108;issuu.com;a;our partners;OTHER
+0000108;issuu.com;a;details section;OTHER
+0000108;issuu.com;button;Use necessary cookies only;DECLINE
+0000108;issuu.com;button;Allow cookies;ACCEPT
+0000109;weebly.com;button;Alle cookies accepteren;ACCEPT
+0000109;weebly.com;button;Cookie-instellingen aanpassen;MODIFY
+0000109;weebly.com;button;Accept all cookies;ACCEPT
+0000109;weebly.com;button;Confirm my choices;SAVE
+0000110;wixsite.com;button;Accepteren;ACCEPT
+0000110;wixsite.com;button;Geavanceerd;MODIFY
+0000110;wixsite.com;a;Cookiebeleid;OTHER
+0000111;force.com;a;Privacyverklaring;OTHER
+0000111;force.com;button;ALLES AFWIJZEN;DECLINE
+0000111;force.com;button;ALLE COOKIES ACCEPTEREN;ACCEPT
+0000111;force.com;button;COOKIE-INSTELLINGEN;MODIFY
+0000111;force.com;button;REJECT ALL COOKIES;DECLINE
+0000111;force.com;button;ACCEPT ALL COOKIES;ACCEPT
+0000111;force.com;button;COOKIE CONSENT MANAGER;MODIFY
+0000111;force.com;button;SAVE SETTINGS;SAVE
+0000115;washingtonpost.com;button;View list of partners;OTHER
+0000115;washingtonpost.com;button;I accept;ACCEPT
+0000115;washingtonpost.com;button;Manage cookies;MODIFY
+0000116;etsy.com;a;Cookie-beleid;OTHER
+0000116;etsy.com;a;privacy-instellingen;OTHER
+0000116;etsy.com;button;Instellingen bijwerken;MODIFY
+0000116;etsy.com;button;Accepteren;ACCEPT
+0000116;etsy.com;button;Update settings;MODIFY
+0000116;etsy.com;button;Accept;ACCEPT
+0000116;etsy.com;button;Done;SAVE
+0000117;reuters.com;a;Cookie Policy;OTHER
+0000117;reuters.com;button;List of Partners (vendors);OTHER
+0000117;reuters.com;button;Accept All;ACCEPT
+0000117;reuters.com;button;Show Purposes;MODIFY
+0000121;tinyurl.com;button;partners;OTHER
+0000121;tinyurl.com;button;MORE OPTIONS;MODIFY
+0000121;tinyurl.com;button;AGREE;ACCEPT
+0000121;tinyurl.com;button;AGREE TO SELECTED;SAVE
+0000121;tinyurl.com;button;AGREE TO ALL;ACCEPT
+0000121;tinyurl.com;button;OBJECT ALL;DECLINE
+0000121;tinyurl.com;button;SAVE & EXIT;SAVE
+0000123;aliexpress.com;button;Cookies personaliseren;MODIFY
+0000123;aliexpress.com;button;Cookies accepteren;ACCEPT
+0000123;aliexpress.com;button;Opslaan;SAVE
+0000125;wsj.com;a;partners;OTHER
+0000125;wsj.com;button;Store and/or access information on a device;OTHER
+0000125;wsj.com;button;Select basic ads;OTHER
+0000125;wsj.com;button;Create a personalised ads profile;OTHER
+0000125;wsj.com;button;Select personalised ads;OTHER
+0000125;wsj.com;button;Create a personalised content profile;OTHER
+0000125;wsj.com;button;Select personalised content;OTHER
+0000125;wsj.com;button;Measure ad performance;OTHER
+0000125;wsj.com;button;Measure content performance;OTHER
+0000125;wsj.com;button;Apply market research to generate audience insights;OTHER
+0000125;wsj.com;button;Develop and improve products;OTHER
+0000125;wsj.com;button;Use precise geolocation data;OTHER
+0000125;wsj.com;button;Actively scan device characteristics for identification;OTHER
+0000125;wsj.com;button;MANAGE SETTINGS;MODIFY
+0000125;wsj.com;button;YES, I AGREE;ACCEPT
+0000125;wsj.com;button;GO BACK;OTHER
+0000125;wsj.com;button;SAVE & CLOSE;SAVE
+0000125;wsj.com;button;ACCEPT ALL;ACCEPT
+0000125;wsj.com;button;REJECT ALL;DECLINE
+0000126;oracle.com;a;onze externe partners kunnen;OTHER
+0000126;oracle.com;a;privacybeleid;OTHER
+0000126;oracle.com;a;Alles accepteren;ACCEPT
+0000126;oracle.com;a;Alles weigeren;DECLINE
+0000126;oracle.com;a;Cookievoorkeuren bekijken en wijzigen;MODIFY
+0000126;oracle.com;a;Privacybeleid;OTHER
+0000126;oracle.com;a;Accept all;ACCEPT
+0000126;oracle.com;a;Decline all;DECLINE
+0000126;oracle.com;a;View and change cookie preferences;MODIFY
+0000126;oracle.com;a;Submit Preferences;SAVE
+0000126;oracle.com;a;Advanced Settings;MODIFY
+0000128;stackoverflow.com;a;Cookie Policy;OTHER
+0000128;stackoverflow.com;button;Accept all cookies;ACCEPT
+0000128;stackoverflow.com;button;Customize settings;MODIFY
+0000128;stackoverflow.com;button;Confirm my choices;SAVE
+0000128;stackoverflow.com;button;Cancel;OTHER
+0000131;bloomberg.com;a;third party partners;OTHER
+0000131;bloomberg.com;button;Informatie op een apparaat opslaan en/of openen;OTHER
+0000131;bloomberg.com;button;Gepersonaliseerde advertenties en inhoud, advertentie- en inhoudsmeting, doelgroep inzichten en productontwikkeling.;OTHER
+0000131;bloomberg.com;button;Bloomberg required cookies;OTHER
+0000131;bloomberg.com;button;Bloomberg functional cookies;OTHER
+0000131;bloomberg.com;button;Bloomberg advertising cookies;OTHER
+0000131;bloomberg.com;a;Privacy Policy;OTHER
+0000131;bloomberg.com;a;right to object;OTHER
+0000131;bloomberg.com;button;Yes, I Accept;ACCEPT
+0000131;bloomberg.com;button;Manage Cookies;MODIFY
+0000132;wix.com;button;Accepteren;ACCEPT
+0000132;wix.com;button;Geavanceerd;MODIFY
+0000132;wix.com;a;Cookiebeleid;OTHER
+0000133;googlesyndication.com;button;NL;OTHER
+0000133;googlesyndication.com;button;Inloggen;OTHER
+0000133;googlesyndication.com;a;cookies;OTHER
+0000133;googlesyndication.com;a;Privacy;OTHER
+0000133;googlesyndication.com;a;Voorwaarden;OTHER
+0000133;googlesyndication.com;button;Aanpassen;MODIFY
+0000133;googlesyndication.com;button;Ik ga akkoord;ACCEPT
+0000135;opera.com;a;Privacy Statement;OTHER
+0000135;opera.com;a;Cookies Policy;OTHER
+0000135;opera.com;a;Accept cookies;ACCEPT
+0000135;opera.com;a;Manage cookies;MODIFY
+0000135;opera.com;a;Accept selection;SAVE
+0000140;fbcdn.net;a;cookiebeleid;OTHER
+0000140;fbcdn.net;a;andere bedrijven;OTHER
+0000140;fbcdn.net;button;Meer informatie;OTHER
+0000140;fbcdn.net;button;Beheeropties in je Facebook-account;OTHER
+0000140;fbcdn.net;button;Meer informatie over online advertenties;OTHER
+0000140;fbcdn.net;button;Cookies beheren via browserinstellingen;OTHER
+0000140;fbcdn.net;button;Alleen essentiële cookies toestaan;DECLINE
+0000140;fbcdn.net;button;Essentiële en optionele cookies toestaan;ACCEPT
+0000141;businessinsider.com;a;Derde partijen;OTHER
+0000141;businessinsider.com;button;Instellingen beheren;MODIFY
+0000141;businessinsider.com;button;Alles accepteren;ACCEPT
+0000144;windows.com;a;Privacyverklaring;OTHER
+0000144;windows.com;a;Cookies van derden;OTHER
+0000144;windows.com;button;Accepteren;ACCEPT
+0000144;windows.com;button;Weigeren;DECLINE
+0000144;windows.com;button;Cookies beheren;MODIFY
+0000146;google.de;button;NL;OTHER
+0000146;google.de;button;Inloggen;OTHER
+0000146;google.de;a;cookies;OTHER
+0000146;google.de;a;Privacy;OTHER
+0000146;google.de;a;Voorwaarden;OTHER
+0000146;google.de;button;Aanpassen;MODIFY
+0000146;google.de;button;Ik ga akkoord;ACCEPT
+0000149;wp.com;a;Aanpassen;MODIFY
+0000149;wp.com;a;Alles accepteren;ACCEPT
+0000149;wp.com;a;Accept Selection;SAVE
+0000149;wp.com;a;Customize;MODIFY
+0000150;researchgate.net;button;partners;OTHER
+0000150;researchgate.net;button;DISAGREE;DECLINE
+0000150;researchgate.net;button;MORE OPTIONS;MODIFY
+0000150;researchgate.net;button;AGREE;ACCEPT
+0000152;imgur.com;button;partners;OTHER
+0000152;imgur.com;button;DISAGREE;DECLINE
+0000152;imgur.com;button;MORE OPTIONS;MODIFY
+0000152;imgur.com;button;AGREE;ACCEPT
+0000154;amazon.co.uk;a;Cookie Notice;OTHER
+0000154;amazon.co.uk;a;Cookie Notice;OTHER
+0000154;amazon.co.uk;a;third-party cookies;OTHER
+0000154;amazon.co.uk;a;Cookie Preferences;MODIFY
+0000154;amazon.co.uk;a;Privacy Notice;OTHER
+0000154;amazon.co.uk;a;Customise Cookies;MODIFY
+0000154;amazon.co.uk;span;Accept Cookies;ACCEPT
+0000154;amazon.co.uk;span;Customise Cookies;MODIFY
+0000156;cnbc.com;a;Cookie Notice;OTHER
+0000156;cnbc.com;a;Privacy Policy;OTHER
+0000156;cnbc.com;button;List of IAB Vendors;OTHER
+0000156;cnbc.com;button;I Accept;ACCEPT
+0000156;cnbc.com;button;Manage Choices;MODIFY
+0000157;indeed.com;a;Cookiebeleid;OTHER
+0000157;indeed.com;button;Cookie-instellingen;MODIFY
+0000157;indeed.com;button;Alles weigeren;DECLINE
+0000157;indeed.com;button;Alle cookies accepteren;ACCEPT
+0000161;dailymail.co.uk;a;partners;OTHER
+0000161;dailymail.co.uk;a;Privacy Policy;OTHER
+0000161;dailymail.co.uk;button;Cookie Settings;MODIFY
+0000161;dailymail.co.uk;button;Got it;ACCEPT
+0000162;wiley.com;a;Privacybeleid;OTHER
+0000162;wiley.com;a;Opslagvoorkeuren;OTHER
+0000162;wiley.com;button;Opslaan;SAVE
+0000162;wiley.com;button;Accepteer alles;ACCEPT
+0000162;wiley.com;button;Alles afwijzen;DECLINE
+0000163;cnet.com;a;Learn more.;OTHER
+0000163;cnet.com;button;Cookie Settings;MODIFY
+0000163;cnet.com;button;Reject All;DECLINE
+0000163;cnet.com;button;Accept All;ACCEPT
+0000166;nature.com;a;privacy policy;OTHER
+0000166;nature.com;button;Accept All Cookies;ACCEPT
+0000166;nature.com;button;Manage Preferences;MODIFY
+0000167;ibm.com;a;here;OTHER
+0000167;ibm.com;a;Accept Default;ACCEPT
+0000167;ibm.com;a;Proceed with Required Cookies Only;DECLINE
+0000167;ibm.com;a;View Cookie Preferences;MODIFY
+0000167;ibm.com;a;Privacy Policy;OTHER
+0000167;ibm.com;a;Agree and save custom settings;SAVE
+0000172;usatoday.com;a;Privacy Policy;OTHER
+0000172;usatoday.com;button;List of Partners (vendors);OTHER
+0000172;usatoday.com;button;Reject;DECLINE
+0000172;usatoday.com;button;Accept;ACCEPT
+0000172;usatoday.com;button;Manage Cookies;MODIFY
+0000173;hp.com;a;(Welke gegevens wij verzamelen);OTHER
+0000173;hp.com;a;Gebruik van cookies;OTHER
+0000173;hp.com;button;Alles afwijzen;DECLINE
+0000173;hp.com;button;AKKOORD;ACCEPT
+0000173;hp.com;button;MEER OPTIES;MODIFY
+0000177;google.co.in;button;NL;OTHER
+0000177;google.co.in;button;Inloggen;OTHER
+0000177;google.co.in;a;cookies;OTHER
+0000177;google.co.in;a;Privacy;OTHER
+0000177;google.co.in;a;Voorwaarden;OTHER
+0000177;google.co.in;button;Aanpassen;MODIFY
+0000177;google.co.in;button;Ik ga akkoord;ACCEPT
+0000179;coinmarketcap.com;a;Privacy Policy;OTHER
+0000180;springer.com;a;Privacy Policy;OTHER
+0000180;springer.com;button;OK;ACCEPT
+0000180;springer.com;button;Manage Cookies;MODIFY
+0000181;googlevideo.com;button;NL;OTHER
+0000181;googlevideo.com;button;Inloggen;OTHER
+0000181;googlevideo.com;a;cookies;OTHER
+0000181;googlevideo.com;a;Privacy;OTHER
+0000181;googlevideo.com;a;Voorwaarden;OTHER
+0000181;googlevideo.com;button;Aanpassen;MODIFY
+0000181;googlevideo.com;button;Ik ga akkoord;ACCEPT
+0000183;salesforce.com;a;Privacyverklaring;OTHER
+0000183;salesforce.com;button;ALLES AFWIJZEN;DECLINE
+0000183;salesforce.com;button;ALLE COOKIES ACCEPTEREN;ACCEPT
+0000183;salesforce.com;button;COOKIE-INSTELLINGEN;MODIFY
+0000185;eventbrite.com;a;Privacyverklaring;OTHER
+0000185;eventbrite.com;a;Tool Voor Cookietoestemming;OTHER
+0000185;eventbrite.com;button;Afvis;OTHER
+0000185;eventbrite.com;button;Accepteren;ACCEPT
+0000185;eventbrite.com;button;Opties;MODIFY
+0000188;booking.com;a;hier;OTHER
+0000188;booking.com;button;Instellingen beheren;MODIFY
+0000188;booking.com;button;Accepteren;ACCEPT
+0000189;time.com;button;List of Partners (vendors);OTHER
+0000189;time.com;button;I Accept;ACCEPT
+0000189;time.com;button;Show Purposes;MODIFY
+0000192;bitly.com;a;here;OTHER
+0000192;bitly.com;a;Learn More;OTHER
+0000192;bitly.com;a;GOT IT;ACCEPT
+0000193;surveymonkey.com;a;Our Cookies Notice;OTHER
+0000193;surveymonkey.com;button;Reject All Cookies;DECLINE
+0000193;surveymonkey.com;button;Accept All Cookies;ACCEPT
+0000193;surveymonkey.com;button;Cookies Preferences;MODIFY
+0000194;fandom.com;a;Privacy Policy;OTHER
+0000194;fandom.com;a;Partner List;OTHER
+0000195;yelp.com;a;Plus d'information;OTHER
+0000195;yelp.com;button;Gérer les cookies;MODIFY
+0000195;yelp.com;button;Accepter uniquement les cookies essentiels;DECLINE
+0000195;yelp.com;button;Autoriser tous les cookies;ACCEPT
+0000195;yelp.com;button;Enregistrer le préférences;SAVE
+0000196;npr.org;a;See details;OTHER
+0000196;npr.org;button;AGREE AND CONTINUE;ACCEPT
+0000196;npr.org;a;YOUR CHOICES;OTHER
+0000196;npr.org;a;Terms of Use;OTHER
+0000196;npr.org;a;Privacy Policy;OTHER
+0000197;aol.com;a;aol;OTHER
+0000197;aol.com;a;our partners;OTHER
+0000197;aol.com;a;Your Privacy Controls;OTHER
+0000197;aol.com;a;Privacy Policy;OTHER
+0000197;aol.com;a;Cookie Policy;OTHER
+0000197;aol.com;a;here;OTHER
+0000197;aol.com;button;Accept all;ACCEPT
+0000197;aol.com;a;Manage settings;MODIFY
+0000197;aol.com;a;Save and continue;SAVE
+0000199;google.co.jp;button;NL;OTHER
+0000199;google.co.jp;button;Inloggen;OTHER
+0000199;google.co.jp;a;cookies;OTHER
+0000199;google.co.jp;a;Privacy;OTHER
+0000199;google.co.jp;a;Voorwaarden;OTHER
+0000199;google.co.jp;button;Aanpassen;MODIFY
+0000199;google.co.jp;button;Ik ga akkoord;ACCEPT
+0000201;cpanel.net;a;Allow selection;SAVE
+0000201;cpanel.net;a;Allow all;ACCEPT
+0000201;cpanel.net;a;Show details;OTHER
+0000202;ted.com;button;Cookie-instellingen;MODIFY
+0000202;ted.com;button;Alle cookies accepteren;ACCEPT
+0000203;google.co.uk;button;NL;OTHER
+0000203;google.co.uk;button;Inloggen;OTHER
+0000203;google.co.uk;a;cookies;OTHER
+0000203;google.co.uk;a;Privacy;OTHER
+0000203;google.co.uk;a;Voorwaarden;OTHER
+0000203;google.co.uk;button;Aanpassen;MODIFY
+0000203;google.co.uk;button;Ik ga akkoord;ACCEPT
+0000205;mailchimp.com;a;Cookie Statement.;OTHER
+0000205;mailchimp.com;button;Cookie settings;MODIFY
+0000205;mailchimp.com;button;Reject all;DECLINE
+0000205;mailchimp.com;button;Accept all cookies;ACCEPT
+0000206;behance.net;button;Aanpassen;MODIFY
+0000206;behance.net;button;Alles inschakelen;ACCEPT
+0000206;behance.net;button;Customize;MODIFY
+0000206;behance.net;button;Enable all;ACCEPT
+0000206;behance.net;button;Don't enable;DECLINE
+0000206;behance.net;button;Confirm my choices;SAVE
+0000207;themeforest.net;a;OK;ACCEPT
+0000207;themeforest.net;a;Settings;MODIFY
+0000209;google.com.br;button;NL;OTHER
+0000209;google.com.br;button;Inloggen;OTHER
+0000209;google.com.br;a;cookies;OTHER
+0000209;google.com.br;a;Privacy;OTHER
+0000209;google.com.br;a;Voorwaarden;OTHER
+0000209;google.com.br;button;Aanpassen;MODIFY
+0000209;google.com.br;button;Ik ga akkoord;ACCEPT
+0000211;opendns.com;a;Privacyverklaring;OTHER
+0000211;opendns.com;a;Cookiekennisgeving;OTHER
+0000211;opendns.com;button;Nee, cookie-instellingen bewerken;MODIFY
+0000211;opendns.com;button;Weigeren;DECLINE
+0000211;opendns.com;button;Accepteren;ACCEPT
+0000212;nginx.com;a;learn more and adjust your preferences;MODIFY
+0000212;nginx.com;a;Privacy Notice;OTHER
+0000212;nginx.com;button;Accept;ACCEPT
+0000218;wired.com;button;List of Partners (vendors);MODIFY
+0000218;wired.com;button;I Accept;ACCEPT
+0000218;wired.com;button;Show Purposes;MODIFY
+0000218;wired.com;button;Confirm My Choices;SAVE
+0000219;amazon.de;a;Cookie-Bestimmungen;OTHER
+0000219;amazon.de;a;Cookie-Bestimmungen;OTHER
+0000219;amazon.de;a;Cookies von Erst- und Drittanbietern;OTHER
+0000219;amazon.de;a;Cookie-Einstellungen;MODIFY
+0000219;amazon.de;a;Datenschutzerklärung;OTHER
+0000219;amazon.de;a;Cookie-Einstellungen anpassen;MODIFY
+0000219;amazon.de;span;Cookies akzeptieren;ACCEPT
+0000219;amazon.de;span;Alle Cookies annehmen;ACCEPT
+0000219;amazon.de;a;Benutzerdefinierte Einstellungen speichern;SAVE
+0000220;zendesk.com;a;Cookie policy;OTHER
+0000220;zendesk.com;button;Cookie settings;MODIFY
+0000220;zendesk.com;button;Reject all;DECLINE
+0000220;zendesk.com;button;Accept all;ACCEPT
+0000221;espn.com;a;Privacy Policy;OTHER
+0000221;espn.com;button;List of Partners (vendors);OTHER
+0000221;espn.com;button;I Accept;ACCEPT
+0000221;espn.com;button;Show Purposes;MODIFY
+0000221;espn.com;button;Continue without Accepting;DECLINE
+0000223;dailymotion.com;button;Doorgaan zonder accepteren;DECLINE
+0000223;dailymotion.com;a;partners;OTHER
+0000223;dailymotion.com;a;opslaan en/of openen van informatie op uw apparaat;OTHER
+0000223;dailymotion.com;a;gepersonaliseerde advertenties en content, advertentie- en contentmetingen, doelgroepinzichten, het ontwikkelen en verbeteren van producten, het regelen van beveiliging, de preventie van fraude, foutoplossing en technische levering van advertenties en content.;OTHER
+0000223;dailymotion.com;a;speciale functies;OTHER
+0000223;dailymotion.com;a;partnerlijsten;OTHER
+0000223;dailymotion.com;a;Cookies beheren;MODIFY
+0000223;dailymotion.com;a;essentiële cookies;OTHER
+0000223;dailymotion.com;a;standaard advertenties, gepersonaliseerde content, advertentie- en contentmetingen, doelgroepinzichten en productontwikkeling;OTHER
+0000223;dailymotion.com;a;gelieerde partners;OTHER
+0000223;dailymotion.com;a;privacybeleid;OTHER
+0000223;dailymotion.com;a;cookiebeleid;OTHER
+0000223;dailymotion.com;a;partners;OTHER
+0000223;dailymotion.com;button;Aanpassen;MODIFY
+0000223;dailymotion.com;button;Accepteren;ACCEPT
+0000226;cpanel.com;a;Allow selection;SAVE
+0000226;cpanel.com;a;Allow all;ACCEPT
+0000226;cpanel.com;a;Show details;OTHER
+0000227;freepik.com;a;More information in our Cookie Policy;OTHER
+0000227;freepik.com;button;List of Partners (vendors);MODIFY
+0000227;freepik.com;button;I Accept;ACCEPT
+0000227;freepik.com;button;Show Purposes;MODIFY
+0000227;freepik.com;button;Confirm My Choices;SAVE
+0000229;techcrunch.com;a;techcrunch;OTHER
+0000229;techcrunch.com;a;our partners;OTHER
+0000229;techcrunch.com;a;Your Privacy Controls;OTHER
+0000229;techcrunch.com;a;Privacy Policy;OTHER
+0000229;techcrunch.com;a;Cookie Policy;OTHER
+0000229;techcrunch.com;a;here;OTHER
+0000229;techcrunch.com;button;Accept all;ACCEPT
+0000229;techcrunch.com;a;Manage settings;MODIFY
+0000231;indiatimes.com;a;privacy policy;OTHER
+0000231;indiatimes.com;a;Agree & continue;ACCEPT
+0000232;huffingtonpost.com;button;partners;OTHER
+0000232;huffingtonpost.com;a;group of websites;OTHER
+0000232;huffingtonpost.com;button;DISAGREE & EXIT;DECLINE
+0000232;huffingtonpost.com;button;MORE OPTIONS;MODIFY
+0000232;huffingtonpost.com;button;AGREE & EXIT;ACCEPT
+0000238;scribd.com;a;Privacy Policy;OTHER
+0000238;scribd.com;button;Save;SAVE
+0000238;scribd.com;button;Accept All;ACCEPT
+0000239;google.fr;button;NL;OTHER
+0000239;google.fr;button;Inloggen;OTHER
+0000239;google.fr;a;cookies;OTHER
+0000239;google.fr;a;Privacy;OTHER
+0000239;google.fr;a;Voorwaarden;OTHER
+0000239;google.fr;button;Aanpassen;MODIFY
+0000239;google.fr;button;Ik ga akkoord;ACCEPT
+0000240;mysql.com;a;onze externe partners kunnen;OTHER
+0000240;mysql.com;a;privacybeleid;OTHER
+0000240;mysql.com;a;Alles accepteren;ACCEPT
+0000240;mysql.com;a;Alles weigeren;DECLINE
+0000240;mysql.com;a;Cookievoorkeuren bekijken en wijzigen;MODIFY
+0000240;mysql.com;a;Privacybeleid;OTHER
+0000243;independent.co.uk;a;trusted partners;OTHER
+0000243;independent.co.uk;button;Informatie op een apparaat opslaan en/of openen;OTHER
+0000243;independent.co.uk;button;Gepersonaliseerde advertenties en inhoud, advertentie- en inhoudsmeting, doelgroep inzichten en productontwikkeling.;OTHER
+0000243;independent.co.uk;button;Precieze geolocatie gegevens en identificatie via het scannen van apparaten;OTHER
+0000243;independent.co.uk;button;OPTIONS;MODIFY
+0000243;independent.co.uk;button;AGREE;ACCEPT
+0000247;addthis.com;a;onze externe partners;OTHER
+0000247;addthis.com;a;privacybeleid;OTHER
+0000247;addthis.com;a;Ik aanvaard alle cookies;ACCEPT
+0000247;addthis.com;a;Cookievoorkeuren bekijken en wijzigen;MODIFY
+0000247;addthis.com;a;Privacybeleid;OTHER
+0000253;fb.com;a;cookiebeleid;OTHER
+0000253;fb.com;a;andere bedrijven;OTHER
+0000253;fb.com;button;Meer informatie;OTHER
+0000253;fb.com;button;Beheeropties in je Facebook-account;OTHER
+0000253;fb.com;button;Meer informatie over online advertenties;OTHER
+0000253;fb.com;button;Cookies beheren via browserinstellingen;OTHER
+0000253;fb.com;button;Alleen essentiële cookies toestaan;DECLINE
+0000253;fb.com;button;Essentiële en optionele cookies toestaan;ACCEPT
+0000255;latimes.com;a;Terms of Service;OTHER
+0000255;latimes.com;a;Privacy Policy;OTHER
+0000255;latimes.com;a;Privacy Policy;OTHER
+0000255;latimes.com;button;Close;ACCEPT
+0000256;tripadvisor.com;button;Cookies Button;OTHER
+0000256;tripadvisor.com;a;Privacy and Cookies Statement;OTHER
+0000256;tripadvisor.com;button;List of Partners (vendors);MODIFY
+0000256;tripadvisor.com;button;I Accept;ACCEPT
+0000256;tripadvisor.com;button;Show Purposes;MODIFY
+0000257;pixabay.com;button;Cookie-instellingen;MODIFY
+0000257;pixabay.com;button;Alle cookies accepteren;ACCEPT
+0000258;w3schools.com;a;EU-recht;OTHER
+0000258;w3schools.com;a;Privacybeleid;OTHER
+0000266;grammarly.com;button;Cookies Settings;MODIFY
+0000266;grammarly.com;button;Accept All Cookies;ACCEPT
+0000267;webmd.com;a;See our Cookie Notice.;OTHER
+0000267;webmd.com;button;List of Partners;OTHER
+0000267;webmd.com;button;I Accept;ACCEPT
+0000267;webmd.com;button;Manage Settings;MODIFY
+0000268;free.fr;a;nos partenaires;OTHER
+0000268;free.fr;button;En savoir plus →;OTHER
+0000268;free.fr;button;Accepter & Fermer;ACCEPT
+0000270;demdex.net;button;Aanpassen;MODIFY
+0000270;demdex.net;button;Alles inschakelen;ACCEPT
+0000272;hubspot.com;a;Cookie Policy;OTHER
+0000272;hubspot.com;a;Allow cookies;ACCEPT
+0000272;hubspot.com;a;Decline;DECLINE
+0000273;healthline.com;a;our partners;OTHER
+0000273;healthline.com;button;ACCEPT AND CONTINUE TO SITE;ACCEPT
+0000273;healthline.com;a;MANAGE SETTINGS;MODIFY
+0000276;google.es;button;NL;OTHER
+0000276;google.es;button;Inloggen;OTHER
+0000276;google.es;a;cookies;OTHER
+0000276;google.es;a;Privacy;OTHER
+0000276;google.es;a;Voorwaarden;OTHER
+0000276;google.es;button;Aanpassen;MODIFY
+0000276;google.es;button;Ik ga akkoord;ACCEPT
+0000277;statista.com;a;Privacy Statement;OTHER
+0000277;statista.com;button;Allow all;ACCEPT
+0000277;statista.com;button;Cookie Consent Manager;MODIFY
+0000279;ft.com;a;cookies;OTHER
+0000279;ft.com;a;Accept & continue;ACCEPT
+0000279;ft.com;a;Manage cookies;MODIFY
+0000281;roblox.com;a;Privacy Policy;OTHER
+0000281;roblox.com;button;Set Cookie Options;SAVE
+0000281;roblox.com;button;Decline All;DECLINE
+0000281;roblox.com;button;Accept All;ACCEPT
+0000282;google.it;button;NL;OTHER
+0000282;google.it;button;Inloggen;OTHER
+0000282;google.it;a;cookies;OTHER
+0000282;google.it;a;Privacy;OTHER
+0000282;google.it;a;Voorwaarden;OTHER
+0000282;google.it;button;Aanpassen;MODIFY
+0000282;google.it;button;Ik ga akkoord;ACCEPT
+0000285;google.ru;button;NL;OTHER
+0000285;google.ru;button;Inloggen;OTHER
+0000285;google.ru;a;cookies;OTHER
+0000285;google.ru;a;Privacy;OTHER
+0000285;google.ru;a;Voorwaarden;OTHER
+0000285;google.ru;button;Aanpassen;MODIFY
+0000285;google.ru;button;Ik ga akkoord;ACCEPT
+0000288;azure.com;a;Privacyverklaring;OTHER
+0000288;azure.com;a;Cookies van derden;OTHER
+0000288;azure.com;button;Accepteren;ACCEPT
+0000288;azure.com;button;Weigeren;DECLINE
+0000288;azure.com;button;Cookies beheren;MODIFY
+0000289;theverge.com;a;Cookie Policy;OTHER
+0000289;theverge.com;a;Privacy Notice;OTHER
+0000289;theverge.com;a;Terms of Use;OTHER
+0000289;theverge.com;button;I Accept;ACCEPT
+0000292;taboola.com;a;Cookie Policy;OTHER
+0000292;taboola.com;a;Confirm;ACCEPT
+0000295;udemy.com;a;Privacybeleid;OTHER
+0000295;udemy.com;button;Instellingen;MODIFY
+0000295;udemy.com;button;OK;ACCEPT
+0000297;shutterstock.com;button;Alle cookies accepteren;ACCEPT
+0000297;shutterstock.com;button;Alles afwijzen;DECLINE
+0000297;shutterstock.com;button;Cookie-instellingen;MODIFY
+0000299;prnewswire.com;a;Cookie Policy.;OTHER
+0000299;prnewswire.com;button;Accept All Cookies;ACCEPT
+0000299;prnewswire.com;button;Manage Preferences;MODIFY
+0000300;theatlantic.com;button;partners;OTHER
+0000300;theatlantic.com;button;I DO NOT ACCEPT;DECLINE
+0000300;theatlantic.com;button;MORE OPTIONS;MODIFY
+0000300;theatlantic.com;button;I ACCEPT;ACCEPT
+0000301;nationalgeographic.com;a;Privacy Policy;OTHER
+0000301;nationalgeographic.com;button;List of Partners (vendors);OTHER
+0000301;nationalgeographic.com;button;I ACCEPT;ACCEPT
+0000301;nationalgeographic.com;button;SHOW PURPOSES;MODIFY
+0000301;nationalgeographic.com;button;Continue without Accepting;DECLINE
+0000305;slack.com;a;Cookie Policy.;OTHER
+0000305;slack.com;button;COOKIES SETTINGS;MODIFY
+0000305;slack.com;button;REJECT ALL;DECLINE
+0000305;slack.com;button;ACCEPT ALL COOKIES;ACCEPT
+0000308;investopedia.com;a;Cookies Settings;MODIFY
+0000308;investopedia.com;button;Cookies Settings;MODIFY
+0000308;investopedia.com;button;Reject All;DECLINE
+0000308;investopedia.com;button;Accept Cookies;ACCEPT
+0000311;washington.edu;a;Online Privacy Statement;OTHER
+0000311;washington.edu;button;YES, I AGREE;ACCEPT
+0000311;washington.edu;button;NO, I DO NOT AGREE;DECLINE
+0000314;huffpost.com;button;partners;OTHER
+0000314;huffpost.com;a;group of websites;OTHER
+0000314;huffpost.com;button;DISAGREE & EXIT;DECLINE
+0000314;huffpost.com;button;MORE OPTIONS;MODIFY
+0000314;huffpost.com;button;AGREE & EXIT;ACCEPT
+0000315;tandfonline.com;a;Accept;ACCEPT
+0000315;tandfonline.com;a;Cookie Policy.;OTHER
+0000318;ikea.com;button;Fine by me, I accept;ACCEPT
+0000318;ikea.com;button;Settings;MODIFY
+0000319;cisco.com;a;Privacyverklaring;OTHER
+0000319;cisco.com;a;Cookiekennisgeving;OTHER
+0000319;cisco.com;button;Nee, cookie-instellingen bewerken;MODIFY
+0000319;cisco.com;button;Weigeren;DECLINE
+0000319;cisco.com;button;Accepteren;ACCEPT
+0000321;snapchat.com;a;Cookie Policy;OTHER
+0000321;snapchat.com;button;Accept Cookies;ACCEPT
+0000321;snapchat.com;a;Cookie Settings;MODIFY
+0000323;deviantart.com;a;Learn more;OTHER
+0000323;deviantart.com;a;personal settings.;MODIFY
+0000323;deviantart.com;button;Accept;ACCEPT
+0000323;deviantart.com;button;Save & Accept;SAVE
+0000324;marriott.com;button;Reject All;DECLINE
+0000324;marriott.com;button;Accept All;ACCEPT
+0000324;marriott.com;button;Cookies Settings;MODIFY
+0000326;giphy.com;a;linked here;OTHER
+0000326;giphy.com;a;View our partners;OTHER
+0000326;giphy.com;button;Learn More →;MODIFY
+0000326;giphy.com;button;Agree and close;ACCEPT
+0000328;android.com;a;Details bekijken;OTHER
+0000328;android.com;button;OK;ACCEPT
+0000329;mediafire.com;a;Dismiss;ACCEPT
+0000329;mediafire.com;a;I Accept;ACCEPT
+0000329;mediafire.com;button;expand_moreLearn more;OTHER
+0000329;mediafire.com;a;third party vendors;OTHER
+0000329;mediafire.com;button;Consent;ACCEPT
+0000329;mediafire.com;button;Manage options;MODIFY
+0000330;linktr.ee;a;Cookie Notice.;OTHER
+0000330;linktr.ee;button;Cookie Preferences;MODIFY
+0000330;linktr.ee;button;Reject;DECLINE
+0000330;linktr.ee;button;Accept;ACCEPT
+0000331;oup.com;a;Continue;ACCEPT
+0000331;oup.com;a;Find out more;MODIFY
+0000333;mailchi.mp;a;Cookie Statement.;OTHER
+0000333;mailchi.mp;button;Cookie settings;MODIFY
+0000333;mailchi.mp;button;Reject all;DECLINE
+0000333;mailchi.mp;button;Accept all cookies;ACCEPT
+0000334;wikihow.com;a;cookie policy;OTHER
+0000334;wikihow.com;a;Cookie Settings;MODIFY
+0000340;pki.goog;a;Meer informatie;OTHER
+0000340;pki.goog;a;OK;ACCEPT
+0000341;usnews.com;a;Terms and Conditions;OTHER
+0000341;usnews.com;a;Privacy Policy;OTHER
+0000341;usnews.com;a;Privacy Policy;OTHER
+0000341;usnews.com;button;Agree;ACCEPT
+0000342;pubmatic.com;a;Privacy Policy;OTHER
+0000342;pubmatic.com;a;Cookie Consent Tool;OTHER
+0000342;pubmatic.com;button;Decline;DECLINE
+0000342;pubmatic.com;button;Accept;ACCEPT
+0000342;pubmatic.com;button;Options;MODIFY
+0000343;binance.com;a;Cookie Policy;OTHER
+0000343;binance.com;button;Cookie-instellingen;MODIFY
+0000343;binance.com;button;Alles afwijzen;DECLINE
+0000343;binance.com;button;Alle cookies accepteren;ACCEPT
+0000344;wetransfer.com;button;Ik ga akkoord;ACCEPT
+0000344;wetransfer.com;button;Cookies beheren;MODIFY
+0000344;wetransfer.com;button;Nee, bedankt;DECLINE
+0000344;wetransfer.com;button;No thanks;DECLINE
+0000344;wetransfer.com;button;Save and close;SAVE
+0000345;google.ca;button;NL;OTHER
+0000345;google.ca;button;Inloggen;OTHER
+0000345;google.ca;a;cookies;OTHER
+0000345;google.ca;a;Privacy;OTHER
+0000345;google.ca;a;Voorwaarden;OTHER
+0000345;google.ca;button;Aanpassen;MODIFY
+0000345;google.ca;button;Ik ga akkoord;ACCEPT
+0000346;marketwatch.com;a;partners;OTHER
+0000346;marketwatch.com;button;Store and/or access information on a device;OTHER
+0000346;marketwatch.com;button;Select basic ads;OTHER
+0000346;marketwatch.com;button;Create a personalised ads profile;OTHER
+0000346;marketwatch.com;button;Select personalised ads;OTHER
+0000346;marketwatch.com;button;Create a personalised content profile;OTHER
+0000346;marketwatch.com;button;Select personalised content;OTHER
+0000346;marketwatch.com;button;Measure ad performance;OTHER
+0000346;marketwatch.com;button;Measure content performance;OTHER
+0000346;marketwatch.com;button;Apply market research to generate audience insights;OTHER
+0000346;marketwatch.com;button;Develop and improve products;OTHER
+0000346;marketwatch.com;button;Use precise geolocation data;OTHER
+0000346;marketwatch.com;button;Actively scan device characteristics for identification;OTHER
+0000346;marketwatch.com;button;MANAGE SETTINGS;MODIFY
+0000346;marketwatch.com;button;YES, I AGREE;ACCEPT
+0000347;weather.com;button;Akkoord en verder;ACCEPT
+0000347;weather.com;button;Alleen doorgaan met de vereiste cookies;DECLINE
+0000347;weather.com;a;Cookie-instellingen bekijken;MODIFY
+0000347;weather.com;a;Privacybeleid bekijken;OTHER
+0000350;dell.com;a;Privacyverklaring voor meer informatie over hoe wij met data omgaan.;OTHER
+0000350;dell.com;a;Iedereen is de acceptor;ACCEPT
+0000350;dell.com;a;Alles afwijzen;DECLINE
+0000350;dell.com;a;Uw cookies beheren;MODIFY
+0000351;buzzfeed.com;button;partners;OTHER
+0000351;buzzfeed.com;a;consent centre;OTHER
+0000351;buzzfeed.com;a;privacy policy;OTHER
+0000351;buzzfeed.com;a;Consent Preferences Centre;OTHER
+0000351;buzzfeed.com;button;DISAGREE & EXIT;DECLINE
+0000351;buzzfeed.com;button;MORE OPTIONS;MODIFY
+0000351;buzzfeed.com;button;AGREE & EXIT;ACCEPT
+0000352;sagepub.com;a;Learn more;OTHER
+0000352;sagepub.com;a;Close;ACCEPT
+0000354;cambridge.org;a;Cookie Notice;OTHER
+0000354;cambridge.org;button;Cookie Settings;MODIFY
+0000354;cambridge.org;button;Accept All Cookies;ACCEPT
+0000355;criteo.com;a;more information;OTHER
+0000355;criteo.com;button;Cookies Settings;MODIFY
+0000355;criteo.com;button;Reject All;DECLINE
+0000355;criteo.com;button;Accept All;ACCEPT
+0000360;whatsapp.net;button;...;OTHER
+0000360;whatsapp.net;a;Cookiebeleid;OTHER
+0000360;whatsapp.net;button;COOKIES BEHEREN;MODIFY
+0000360;whatsapp.net;button;ACCEPTEREN;ACCEPT
+0000363;hbr.org;button;expand_moreLearn more;OTHER
+0000363;hbr.org;a;third party vendors;OTHER
+0000363;hbr.org;button;Consent;ACCEPT
+0000363;hbr.org;button;Manage options;MODIFY
+0000364;adsrvr.org;a;YOU CAN OPT-OUT OF TARGETED ADVERTISING BASED ON THETRADEDESK'S BROWSER COOKIE BY CLICKING HERE.;DECLINE
+0000364;adsrvr.org;a;www.aboutads.info/choices;OTHER
+0000364;adsrvr.org;a;www.networkadvertising.org/choices;OTHER
+0000364;adsrvr.org;a;www.youradchoices.ca/choices;OTHER
+0000364;adsrvr.org;a;www.youronlinechoices.com;OTHER
+0000364;adsrvr.org;a;here.;OTHER
+0000364;adsrvr.org;a;here.;OTHER
+0000364;adsrvr.org;a;liveramp.com/opt-out;OTHER
+0000364;adsrvr.org;a;transparentadvertising.org;OTHER
+0000364;adsrvr.org;a;here.;OTHER
+0000365;zoho.com;a;here;OTHER
+0000366;evernote.com;a;cookiebeleid;OTHER
+0000366;evernote.com;a;OK;ACCEPT
+0000369;akismet.com;a;Learn more;OTHER
+0000369;akismet.com;a;Got It!;ACCEPT
+0000372;ilovepdf.com;button;×;OTHER
+0000372;ilovepdf.com;a;JA;OTHER
+0000372;ilovepdf.com;a;NEE;OTHER
+0000372;ilovepdf.com;a;Terms;OTHER
+0000372;ilovepdf.com;a;Settings;MODIFY
+0000372;ilovepdf.com;a;ACCEPT ALL;ACCEPT
+0000373;unesco.org;button;Accept;ACCEPT
+0000374;allaboutcookies.org;button;Cookies Settings;MODIFY
+0000374;allaboutcookies.org;button;Accept;ACCEPT
+0000374;allaboutcookies.org;button;Continue without Accepting;DECLINE
+0000376;coursera.org;a;Cookies Policy;OTHER
+0000376;coursera.org;button;List of Partners (vendors);OTHER
+0000376;coursera.org;button;Accept All;ACCEPT
+0000376;coursera.org;button;Reject All;DECLINE
+0000376;coursera.org;button;Show Purposes;MODIFY
+0000381;britannica.com;button;NL;OTHER
+0000381;britannica.com;a;Derde partijen;OTHER
+0000381;britannica.com;button;Instellingen beheren;MODIFY
+0000381;britannica.com;button;Alles accepteren;ACCEPT
+0000384;change.org;button;Accept cookies;ACCEPT
+0000384;change.org;button;Reject non-essential cookies;DECLINE
+0000384;change.org;a;Manage cookies;MODIFY
+0000387;typepad.com;a;Cookie Notice;OTHER
+0000387;typepad.com;button;Reject All;DECLINE
+0000387;typepad.com;button;Got It;ACCEPT
+0000387;typepad.com;button;Cookies Settings;MODIFY
+0000388;trello.com;a;Cookie-instellingen;MODIFY
+0000388;trello.com;button;Cookies accepteren;ACCEPT
+0000388;trello.com;a;×;OTHER
+0000389;nypost.com;a;Cookie Notice;OTHER
+0000389;nypost.com;button;List of Partners (vendors);OTHER
+0000389;nypost.com;button;Allow All;ACCEPT
+0000389;nypost.com;button;Manage Choices;MODIFY
+0000391;fastly.net;a;Cookie Policy;OTHER
+0000391;fastly.net;button;Accept all;ACCEPT
+0000391;fastly.net;button;Customize;MODIFY
+0000392;economist.com;a;cookie policy;OTHER
+0000392;economist.com;button;Accept;ACCEPT
+0000392;economist.com;button;Manage;MODIFY
+0000394;mayoclinic.org;a;Privacy Policy;OTHER
+0000394;mayoclinic.org;a;Click here to update your preferences;SAVE
+0000394;mayoclinic.org;button;I Agree;ACCEPT
+0000395;ampproject.org;a;use of cookies;OTHER
+0000395;ampproject.org;a;privacy policy;OTHER
+0000395;ampproject.org;button;Got it!;ACCEPT
+0000400;trustpilot.com;button;No thanks;DECLINE
+0000400;trustpilot.com;button;Ok;ACCEPT
+0000400;trustpilot.com;button;Manage cookies;MODIFY
+0000402;sciencemag.org;a;OK;ACCEPT
+0000402;sciencemag.org;a;Manage Cookies;MODIFY
+0000404;businesswire.com;a;Cookie Policy;OTHER
+0000404;businesswire.com;button;Cookies Settings;MODIFY
+0000404;businesswire.com;button;Accept All Cookies;ACCEPT
+0000406;primevideo.com;a;Ga naar de startpagina;OTHER
+0000406;primevideo.com;a;Home;OTHER
+0000406;primevideo.com;a;Tv-series;OTHER
+0000406;primevideo.com;a;Films;OTHER
+0000406;primevideo.com;a;Categorieën;OTHER
+0000406;primevideo.com;a;Cookieverklaring;OTHER
+0000406;primevideo.com;a;Cookieverklaring;OTHER
+0000406;primevideo.com;a;cookies van derden;OTHER
+0000406;primevideo.com;a;Cookievoorkeuren;MODIFY
+0000406;primevideo.com;a;Privacyverklaring;OTHER
+0000406;primevideo.com;button;Cookies accepteren;ACCEPT
+0000406;primevideo.com;a;Cookies aanpassen;MODIFY
+0000406;primevideo.com;button;Cookies aanpassen;MODIFY
+0000406;primevideo.com;a;Meer informatie;OTHER
+0000406;primevideo.com;a;Meer informatie;OTHER
+0000406;primevideo.com;a;Meer informatie;OTHER
+0000406;primevideo.com;a;Meer informatie;OTHER
+0000406;primevideo.com;a;Meer informatie;OTHER
+0000406;primevideo.com;a;Meer informatie;OTHER
+0000406;primevideo.com;a;Meer informatie;OTHER
+0000406;primevideo.com;a;Meer informatie;OTHER
+0000406;primevideo.com;a;Meer informatie;OTHER
+0000406;primevideo.com;a;Meer informatie;OTHER
+0000406;primevideo.com;a;Meer informatie;OTHER
+0000406;primevideo.com;a;Meer informatie;OTHER
+0000406;primevideo.com;a;Meer informatie;OTHER
+0000406;primevideo.com;a;Meer informatie;OTHER
+0000406;primevideo.com;a;Meer informatie;OTHER
+0000406;primevideo.com;a;Meer informatie;OTHER
+0000406;primevideo.com;a;Meer informatie;OTHER
+0000406;primevideo.com;a;Meer informatie;OTHER
+0000406;primevideo.com;a;Meer bekijken;OTHER
+0000406;primevideo.com;button;Meer bekijken;OTHER
+0000406;primevideo.com;a;Voorwaarden en privacyverklaring;OTHER
+0000406;primevideo.com;a;Stuur ons je feedback;OTHER
+0000406;primevideo.com;a;Hulp;OTHER
+0000406;primevideo.com;a;Cookieverklaring;OTHER
+0000407;speedtest.net;button;More Options;MODIFY
+0000407;speedtest.net;button;I Consent;ACCEPT
+0000412;webex.com;a;Privacyverklaring;OTHER
+0000412;webex.com;a;Cookiekennisgeving;OTHER
+0000412;webex.com;button;Nee, cookie-instellingen bewerken;MODIFY
+0000412;webex.com;button;Weigeren;DECLINE
+0000412;webex.com;button;Accepteren;ACCEPT
+0000414;constantcontact.com;a;Learn more;OTHER
+0000414;constantcontact.com;button;Cookie settings;MODIFY
+0000414;constantcontact.com;button;Got it;ACCEPT
+0000415;disneyplus.com;a;informatie;OTHER
+0000415;disneyplus.com;button;VOORKEUREN BEHEREN;MODIFY
+0000415;disneyplus.com;button;ALLES WEIGEREN;DECLINE
+0000415;disneyplus.com;button;ALLES ACCEPTEREN;ACCEPT
+0000423;verisign.com;a;Privacy Policy;OTHER
+0000423;verisign.com;button;Cookies Settings;MODIFY
+0000423;verisign.com;button;Reject All Cookies;DECLINE
+0000423;verisign.com;button;Accept All Cookies;ACCEPT
+0000426;mashable.com;button;partners;OTHER
+0000426;mashable.com;button;MEER OPTIES;MODIFY
+0000426;mashable.com;button;IK GA AKKOORD;ACCEPT
+0000427;airbnb.com;a;Cookiebeleid;OTHER
+0000427;airbnb.com;button;Cookievoorkeuren;MODIFY
+0000427;airbnb.com;button;Oké;ACCEPT
+0000433;umich.edu;a;View our Privacy Notice;OTHER
+0000433;umich.edu;a;Decline;DECLINE
+0000433;umich.edu;a;Allow cookies;ACCEPT
+0000438;columbia.edu;button;Close Cookie NoticeI AGREE;ACCEPT
+0000438;columbia.edu;a;Columbia University Website Cookie Notice;OTHER
+0000439;box.com;a;Cookie Policy;OTHER
+0000439;box.com;button;Hide;OTHER
+0000439;box.com;span;Dismiss;ACCEPT
+0000440;outbrain.com;a;Outbrain’s Privacy Policy.;OTHER
+0000440;outbrain.com;button;Reject All;DECLINE
+0000440;outbrain.com;button;Accept Cookies;ACCEPT
+0000440;outbrain.com;button;Cookies Settings;MODIFY
+0000441;vice.com;a;Cookies Policy;OTHER
+0000441;vice.com;button;Store and/or access information on a device;OTHER
+0000441;vice.com;button;Personalised ads and content, ad and content measurement, audience insights and product development;OTHER
+0000441;vice.com;button;Use precise geolocation data;OTHER
+0000441;vice.com;button;Actively scan device characteristics for identification;OTHER
+0000441;vice.com;button;Configure Preferences;MODIFY
+0000441;vice.com;button;I Accept;ACCEPT
+0000441;vice.com;button;Reject All Purposes;DECLINE
+0000441;vice.com;button;Enable All Purposes;ACCEPT
+0000442;fb.me;a;cookiebeleid;OTHER
+0000442;fb.me;a;andere bedrijven;OTHER
+0000442;fb.me;button;Meer informatie;OTHER
+0000442;fb.me;button;Beheeropties in je Facebook-account;OTHER
+0000442;fb.me;button;Meer informatie over online advertenties;OTHER
+0000442;fb.me;button;Cookies beheren via browserinstellingen;OTHER
+0000442;fb.me;button;Alleen essentiële cookies toestaan;DECLINE
+0000442;fb.me;button;Essentiële en optionele cookies toestaan;ACCEPT
+0000446;steampowered.com;a;pagina met cookie-instellingen;MODIFY
+0000446;steampowered.com;a;privacybeleid (Privacy Policy);OTHER
+0000446;steampowered.com;span;Accept All;ACCEPT
+0000446;steampowered.com;span;Reject All;DECLINE
+0000447;deepl.com;a;Privacyverklaring;OTHER
+0000447;deepl.com;button;Meer informatie;OTHER
+0000447;deepl.com;button;Geselecteerd accepteren;SAVE
+0000447;deepl.com;button;Alles accepteren;ACCEPT
+0000448;google.com.tw;button;NL;OTHER
+0000448;google.com.tw;button;Inloggen;OTHER
+0000448;google.com.tw;a;cookies;OTHER
+0000448;google.com.tw;a;Privacy;OTHER
+0000448;google.com.tw;a;Voorwaarden;OTHER
+0000448;google.com.tw;button;Aanpassen;MODIFY
+0000448;google.com.tw;button;Ik ga akkoord;ACCEPT
+0000450;moatads.com;a;onze externe partners;OTHER
+0000450;moatads.com;a;privacybeleid;OTHER
+0000450;moatads.com;a;Ik aanvaard alle cookies;ACCEPT
+0000450;moatads.com;a;Cookievoorkeuren bekijken en wijzigen;MODIFY
+0000450;moatads.com;a;Privacybeleid;OTHER
+0000452;instructure.com;a;Privacy Policy;OTHER
+0000452;instructure.com;button;I Accept;ACCEPT
+0000452;instructure.com;button;Cookies Settings;MODIFY
+0000453;redhat.com;a;Agree and proceed with standard settings;ACCEPT
+0000453;redhat.com;a;Proceed with Required Cookies only;DECLINE
+0000453;redhat.com;a;View cookie preferences;MODIFY
+0000453;redhat.com;a;Privacy Statement;OTHER
+0000454;getpocket.com;a;Meer informatie;OTHER
+0000454;getpocket.com;button;Beheren;MODIFY
+0000454;getpocket.com;button;Aanvaarden;ACCEPT
+0000455;worldbank.org;a;click here;OTHER
+0000455;worldbank.org;button;×;ACCEPT
+0000456;vox.com;a;Cookie Policy;OTHER
+0000456;vox.com;a;Privacy Notice;OTHER
+0000456;vox.com;a;Terms of Use;OTHER
+0000456;vox.com;button;I Accept;ACCEPT
+0000457;google.com.sg;button;NL;OTHER
+0000457;google.com.sg;button;Inloggen;OTHER
+0000457;google.com.sg;a;cookies;OTHER
+0000457;google.com.sg;a;Privacy;OTHER
+0000457;google.com.sg;a;Voorwaarden;OTHER
+0000457;google.com.sg;button;Aanpassen;MODIFY
+0000457;google.com.sg;button;Ik ga akkoord;ACCEPT
+0000458;iso.org;a;Cookies Policy;OTHER
+0000458;iso.org;button;Manage my cookies;MODIFY
+0000458;iso.org;button;Yes, I am happy;ACCEPT
+0000459;cbc.ca;a;enhance our services;OTHER
+0000459;cbc.ca;a;advertising purposes;OTHER
+0000459;cbc.ca;a;review your settings;MODIFY
+0000459;cbc.ca;a;Learn more;OTHER
+0000459;cbc.ca;button;Close;ACCEPT
+0000461;zdnet.com;a;Learn more.;OTHER
+0000461;zdnet.com;button;Cookie Settings;MODIFY
+0000461;zdnet.com;button;Reject All;DECLINE
+0000461;zdnet.com;button;Accept All;ACCEPT
+0000465;sciencedaily.com;button;partners;OTHER
+0000465;sciencedaily.com;button;MORE OPTIONS;MODIFY
+0000465;sciencedaily.com;button;AGREE;ACCEPT
+0000474;fc2.com;a;Details here;OTHER
+0000474;fc2.com;button;I Agree;ACCEPT
+0000477;wpengine.com;a;Privacy Policy;OTHER
+0000477;wpengine.com;button;I AGREE;ACCEPT
+0000478;advertising.com;a;Find out more about how we use your information in our B2B Privacy Policy.;OTHER
+0000478;advertising.com;button;Accept All;ACCEPT
+0000478;advertising.com;button;Manage Settings;MODIFY
+0000479;engadget.com;a;engadget;OTHER
+0000479;engadget.com;a;our partners;OTHER
+0000479;engadget.com;a;Your Privacy Controls;OTHER
+0000479;engadget.com;a;Privacy Policy;OTHER
+0000479;engadget.com;a;Cookie Policy;OTHER
+0000479;engadget.com;a;here;OTHER
+0000479;engadget.com;button;Accept all;ACCEPT
+0000479;engadget.com;a;Manage settings;MODIFY
+0000481;typeform.com;a;cookie policy;OTHER
+0000481;typeform.com;button;Accept all cookies;ACCEPT
+0000481;typeform.com;button;Cookie settings;MODIFY
+0000482;abc.net.au;a;how we use cookies;OTHER
+0000482;abc.net.au;button;ACCEPT ALL COOKIES;ACCEPT
+0000482;abc.net.au;button;ABC REQUIRED COOKIES ONLY;DECLINE
+0000483;uol.com.br;a;Política de Privacidade;OTHER
+0000483;uol.com.br;button;OK;ACCEPT
+0000484;globo.com;a;Política de Privacidade;OTHER
+0000484;globo.com;a;Portal da Privacidade;OTHER
+0000484;globo.com;button;PROSSEGUIR;ACCEPT
+0000485;merriam-webster.com;button;NL;OTHER
+0000485;merriam-webster.com;a;Derde partijen;OTHER
+0000485;merriam-webster.com;button;Instellingen beheren;MODIFY
+0000485;merriam-webster.com;button;Alles accepteren;ACCEPT
+0000488;istockphoto.com;button;Alle cookies accepteren;ACCEPT
+0000488;istockphoto.com;button;Cookie-instellingen;MODIFY
+0000489;psychologytoday.com;a;More Info;OTHER
+0000489;psychologytoday.com;a;OK;ACCEPT
+0000494;fastcompany.com;a;privacybeleid;OTHER
+0000494;fastcompany.com;button;OPTIES WEERGEVEN;MODIFY
+0000494;fastcompany.com;button;AKKOORD EN DOORGAAN;ACCEPT
+0000496;stripe.com;a;cookiebeleid;OTHER
+0000496;stripe.com;a;Cookies beheren ;MODIFY
+0000496;stripe.com;a;Alles accepteren;ACCEPT
+0000497;3lift.com;button;partners;OTHER
+0000497;3lift.com;button;MORE OPTIONS;MODIFY
+0000497;3lift.com;button;AGREE;ACCEPT
+0000498;newyorker.com;button;List of Partners (vendors);OTHER
+0000498;newyorker.com;button;I Accept;ACCEPT
+0000498;newyorker.com;button;Show Purposes;MODIFY
+0000498;newyorker.com;button;Confirm My Choices;SAVE
+0000499;investing.com;button;List of Partners (vendors);OTHER
+0000499;investing.com;button;I Accept;ACCEPT
+0000499;investing.com;button;Show Purposes;MODIFY
+0000500;bmj.com;a;Cookie policy;OTHER
+0000500;bmj.com;a;List of Partners (vendors);OTHER
+0000500;bmj.com;button;I Accept;ACCEPT
+0000500;bmj.com;button;Show Purposes;MODIFY
